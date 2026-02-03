@@ -1,0 +1,17 @@
+{
+  "name": "slutprojektet-start-template",
+  "version": "2.1.0",
+  "description": "Project to quickly get something working in p5.js and typescript",
+  "scripts": {
+    "dev": "run-p build:watch serve",
+    "build:watch": "tsc --watch",
+    "build": "tsc",
+    "serve": "vite --port=5500 --open"
+  },
+  "devDependencies": {
+    "@types/p5": "^1.7.4",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.9"
+  }
+}
