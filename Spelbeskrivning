@@ -5,6 +5,9 @@ När en fiende besegras får man tillgång till bättre utröstning,
 vilket gör det möjlight att bekämpa svårare fiender <-- game loop
 
 Functioner
+  ##Spel
+    - update
+    - draw
   ##Spelmotor
     - Starta //funktion att starta spelet
     - Pausa // funktion att pausa spelet
