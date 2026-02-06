@@ -33,3 +33,57 @@ Functioner
   - hälsa // funktion för grund hälsa i spelet
   - aktiv nivå // hanterar hur långt man har kommit i spelet samt hur svårt det blir.
   ##Spelare
+  - 
+
+
+
+Terraria x Boss rush
+Spelet är ett 2D terraria inspererat action game, med boss rush som fokus. I stället för open sandbox world där spelaren kan mina, crafta 
+och explora är spelet uppbygt på en serie striedr mot olika typer av bossar med olika svårighetes grader i en förbuyggd arena. 
+Spelaren styr en karaktär som möter en boss åt gången. När en boss besegras belönas spelaren med experience och förbättrad utrustning, 
+vilket gör det lättare att besegra nästa boss. 
+
+Game loop
+  - Spelaren möter en boss
+  - Bossen besegras
+  - Spelaren får erfarenhet och uppgraderad utrustning
+  - Svårighetsgraden ökar
+  - Nästa boss laddas in
+Denna loop upprepas tills spelaren har besegrat alla bossar eller förlorar.
+
+Spelmekanik och system Functioner
+Spel/Game
+  - Uppdaterar spelets logik (update)
+  - Renderar spelet (draw)
+  - Hanterar spelets tillstånd (meny, paus, aktivt spel)
+
+Spelmotor
+  - Starta och pausa spelet
+  - Ladda nivåer och bossar baserat på spelarens progression
+  - Hantera ljud, musik och framerate
+  - Samordnar alla system (player, enemies, world, UI)
+
+Värld
+  - estår av fördefinierade arenor snarare än en öppen värld
+  - Världen rör sig horisontellt och vertikalt medan spelaren upplevs som relativt statisk
+  - Ansvarar för gravitation och världens gränser
+
+Spelare
+  - Kan röra sig, hoppa och attackera
+  - Har hälsa, experience och nivå
+  - Använder utrustning som påverkar skada och försvar
+
+Fiender / Bossar
+  - Varje boss är en unik fiendetyp med eget beteende
+  - Bossar spårar spelaren och attackerar baserat på sin AI tracking
+  - Svårighetsgraden ökar med varje nivå
+
+Status & progression
+  - Grundvärden för hastighet, hälsa och skada
+  - svårighetsgrad skalas beroende på aktiv nivå
+  - Spelarens utrustning och stats förbättras efter varje boss
+
+UI
+  - Visar spelarens hälsa och nivå
+  - Visar bossens hälsa
+  - Visar aktuell progression och menyval
