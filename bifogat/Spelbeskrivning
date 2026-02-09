@@ -1,43 +1,4 @@
 Terraria x Boss rush
-Använda terraria för som en mal för världen man ska skapa.
-ideen med spelet är att man ska bekämpa fiender.
-När en fiende besegras får man tillgång till bättre utröstning, 
-vilket gör det möjlight att bekämpa svårare fiender <-- game loop
-
-Functioner
-  ##Spel
-    - update
-    - draw
-  ##Spelmotor
-    - Starta //funktion att starta spelet
-    - Pausa // funktion att pausa spelet
-    - Ladda nivå // laddar in spelet utifrån "aktiv nivå info"
-    - menu // en menu för att hanterar spel inställningar
-    - fps // ståller in framerate på spelet
-    - ljud/music nivå // väljer master nivå för musiken & ljudet i spelet
-  ##Värld
-    - Graphfunktion // startar inladningen av grafik
-    - Verticalgrapich loading // laddar in den verticala grafiken / påvärkar hur högt up man kan komma i spelet
-    - Horizontalgraphic Loading // laddar in den horizontela grafiken / spelaren rör sig "statiskt" och istället ändras världen runt omkring dem. 
-    - spelare grpahic // laddar in och hanterar grafiken för spelaren
-    - Fiende grapic // laddar in och hanterar grafiken för fiende
-  ##Fiende
-    - Fiende init // initierar fienden och bestämmer typ och status beroende på "aktiv nivå"
-    - Fiende status // denns hälsa och aktiva effekter
-    - Fiende Position // poistionen av fienden live
-    - Fiende Tracking // Fiendens realation utifrån spelaren och logik för att hur den ska interagera med den
-    - Fiende Position Update // uppdatera fiendens position utifrån "Fiende Tracking"
- ##Status
-  - Rörelse/hastighet // funktion för grund hastighet för olika saker i spelet
-  - gravity // funktion för grund gravitet i spelet
-  - hälsa // funktion för grund hälsa i spelet
-  - aktiv nivå // hanterar hur långt man har kommit i spelet samt hur svårt det blir.
-  ##Spelare
-  - 
-
-
-
-Terraria x Boss rush
 Spelet är ett 2D terraria inspererat action game, med boss rush som fokus. I stället för open sandbox world där spelaren kan mina, crafta 
 och explora är spelet uppbygt på en serie striedr mot olika typer av bossar med olika svårighetes grader i en förbuyggd arena. 
 Spelaren styr en karaktär som möter en boss åt gången. När en boss besegras belönas spelaren med experience och förbättrad utrustning, 
