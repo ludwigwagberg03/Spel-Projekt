@@ -60,13 +60,14 @@ Spel/Game
 Spelmotor
   - Starta och pausa spelet
   - Ladda nivåer och bossar baserat på spelarens progression
-  - Hantera ljud, musik och framerate
-  - Samordnar alla system (player, enemies, world, UI)
+  - Hantera ljud, musik och framerate kap 60
+  - Samordnar alla system (player, enemies, world, UI, Projectile)
+  - Ansvarar för gravitation 
 
 Värld
-  - estår av fördefinierade arenor snarare än en öppen värld
+  - Består av fördefinierade arenor snarare än en öppen värld
   - Världen rör sig horisontellt och vertikalt medan spelaren upplevs som relativt statisk
-  - Ansvarar för gravitation och världens gränser
+  - Ansvarar för världens gränser.
 
 Spelare
   - Kan röra sig, hoppa och attackera
@@ -87,3 +88,6 @@ UI
   - Visar spelarens hälsa och nivå
   - Visar bossens hälsa
   - Visar aktuell progression och menyval
+
+Projectile
+  - 
