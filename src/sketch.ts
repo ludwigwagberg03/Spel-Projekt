@@ -3,6 +3,13 @@ let game: Game;
 let music: {
   mystery: p5.SoundFile;
 };
+let sounds: {
+  coin: p5.SoundFile;
+};
+let images: {
+  treasury: p5.Image;
+  pirate: p5.Image;
+};
 
 /**
  * Built in preload function in P5
@@ -12,6 +19,13 @@ let music: {
 function preload() {
   music = {
     mystery: loadSound("/assets/music/mystery.mp3"),
+  };
+  sounds = {
+    coin: loadSound("/assets/sounds/coin.wav"),
+  };
+  images = {
+    treasury: loadImage("/assets/images/treasury.png"),
+    pirate: loadImage("/assets/images/pirate.png"),
   };
 }
 
