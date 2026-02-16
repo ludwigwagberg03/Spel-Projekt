@@ -1,5 +1,7 @@
 //---- GLOBAL VARIABLES ----//
 let game: Game;
+let gameFont: p5.Font;
+
 let music: {
   mystery: p5.SoundFile;
 };
@@ -27,6 +29,8 @@ function preload() {
     treasury: loadImage("/assets/images/treasury.png"),
     pirate: loadImage("/assets/images/pirate.png"),
   };
+  gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
+
 }
 
 /**
@@ -59,3 +63,9 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
+function keyPressed() {
+  game.keyPressed(key);
+}
+
+

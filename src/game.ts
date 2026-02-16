@@ -1,6 +1,3 @@
-/// <reference path="./core/screens/IScreen.ts" />
-/// <reference path="./core/screens/StartScreen.ts" />
-
 class Game {
   private currentScreen: IScreen;
 
@@ -21,5 +18,9 @@ class Game {
     this.currentScreen.onExit?.();
     this.currentScreen = newScreen;
     this.currentScreen.onEnter?.();
+  }
+
+  keyPressed(key: string): void {
+    this.currentScreen.keyPressed?.(key);
   }
 }
