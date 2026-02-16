@@ -1,14 +1,12 @@
-import { IScreen } from "./IScreen";
-
-export class StartScreen implements IScreen {
-  constructor(private game: any) {}
+class StartScreen implements IScreen {
+  constructor(private game: Game) {}
 
   update(): void {
-    // update logic
+    
   }
 
   draw(): void {
-    // draw logic
+    
   }
 
   onEnter?(): void {

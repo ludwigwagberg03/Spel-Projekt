@@ -1,12 +1,25 @@
-import { IScreen } from "core/screens/IScreen";
-import { StartScreen } from "core/screens/StartScreen"
+/// <reference path="./core/screens/IScreen.ts" />
+/// <reference path="./core/screens/StartScreen.ts" />
 
-// import { StartScreen } from "core/screens/StartScreen";
-
-export class Game {
+class Game {
   private currentScreen: IScreen;
+
   constructor() {
     this.currentScreen = new StartScreen(this);
+    this.currentScreen.onEnter?.();
+  }
+
+  update(): void {
+    this.currentScreen.update();
+  }
+
+  draw(): void {
+    this.currentScreen.draw();
+  }
+
+  changeScreen(newScreen: IScreen): void {
+    this.currentScreen.onExit?.();
+    this.currentScreen = newScreen;
     this.currentScreen.onEnter?.();
   }
 }
