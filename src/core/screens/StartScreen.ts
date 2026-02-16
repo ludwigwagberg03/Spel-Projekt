@@ -42,10 +42,21 @@ class StartScreen implements IScreen {
     rect(panelX, panelY, panelW, panelH, 18);
 
     // Menu buttons
+    // const btnW = 420;
+    // const btnH = 60;
+    // const startY = panelY + 70;
+    // const gap = 18;
+
     const btnW = 420;
     const btnH = 60;
-    const startY = panelY + 70;
     const gap = 18;
+
+    // calculate total menu height
+    const totalHeight =
+      this.options.length * btnH + (this.options.length - 1) * gap;
+
+    // center inside panel
+    const startY = panelY + (panelH - totalHeight) / 2;
 
     for (let i = 0; i < this.options.length; i++) {
       const x = width / 2 - btnW / 2;
@@ -101,25 +112,42 @@ class StartScreen implements IScreen {
     );
   }
 
-  keyPressed(key: string): void {
-    if (key === "ArrowUp") this.selected--;
-    if (key === "ArrowDown") this.selected++;
+  // keyPressed(key: string): void {
+  //   if (key === "ArrowUp") this.selected--;
+  //   if (key === "ArrowDown") this.selected++;
+
+  //   if (this.selected < 0) this.selected = this.options.length - 1;
+  //   if (this.selected >= this.options.length) this.selected = 0;
+
+  //   if (key === "Enter") {
+  //     const choice = this.options[this.selected];
+
+  //     if (choice === "Nytt spel") {
+  //       this.game.changeScreen(new PlayScreen(this.game));
+  //     }
+
+  //     if (choice === "Avsluta") {
+  //       noLoop();
+  //     }
+  //   }
+  // }
+
+  // Updated to use keyCode instead of key string for better performance
+  keyPressed(code: number): void {
+    if (code === UP_ARROW) this.selected--;
+    if (code === DOWN_ARROW) this.selected++;
 
     if (this.selected < 0) this.selected = this.options.length - 1;
     if (this.selected >= this.options.length) this.selected = 0;
 
-    if (key === "Enter") {
+    if (code === ENTER) {
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {
-        // TODO: go to PlayScreen later
-        console.log("Nytt spel");
-      } else if (choice === "Ladda spel") {
-        console.log("Ladda spel (kommer senare)");
-      } else if (choice === "Inställningar") {
-        console.log("Inställningar (kommer senare)");
-      } else if (choice === "Avsluta") {
-        // stop draw loop (simple “quit” for browser)
+        this.game.changeScreen(new PlayScreen(this.game));
+      }
+
+      if (choice === "Avsluta") {
         noLoop();
       }
     }

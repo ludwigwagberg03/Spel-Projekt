@@ -6,6 +6,8 @@ interface IScreen {
   onEnter?(): void;
   onExit?(): void;
 
-  keyPressed?(key: string): void;
+  // keyPressed?(key: string): void;
+  keyPressed?(code: number): void;
+
   mousePressed?(): void;
 }

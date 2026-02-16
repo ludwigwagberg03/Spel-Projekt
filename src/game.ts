@@ -20,7 +20,11 @@ class Game {
     this.currentScreen.onEnter?.();
   }
 
-  keyPressed(key: string): void {
-    this.currentScreen.keyPressed?.(key);
+  keyPressed(code: number): void {
+    this.currentScreen.keyPressed?.(code);
+  }
+
+  mousePressed(): void {
+    this.currentScreen.mousePressed?.();
   }
 }

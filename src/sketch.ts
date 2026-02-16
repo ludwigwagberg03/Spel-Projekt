@@ -64,8 +64,10 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
+//---- INPUT HANDLERS (keyCode) ----//
 function keyPressed() {
-  game.keyPressed(key);
+  game.keyPressed(keyCode);
 }
+
 
 
