@@ -19,5 +19,13 @@ class PauseScreen implements GameScreen {
     text("M - Main Menu", width / 2, height / 2 + 40);
   }
   update(): void {}
+
+  keyPressed(code: number): void {
+    // resume game
+    if (code === ESCAPE) this.game.changeScreen(new PlayScreen(this.game));
+
+    // go to menu
+    if (code === 77) this.game.changeScreen(new StartScreen(this.game));
+  }
 }
 
