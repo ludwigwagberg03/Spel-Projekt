@@ -1,13 +1,8 @@
-class StartScreen implements IScreen {
+class StartScreen implements GameScreen {
   private game: Game;
   private time = 0;
 
-  private stars = Array.from({ length: 80 }, () => ({
-    x: Math.random() * window.innerWidth,
-    y: Math.random() * window.innerHeight,
-    size: Math.random() * 2 + 1,
-    speed: Math.random() * 0.15 + 0.05,
-  }));
+  private stars: { x: number; y: number; size: number; speed: number }[] = [];
 
   // Menu
   private options = ["Nytt spel", "Ladda spel", "Inställningar", "Avsluta"];
@@ -16,6 +11,16 @@ class StartScreen implements IScreen {
 
   constructor(game: Game) {
     this.game = game;
+
+    // create stars (random positions, sizes and speeds)
+    for (let i = 0; i < 80; i++) {
+      this.stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 2 + 1,
+        speed: Math.random() * 0.15 + 0.05,
+      });
+    }
   }
 
   update(): void {}
@@ -125,6 +130,27 @@ class StartScreen implements IScreen {
     vertex(width, height);
     vertex(0, height);
     endShape(CLOSE);
+  }
+
+  // ================= INPUT =================
+  keyPressed(code: number): void {
+    if (code === UP_ARROW) this.selected--;
+    if (code === DOWN_ARROW) this.selected++;
+
+    if (this.selected < 0) this.selected = this.options.length - 1;
+    if (this.selected >= this.options.length) this.selected = 0;
+
+    if (code === ENTER) {
+      const choice = this.options[this.selected];
+
+      if (choice === "Nytt spel") {
+        this.game.changeScreen(new PlayScreen(this.game));
+      }
+
+      if (choice === "Avsluta") {
+        noLoop();
+      }
+    }
   }
 
   onEnter(): void {

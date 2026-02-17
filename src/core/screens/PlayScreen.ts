@@ -1,4 +1,5 @@
-class PlayScreen implements IScreen {
+class PlayScreen implements GameScreen
+ {
   private game: Game;
 
   constructor(game: Game) {
@@ -7,6 +8,7 @@ class PlayScreen implements IScreen {
 
   update(): void {
     // update gameplay systems here later
+   
   }
 
   draw(): void {
@@ -16,5 +18,11 @@ class PlayScreen implements IScreen {
     textAlign(CENTER, CENTER);
     textSize(40);
     text("PLAYING", width / 2, height / 2);
+  }
+  keyPressed(code: number): void {
+    //press ESC to go back to start menu
+    if (code === ESCAPE) {
+      this.game.changeScreen(new StartScreen(this.game));
+    }
   }
 }
