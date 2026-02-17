@@ -40,7 +40,19 @@ class StartScreen implements IScreen {
     line(0, y, width, y);
   }
 
- 
+  // ===== STARS =====
+noStroke();
+fill(255);
+
+for (let s of this.stars) {
+  circle(s.x, s.y, s.size);
+
+  s.y += s.speed;
+
+  if (s.y > height) {
+    s.y = 0;
+    s.x = random(width);
+  }
 }
 
 
