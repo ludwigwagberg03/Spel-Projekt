@@ -1,3 +1,61 @@
+
+// ===== STONE BUTTON DRAWER =====
+function drawStoneButton(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  selected: boolean,
+  label: string,
+) {
+  // shadow
+  fill(0, 0, 0, 120);
+  rect(x + 6, y + 6, w, h, 8);
+
+  
+  // bottom shadow (thickness)
+  fill(40, 35, 30);
+  rect(x, y + 6, w, h, 10);
+
+  // main stone
+  fill(70, 65, 60);
+  rect(x, y, w, h, 10);
+
+  // inner stone
+  fill(110, 105, 95);
+  rect(x + 4, y + 4, w - 8, h - 8, 8);
+
+  // top light line
+  stroke(180);
+  line(x + 6, y + 6, x + w - 6, y + 6);
+  noStroke();
+
+  // glowing border if selected
+  if (selected) {
+    let glow = 180 + sin(frameCount * 0.08) * 70;
+    stroke(255, 220, 120, glow);
+    strokeWeight(3);
+    noFill();
+    rect(x - 2, y - 2, w + 4, h + 4, 12);
+    noStroke();
+  }
+
+  // outlined text
+  textAlign(CENTER, CENTER);
+  textSize(28);
+
+  fill(0);
+  for (let ox = -2; ox <= 2; ox++) {
+    for (let oy = -2; oy <= 2; oy++) {
+      if (ox || oy) text(label, x + w / 2 + ox, y + h / 2 + oy);
+    }
+  }
+
+  fill(selected ? color(255, 230, 150) : color(230));
+  text(label, x + w / 2, y + h / 2);
+}
+
+
 class StartScreen implements GameScreen {
   private game: Game;
   private time = 0;
@@ -26,24 +84,16 @@ class StartScreen implements GameScreen {
   update(): void {}
 
   draw(): void {
-    // Clear frame
-    background(0);
+    // ===== BACKGROUND IMAGE =====
+    imageMode(CORNER);
+    image(images.menu, 0, 0, width, height);
 
-    // ===== SKY ANIMATION =====
-    this.time += 0.01;
+    // dark overlay for readability
+    noStroke();
+    fill(0, 0, 0, 140);
+    rect(0, 0, width, height);
 
-    for (let y = 0; y < height; y++) {
-      let t = y / height;
-
-      let r = lerp(10, 2, t);
-      let g = lerp(20, 5, t);
-      let b = lerp(40, 20 + sin(this.time) * 10, t);
-
-      stroke(r, g, b);
-      line(0, y, width, y);
-    }
-
-    // ===== STARS =====
+    // ===== STARS (FAR BACKGROUND) =====
     noStroke();
     fill(255);
 
@@ -57,63 +107,53 @@ class StartScreen implements GameScreen {
         s.x = random(width);
       }
     }
-    // ===== MOUNTAINS =====
+
+    // ===== MOUNTAINS (MID LAYER) =====
     this.drawMountains(10, [15, 20, 35]);
     this.drawMountains(20, [20, 28, 50]);
     this.drawMountains(30, [30, 40, 70]);
 
-    // ===== TITLE =====
+    // ===== TITLE (UI LAYER) =====
     textAlign(CENTER, CENTER);
-    textSize(64);
-    fill(255);
-    text("Terrarian x Boss Rush", width / 2, height * 0.22);
 
-    // ===== MENU =====
-    const panelW = 520;
-    const panelH = 330;
-    const panelX = width / 2 - panelW / 2;
+    const drawTitle = (txt: string, y: number, size: number, col: any) => {
+      textSize(size);
 
-    let floatY = sin(frameCount * 0.04) * 6;
-    const panelY = height * 0.38 + floatY;
+      fill(0);
+      for (let ox = -3; ox <= 3; ox++) {
+        for (let oy = -3; oy <= 3; oy++) {
+          if (ox || oy) text(txt, width / 2 + ox, y + oy);
+        }
+      }
 
-    noStroke();
-    fill(240, 240, 240, 230);
-    rect(panelX, panelY, panelW, panelH, 18);
+      fill(col);
+      text(txt, width / 2, y);
+    };
 
-    const btnW = 420;
-    const btnH = 60;
+    let glow = 200 + sin(frameCount * 0.05) * 55;
+    drawTitle("Terrarian", height * 0.18, 72, color(255, 220, 120, glow));
+    drawTitle("Boss Rush", height * 0.27, 42, color(240));
+
+    // ===== MENU BUTTONS (FRONT UI) =====
+    const btnW = 380;
+    const btnH = 70;
     const gap = 18;
 
-    const totalHeight =
-      this.options.length * btnH + (this.options.length - 1) * gap;
-
-    const startY = panelY + (panelH - totalHeight) / 2;
+    // position menu relative to title instead of screen height
+    const titleBottom = height * 0.27; // where "Boss Rush" text is
+    const startY = titleBottom + 50; // fixed spacing under title
 
     for (let i = 0; i < this.options.length; i++) {
       const x = width / 2 - btnW / 2;
       const y = startY + i * (btnH + gap);
 
-      if (i === this.selected) {
-        fill(210, 210, 210);
-        rect(x, y, btnW, btnH, 14);
-
-        fill(40);
-        textSize(18);
-        text("▶", x + 28, y + btnH / 2 + 2);
-      } else {
-        fill(225, 225, 225);
-        rect(x, y, btnW, btnH, 14);
-      }
-
-      fill(30);
-      textSize(26);
-      text(this.options[i], width / 2, y + btnH / 2 + 2);
+      drawStoneButton(x, y, btnW, btnH, i === this.selected, this.options[i]);
     }
 
-    // ===== HELP TEXT =====
-    fill(180);
-    textSize(18);
-    text("Piltangenter – Navigera     ENTER – Välj", width / 2, height - 40);
+    // ===== HELP TEXT (TOP UI) =====
+    fill(220);
+    textSize(20);
+    text("↑ ↓  Navigate      ENTER  Select", width / 2, height - 40);
   }
 
   // ================= MOUNTAINS (SEPARATE METHOD) =================

@@ -11,6 +11,7 @@ let sounds: {
 let images: {
   treasury: p5.Image;
   pirate: p5.Image;
+  menu: p5.Image;
 };
 
 /**
@@ -26,6 +27,8 @@ function preload() {
     coin: loadSound("/assets/sounds/coin.wav"),
   };
   images = {
+    menu: loadImage("/assets/images/menu_bg.png"),
+
     treasury: loadImage("/assets/images/treasury.png"),
     pirate: loadImage("/assets/images/pirate.png"),
   };
