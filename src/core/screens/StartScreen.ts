@@ -66,6 +66,7 @@ class StartScreen implements GameScreen {
   private options = ["Nytt spel", "Ladda spel", "Inställningar", "Avsluta"];
 
   private selected = 0;
+  private lastSelected = 0;
 
   constructor(game: Game) {
     this.game = game;
@@ -174,13 +175,26 @@ class StartScreen implements GameScreen {
 
   // ================= INPUT =================
   keyPressed(code: number): void {
+    // remember old selection
+    this.lastSelected = this.selected;
+
+    // move selection
     if (code === UP_ARROW) this.selected--;
     if (code === DOWN_ARROW) this.selected++;
 
+    // wrap menu
     if (this.selected < 0) this.selected = this.options.length - 1;
     if (this.selected >= this.options.length) this.selected = 0;
 
+    // play tick if moved
+    if (this.lastSelected !== this.selected) {
+      sounds.tick.play();
+    }
+
+    // ENTER pressed
     if (code === ENTER) {
+      sounds.confirm.play();
+
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {

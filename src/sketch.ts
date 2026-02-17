@@ -7,6 +7,8 @@ let music: {
 };
 let sounds: {
   coin: p5.SoundFile;
+  tick: p5.SoundFile;
+  confirm: p5.SoundFile;
 };
 let images: {
   treasury: p5.Image;
@@ -24,6 +26,8 @@ function preload() {
     mystery: loadSound("/assets/music/mystery.mp3"),
   };
   sounds = {
+    tick: loadSound("/assets/sounds/menu-selection.mp3"),
+    confirm: loadSound("/assets/sounds/confirm.mp3"),
     coin: loadSound("/assets/sounds/coin.wav"),
   };
   images = {
@@ -46,6 +50,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
   music.mystery.setVolume(0.8);
+  
 
   game = new Game();
 }
@@ -72,5 +77,9 @@ function keyPressed() {
   game.keyPressed(keyCode);
 }
 
+function mousePressed() {
+  userStartAudio();
+  game.mousePressed();
+}
 
 
