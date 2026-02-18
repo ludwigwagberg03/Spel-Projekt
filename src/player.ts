@@ -14,18 +14,24 @@ class Player extends Entity {
         const platformTop = other.position.y;
         if (this.onPlatform === true) {
             // console.log("RIO")
-            this.position.y = platformTop - this.size.y;
-            this.velocity.y = 0;
-            this.onGround = true;
-            this.onPlatform = true;
+            const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
+
+            const freeFall = this.velocity.y > 0;
+
+            if (freeFall && isAbovePlatform){
+                this.position.y = platformTop - this.size.y;
+                this.velocity.y = 0;
+                this.onGround = true;
+                this.onPlatform = true;
+            }
         }
     }
 
     private takedamage(n: number): void { }
 
     update() {
-        this.updateposition();
         this.move();
+        this.updateposition();
         // this.checkIfJumping();
     }
     updateposition() {
