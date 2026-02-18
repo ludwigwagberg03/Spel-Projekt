@@ -33,7 +33,7 @@ export class level implements IScreen {
     checkColission(entities: Entity[]) {
         let player!: Player;
         let plat!: platform;
-
+        
         for (const entity of entities) {
             if (entity instanceof Player) {
                 player = entity

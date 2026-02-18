@@ -2,10 +2,9 @@ import { IScreen } from "./IScreen";
 import { startMenu } from "./startMenu";
 export class Game {
   private currentScreen: IScreen;
-  private gameInstance = this
   
   constructor() {
-    this.currentScreen = new startMenu(this.gameInstance);
+    this.currentScreen = new startMenu(this);
   }
   setScreen(screen: IScreen) {
     this.currentScreen = screen;
