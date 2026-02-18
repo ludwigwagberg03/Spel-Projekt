@@ -1,50 +1,25 @@
-class Game {
-  private position: p5.Vector;
-  private isCircleVisible: boolean;
-
+import { IScreen } from "./IScreen";
+import { startMenu } from "./startMenu";
+export class Game {
+  private currentScreen: IScreen;
+  private gameInstance = this
+  
   constructor() {
-    this.position = createVector(width * 0.5, height * 0.5);
-    this.isCircleVisible = false;
+    this.currentScreen = new startMenu(this.gameInstance);
+  }
+  setScreen(screen: IScreen) {
+    this.currentScreen = screen;
   }
 
-  public update() {
-    this.position.set(mouseX, mouseY);
-    this.isCircleVisible = mouseIsPressed;
-
-    if (mouseIsPressed) {
-      if (!music.mystery.isPlaying()) {
-        music.mystery.loop();
-      }
-    } else {
-      music.mystery.pause();
-    }
+  keyPressed() {
+    // console.log("On screen",this.currentScreen)
+    this.currentScreen.keyPressed();
+    // console.log("after",this.currentScreen)
   }
-
-  public draw() {
-    background("black");
-    this.drawText();
-
-    if (this.isCircleVisible) {
-      this.drawCircle();
-    }
+  update() {
+    this.currentScreen.update();
   }
-
-  public drawText() {
-    push();
-    fill("white");
-    textSize(width * 0.1);
-    textStyle("bold");
-    textAlign("center");
-    text("Click & Drag", width * 0.5, height * 0.5);
-    pop();
-  }
-
-  public drawCircle() {
-    push();
-    fill(0, 255, 0, 200);
-    stroke("white");
-    strokeWeight(width * 0.01);
-    circle(this.position.x, this.position.y, width * 0.2);
-    pop();
+  draw() {
+    this.currentScreen.draw();
   }
 }
