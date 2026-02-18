@@ -10,9 +10,18 @@ abstract class Entity {
         this.size = s;
         // console.log(p, v, s)
     }
-    abstract update(): void;
-    abstract draw(): void;
-    abstract keyPressed(): void;
-    onCollision(other: Entity): void {}
-    private takedamage(n: number): void {}
+    
+    public update() {
+        this.position.add(this.velocity);
+        // this.position.add(this.velocity.copy().mult(deltaTime));
+    }
+    
+    public draw() {
+        push();
+        fill(255);
+        rect(this.position.x, this.position.y, this.size.x, this.size.y);
+        pop();
+    }
+    
+    abstract onCollision(other: Entity): void;
 }

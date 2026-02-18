@@ -4,12 +4,13 @@
     constructor(game: Game) {
         this.game = game;
     }
-    keyPressed() {
-        this.game.setScreen(new Level(this.game));
-    }
+    
     update() {
-        
+        if (keyIsPressed) {
+            this.game.setScreen(new Level(this.game));
+        }    
     }
+    
     draw() {
         // console.log("drawing menu");
         fill(255);

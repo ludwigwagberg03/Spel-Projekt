@@ -16,7 +16,7 @@ class Level implements IScreen {
             createVector(0, height / 3), createVector(0, 0), createVector(width, 10)
         ));
         this.entities.push(new Player(
-            createVector(width / 4, height / 4), createVector(0, 0), createVector(50, 100)
+            createVector(width / 4, height /2), createVector(0, 0), createVector(50, 100)
         ));
     }
     update() {
@@ -39,7 +39,7 @@ class Level implements IScreen {
             }
         }
         if (player && plat) {
-            if (player.ignorePlatform) return;
+            // if (player.ignorePlatform) return;
             
             const playerBottom = player.position.y + player.size.y;
             const platformTop = plat.position.y;
@@ -51,17 +51,14 @@ class Level implements IScreen {
             }
         }
     }
+    
     draw() {
         background(0);
         this.entities.forEach(entity => {
             entity.draw();
         });
     }
-    keyPressed(): void {
-        this.entities.forEach(entity => {
-            entity.keyPressed();
-        })
-    }
+    
     aplygravity(): void {
         this.entities.forEach(entity => {
             if (entity.isgravity) {

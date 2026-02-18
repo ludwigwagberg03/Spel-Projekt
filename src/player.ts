@@ -10,13 +10,19 @@ class Player extends Entity {
         console.log("player");
     }
     onCollision(other: Entity): void {
+        console.log(this.onPlatform)
         const platformTop = other.position.y;
-        // console.log("RIO")
-        this.position.y = platformTop - this.size.y;
-        this.velocity.y = 0;
-        this.onGround = true;
-        this.onPlatform = true;
+        if (this.onPlatform === true) {
+            // console.log("RIO")
+            this.position.y = platformTop - this.size.y;
+            this.velocity.y = 0;
+            this.onGround = true;
+            this.onPlatform = true;
+        }
     }
+
+    private takedamage(n: number): void { }
+
     update() {
         this.updateposition();
         this.move();
@@ -32,10 +38,11 @@ class Player extends Entity {
             this.onPlatform = false;
         }
     }
-    get ignorePlatform(): boolean {
-        return this.onPlatform
-    }
+    // get ignorePlatform(): boolean {
+    //     return this.onPlatform
+    // }
     private move() {
+        // console.log("on platform", this.onPlatform)
         this.velocity.x = 0;
 
         if (keyIsDown(65)) { // a
@@ -50,27 +57,17 @@ class Player extends Entity {
             this.velocity.y = 0.8;
             this.onGround = false;
             this.onPlatform = false;
+            console.log("pressed s", this.onPlatform)
+        }
+        if (keyIsDown(32)) { // space
+            this.jump();
         }
     }
-    jump() { // space
+    private jump() { // space
         if (this.onGround) {
             this.velocity.y = -30;
             this.onGround = false;
-            this.onPlatform = false;
+            this.onPlatform = true;
         }
-    }
-    keyPressed(): void {
-        if (keyCode === 32) {
-            // console.log("jump")
-            this.jump();
-        }
-        // console.log("on screen Play")
-    }
-    draw() {
-        // console.log("player", this.position.y, height - this.size / 2, this.size)
-        push();
-        fill(255);
-        rect(this.position.x, this.position.y, this.size.x, this.size.y);
-        pop();
     }
 }
