@@ -1,6 +1,4 @@
-import { Entity } from "./Entity";
-
-export class platform extends Entity {
+class Platform extends Entity {
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
         super(p, v, s);
         console.log("platform");

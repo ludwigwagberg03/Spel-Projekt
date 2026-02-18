@@ -1,15 +1,11 @@
-import { IScreen } from "./IScreen";
-import { Game } from "./game";
-import { level } from "./level";
-
-export class startMenu implements IScreen {
+;class StartMenu implements IScreen {
     private game: Game;
 
     constructor(game: Game) {
         this.game = game;
     }
     keyPressed() {
-        this.game.setScreen(new level(this.game));
+        this.game.setScreen(new Level(this.game));
     }
     update() {
         

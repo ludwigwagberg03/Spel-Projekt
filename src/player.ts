@@ -1,6 +1,6 @@
-import { Entity } from "./Entity";
+/// <reference path="Entity.ts" />
 
-export class Player extends Entity {
+class Player extends Entity {
     onGround: boolean = false;
     onPlatform: boolean = false;
 

@@ -1,4 +1,4 @@
-export abstract class Entity {
+abstract class Entity {
     position: p5.Vector;
     velocity: p5.Vector;
     size: p5.Vector;

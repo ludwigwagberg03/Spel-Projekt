@@ -1,22 +1,21 @@
-import { Game } from "./game";
-
 let game: Game;
 
-(window as any).setup = () => {
+function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
 
   game = new Game();
 };
-(window as any).draw = () => {
+
+function draw() {
   game.update();
   game.draw();
 };
 
-(window as any).windowResized = () => {
+function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 };
 
-(window as any).keyPressed = () => {
+function keyPressed() {
   game.keyPressed();
 };
