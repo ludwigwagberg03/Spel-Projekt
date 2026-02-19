@@ -56,7 +56,7 @@ function drawStoneButton(
 }
 
 
-class StartScreen implements GameScreen {
+class StartScreen implements IScreen {
   private game: Game;
   private time = 0;
 

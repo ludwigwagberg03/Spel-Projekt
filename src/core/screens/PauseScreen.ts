@@ -1,4 +1,4 @@
-class PauseScreen implements GameScreen {
+class PauseScreen implements IScreen {
   private game: Game;
 
   constructor(game: Game) {

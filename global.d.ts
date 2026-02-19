@@ -19,14 +19,14 @@ declare global {
     loadingCallback?: (percentageLoaded: number) => void,
   ): p5.SoundFile;
 
-  interface GameScreen {
-    update(): void;
-    draw(): void;
+  // interface GameScreen {
+  //   update(): void;
+  //   draw(): void;
 
-    onEnter?(): void;
-    onExit?(): void;
+  //   onEnter?(): void;
+  //   onExit?(): void;
 
-    keyPressed?(code: number): void;
-    mousePressed?(): void;
-  }
+  //   keyPressed?(code: number): void;
+  //   mousePressed?(): void;
+  // }
 }
