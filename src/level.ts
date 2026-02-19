@@ -20,7 +20,7 @@ class Level implements IScreen {
         ));
 
         this.entities.push(new Enemy(
-            createVector(width / 4, height /3), createVector(0, 0), createVector(50, 100)
+            createVector(width / 3, height /2), createVector(0, 0), createVector(50, 100)
         ));
     }
     update() {

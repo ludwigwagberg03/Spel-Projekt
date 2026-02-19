@@ -76,7 +76,7 @@ class Player extends Entity {
         if (this.onGround) {
             this.velocity.y = -30;
             this.onGround = false;
-            this.onPlatform = false;
+            this.onPlatform = true;
         }
     }
 

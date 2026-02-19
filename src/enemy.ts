@@ -2,22 +2,52 @@
 
 class Enemy extends Entity {
 
-    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
+    private player: Player;
+    private speed: number = 2;
+
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, player: Player) {
         super(p, v, s);
-        this.isgravity = true;
+        this.isgravity = false;
         console.log("enemy");
 
+        this.player = player;
     }
 
-    onCollision(other: Entity): void {
+    private playerPosition() {
+        let direction = p5.Vector.sub(this.player.position, this.position)
+        direction.normalize();
+        direction.mult(this.speed);
+        this.velocity = direction;
+    }
+
+    private updatePosition() {
+    this.position.add(this.velocity);
+    if (this.position.x < 0) {
+      this.position.x = width;
+    }
+    if (this.position.x > width) {
+      this.position.x = 0;
+      
+    }
+    if (this.position.y < 0) {
+      this.position.y = height;
+      this.velocity.y = 0;
+    }
+    if (this.position.y > height) {
+      this.position.y = 0;
+      this.velocity.y = 0;
+    }
+    }
+
+    public onCollision(other: Entity): void {
         //
     }
 
-    update() {
-        //
+    public update() {
+        this.playerPosition();
     };
 
-    draw() {
+    public draw() {
         super.draw();
     };
 
