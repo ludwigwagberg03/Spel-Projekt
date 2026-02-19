@@ -8,17 +8,20 @@ class Player extends Entity {
         super(p, v, s);
         this.isgravity = true;
         console.log("player");
+
     }
     onCollision(other: Entity): void {
+        
         console.log(this.onPlatform)
         const platformTop = other.position.y;
         if (this.onPlatform === true) {
+
             // console.log("RIO")
             const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
 
             const freeFall = this.velocity.y > 0;
 
-            if (freeFall && isAbovePlatform){
+            if (freeFall && isAbovePlatform) {
                 this.position.y = platformTop - this.size.y;
                 this.velocity.y = 0;
                 this.onGround = true;
@@ -73,7 +76,15 @@ class Player extends Entity {
         if (this.onGround) {
             this.velocity.y = -30;
             this.onGround = false;
-            this.onPlatform = true;
+            this.onPlatform = false;
         }
     }
+
+    // public overlaps(other: Entity) {
+    //     if (other instanceof Platform) {
+    //         // Speciell lösning
+    //     } else {
+    //         super.overlaps(other);
+    //     }
+    // }
 }

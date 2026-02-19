@@ -38,6 +38,17 @@ class Level implements IScreen {
                 plat = entity
             }
         }
+
+        // for (const e1 of entities) {
+        //     for (const e2 of entities) {
+        //         if (e1 === e2) continue;
+        //         if (e1.overlaps(e2)) {
+        //             e1.onCollision(e2);
+        //             e2.onCollision(e1);
+        //         }
+        //     }
+        // }
+
         if (player && plat) {
             // if (player.ignorePlatform) return;
             
