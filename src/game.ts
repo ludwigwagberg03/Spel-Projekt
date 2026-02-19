@@ -1,18 +1,32 @@
 class Game {
   private currentScreen: IScreen;
-  
+
   constructor() {
-    this.currentScreen = new StartMenu(this);
-  }
-  setScreen(screen: IScreen) {
-    this.currentScreen = screen;
+    this.currentScreen = new StartScreen(this);
+    this.currentScreen.onEnter?.();
   }
 
-  update() {
+  update(): void {
     this.currentScreen.update();
-    
   }
-  draw() {
+
+  draw(): void {
     this.currentScreen.draw();
+  }
+
+  changeScreen(newScreen: IScreen): void {
+    this.currentScreen.onExit?.();
+    this.currentScreen = newScreen;
+    this.currentScreen.onEnter?.();
+  }
+
+  keyPressed(code: number): void {
+    if (this.currentScreen && this.currentScreen.keyPressed) {
+      this.currentScreen.keyPressed(code);
+    }
+  }
+
+  mousePressed(): void {
+    this.currentScreen.mousePressed?.();
   }
 }
