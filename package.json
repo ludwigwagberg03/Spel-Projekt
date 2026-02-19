@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "run-p build:watch serve",
     "build:watch": "tsc --watch",
-    "build": "tsc -w",
-    "serve": "vite --port=5500 --open"
+    "build": "tsc",
+    "serve": "vite --port=5500 --open --host"
   },
   "devDependencies": {
     "@types/p5": "^1.7.7",
