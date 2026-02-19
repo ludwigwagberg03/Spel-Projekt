@@ -72,7 +72,7 @@ class Player extends Entity {
             this.jump();
         }
     }
-    private jump() { // space
+    private jump() {
         if (this.onGround) {
             this.velocity.y = -30;
             this.onGround = false;
