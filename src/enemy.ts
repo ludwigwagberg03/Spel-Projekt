@@ -45,6 +45,7 @@ class Enemy extends Entity {
 
     public update() {
         this.playerPosition();
+        super.update();
     };
 
     public draw() {
