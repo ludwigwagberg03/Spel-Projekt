@@ -66,5 +66,3 @@ function mousePressed() {
   userStartAudio();
   game.mousePressed();
 }
-
-
