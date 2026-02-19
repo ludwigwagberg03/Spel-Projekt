@@ -3,7 +3,7 @@
 class Enemy extends Entity {
 
     private player: Player;
-    private speed: number = 2;
+    private speed: number = 4;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, player: Player) {
         super(p, v, s);

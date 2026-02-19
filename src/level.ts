@@ -15,13 +15,18 @@ class Level implements IScreen {
         this.entities.push(new Platform(
             createVector(0, height / 2), createVector(0, 0), createVector(width, 10)
         ));
-        this.entities.push(new Player(
+        const player = new Player(
             createVector(width / 4, height /2), createVector(0, 0), createVector(50, 100)
-        ));
+        );
+
+        this.entities.push(player);
 
         this.entities.push(new Enemy(
-            createVector(width / 3, height /2), createVector(0, 0), createVector(50, 100)
-        ));
+            createVector(width / 3, height /2), 
+            createVector(0, 0), 
+            createVector(50, 100), 
+            player
+        )); 
     }
     update() {
         this.aplygravity();
