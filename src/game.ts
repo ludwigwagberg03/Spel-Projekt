@@ -1,5 +1,5 @@
 class Game {
-  private currentScreen: GameScreen;
+  private currentScreen: IScreen;
 
   constructor() {
     this.currentScreen = new StartScreen(this);
@@ -14,7 +14,7 @@ class Game {
     this.currentScreen.draw();
   }
 
-  changeScreen(newScreen: GameScreen): void {
+  changeScreen(newScreen: IScreen): void {
     this.currentScreen.onExit?.();
     this.currentScreen = newScreen;
     this.currentScreen.onEnter?.();

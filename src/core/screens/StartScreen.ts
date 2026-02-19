@@ -56,7 +56,7 @@ function drawStoneButton(
 }
 
 
-class StartScreen implements GameScreen {
+class StartScreen implements IScreen {
   private game: Game;
   private time = 0;
 
@@ -198,7 +198,7 @@ class StartScreen implements GameScreen {
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {
-        this.game.changeScreen(new PlayScreen(this.game));
+        this.game.changeScreen(new Level(this.game));
       }
 
       if (choice === "Avsluta") {
