@@ -16,6 +16,17 @@ declare global {
     path: string | string[] | p5.File,
     successCallback?: () => void,
     errorCallback?: (err: unknown) => void,
-    loadingCallback?: (percentageLoaded: number) => void
+    loadingCallback?: (percentageLoaded: number) => void,
   ): p5.SoundFile;
+
+  interface GameScreen {
+    update(): void;
+    draw(): void;
+
+    onEnter?(): void;
+    onExit?(): void;
+
+    keyPressed?(code: number): void;
+    mousePressed?(): void;
+  }
 }
