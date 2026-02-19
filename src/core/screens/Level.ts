@@ -1,4 +1,4 @@
-class PlayScreen implements IScreen {
+class Level implements IScreen {
   private game: Game;
   private entities: entity[];
   private gravity = 0.8;
@@ -39,6 +39,15 @@ class PlayScreen implements IScreen {
       }
     }
 
+    // for (const e1 of entities) {
+    //     for (const e2 of entities) {
+    //         if (e1 === e2) continue;
+    //         if (e1.overlaps(e2)) {
+    //             e1.onCollision(e2);
+    //             e2.onCollision(e1);
+    //         }
+    //     }
+    // }
     if (player && plat) {
 
       const playerBottom = player.position.y + player.size.y;

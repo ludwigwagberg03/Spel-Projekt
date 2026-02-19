@@ -22,7 +22,7 @@ class PauseScreen implements IScreen {
 
   keyPressed(code: number): void {
     // resume game
-    if (code === ESCAPE) this.game.changeScreen(new PlayScreen(this.game));
+    if (code === ESCAPE) this.game.changeScreen(new Level(this.game));
 
     // go to menu
     if (code === 77) this.game.changeScreen(new StartScreen(this.game));

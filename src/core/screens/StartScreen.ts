@@ -198,7 +198,7 @@ class StartScreen implements IScreen {
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {
-        this.game.changeScreen(new PlayScreen(this.game));
+        this.game.changeScreen(new Level(this.game));
       }
 
       if (choice === "Avsluta") {
