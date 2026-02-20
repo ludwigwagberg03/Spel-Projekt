@@ -1,3 +1,92 @@
+## Terraria x Boss Rush
+
+Det här är ett 2D-actionspel inspirerat av Terraria – men istället för en öppen värld där du miner, craftar och utforskar, är allt fokus på bossar. 
+Spelet är uppbyggt som en boss rush där du möter en boss i taget i en förbyggd arena.
+
+Du styr en karaktär som kastas rakt in i intensiva strider. När du besegrar en boss får du en belöning som kan användas för bättre utrustning. 
+Det gör dig starkare inför nästa fight – som alltid är svårare än den förra. Spelet fortsätter så här tills du antingen klarar alla bossar eller blir besegrad.
+
+
+## Hur spelet fungerar
+
+Loopen är enkel men effektiv:
+
+* Du möter en boss
+* Du besegrar bossen
+* Du får belöningar och uppgraderingar
+* Svårighetsgraden ökar
+* Nästa boss spawnar
+
+Och så fortsätter det.
+
+
+## Spelaren
+
+Spelaren kan röra sig, hoppa och attackera. Du har hälsa, kan få olika status­effekter (som att brinna eller bli nedfryst), 
+och du kan förbättra dina stats genom bättre vapen och rustningar.
+
+Det finns också kollisionssystem så att spelaren kan stå på plattformar, ta skada av fiender och påverkas av projektiler.
+
+
+## Bossarna
+
+Varje boss har sin egen personlighet och sitt eget attackmönster.
+
+**FireBoss**
+Håller sig nära dig och rusar ibland aggressivt fram. Skjuter eldkulor i en kon som både gör direkt skada och bränner dig över tid.
+
+**IceBoss**
+Håller avstånd och kastar stora isprojektiler. Om du träffas tar du skada och blir långsammare en stund.
+
+**SpiderBoss**
+Jagar dig för närstrid. Om du försöker hålla avstånd skjuter den spindelnät som fastnar i arenan och begränsar hur du kan röra dig.
+
+
+## Projektiler och effekter
+
+Olika bossar använder olika projektiler, som kan:
+
+* Göra skada direkt
+* Orsaka skada över tid (fire damage)
+* Sakta ner dig (slowness)
+* Blockera din rörelse (nät)
+
+Effekterna är tidsbaserade och hanteras via ett system som håller koll på hur länge de ska vara aktiva.
+
+
+## Världen
+
+Istället för en öppen värld består spelet av färdiga arenor. 
+Kameran ger känslan av rörelse medan spelaren är i centrum. 
+Det finns tydliga gränser och plattformar att använda taktiskt i striderna.
+
+
+## Progression & Shop
+
+Efter varje boss får spelaren mynt baserat på bossens svårighetsgrad och tiden det tog att besegra den (svårighet × tid). 
+Mellan nivåerna får spelaren tillgång till en shop med slumpmässigt utvalda föremål. Där kan man köpa nya vapen och rustningar som förbättrar spelarens statistik och förmågor.
+
+Ju längre du kommer, desto tuffare blir bossarna – men du blir också starkare.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Terraria x Boss rush
 Spelet är ett 2D terraria inspererat action game, med boss rush som fokus. I stället för open sandbox world där spelaren kan mina, crafta 
 och explora är spelet uppbygt på en serie striedr mot olika typer av bossar med olika svårighetes grader i en förbuyggd arena. 
@@ -17,28 +106,64 @@ Spel/Game
   - Uppdaterar spelets logik (update)
   - Renderar spelet (draw)
   - Hanterar spelets tillstånd (meny, paus, aktivt spel)
+  - väljer den aktiva skärmen som vissas.
 
-Spelmotor
+Iscreen
+  - ett interface för att hantera det olika skärmarna i spelet, som är det följande (aktivt spel(level), Game over, start menu, music menu, pause menu och shop menu)
+
+- Hantera ljud, musik och framerate kap 60
+
+Spelmotor/level
   - Starta och pausa spelet
   - Ladda nivåer och bossar baserat på spelarens progression
-  - Hantera ljud, musik och framerate kap 60
+  - hanterar kollisons systemet
   - Samordnar alla system (player, enemies, world, UI, Projectile)
-  - Ansvarar för gravitation 
+  - Ansvarar för gravitation
+  - hanterar hur bossen spawnar in i level om det tex är en delay mellan den och spelaren
 
 Värld
   - Består av fördefinierade arenor snarare än en öppen värld
   - Världen rör sig horisontellt och vertikalt medan spelaren upplevs som relativt statisk
   - Ansvarar för världens gränser.
 
+Entity
+- grundklass för entiys i spelet och sätter up grunderna för dem som tex, positonen, velocity, size, health och gravity
+- ansvara för att skriva ut alla entitys
+- hanterar överlappningssystmet som bestämmer vad som händer om flera entitys hamnar ovanpå varandra.
+- sätter också up grunderna för kollisons systemet.
+
 Spelare
   - Kan röra sig, hoppa och attackera
-  - Har hälsa, experience och nivå
+  - ansvara för positonen för spelaren
+  - Har hälsa och möjligtvis olika status effekter
   - Använder utrustning som påverkar skada och försvar
+  - har egna specifika regler för kollison
+
+Equipment
+  - hanterar vilket armor och vapen man har fått - getWeapon / getArmor
+  - hanterar också aktiva vapnet - selectedWeapon
 
 Fiender / Bossar
   - Varje boss är en unik fiendetyp med eget beteende
   - Bossar spårar spelaren och attackerar baserat på sin AI tracking
   - Svårighetsgraden ökar med varje nivå
+  - har egna kollisons regler
+
+  -FireBoss, en boss som följer efter spelaren men håller er kort avstånd från den, sparadiskt så åker den agresivt mot spelaren. 
+  - Annars så skjuter den ut 5 eld skott i en kon form som gör initialskadda på spelaren samt en kort skadda över tid.
+  -IceBoss, en boss som följer efter spelaren men håller er kort avstånd från den, sparadiskt så åker den agresivt mot spelaren. 
+  - Annars så skjuter den ut ett större is klott där ifall den träffar spelaren gör skadda och sen sätter en effekt som saktar ner spelarens rörelse.
+  -SpiderBoss, en boss som jagar spelaren och försöker komma så nära den som möjlight för att komma in i närstrid, 
+  - om spelaren kommer förlångt ifrån bossen så skjuter den ut spindelnät som fastnar på kartan för att hindra vart spelaren kan röra sig.
+
+Platformar
+  - har ett kollison system som tittar ifall spelar står på dem eller inte.
+
+Projectile
+  - varje projectile är en subklass av projectiles
+  - SlowNet - projectilen för spindel bossen, använder sig av ett kollison system samt en variabel för att se ifall den är i rörelse eller sitter fast i världen.
+  - IceBoulder - projectilen för is bossen, använder sig av ett kollison system samt skickar med en effekt tag som anger slowness
+  - FlameBullet - projectilen för eld, använder sig av ett kollison system samt skickar med en effekt tag som anger fireDamage
 
 Status & progression
   - Grundvärden för hastighet, hälsa och skada
@@ -46,9 +171,16 @@ Status & progression
   - Spelarens utrustning och stats förbättras efter varje boss
 
 UI
-  - Visar spelarens hälsa och nivå
+  - Visar spelarens hälsa
   - Visar bossens hälsa
   - Visar aktuell progression och menyval
+  - Visar hur mycket mana och ammunition man har
 
-Projectile
-  - 
+Effekter
+  - updateEffect - håller koll på hur länge en effekt är aktiv och stänger av samt sätter på dem.
+  - applyEffect - ett sätt för olika entitys att sätta effekter på varandra.
+  - effektType - fireDamage (skada över tid), slowness (saktar ner spelaren under en viss tid eller i ett vist område).
+
+Shop/Reward
+  - Efter en boss har blivit besegrad så får spelaren en belöning i mynt utifrån bossens svårighet samt tiden det tog så x*y = z
+  - I mellan nivåerna så har man tillgång till en shop som har en slumpmäsig selektion av varor där man kan använda sinna mynt för att uppgradera olika aspekter av spelaren igenom vapen och utrustning.
