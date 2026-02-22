@@ -77,10 +77,17 @@ class Level implements IScreen {
   }
 
   draw(): void {
+    push();
     // background
     translate(-this.cameraX, 0);
     image(images.testStage, 0, 0);
     //background(25, 35, 60);
+
+    this.entities.forEach(entity => {
+      entity.draw();
+    });
+
+    pop();
 
     // demo text
     fill(255);
@@ -91,9 +98,7 @@ class Level implements IScreen {
     textSize(18);
     text("Press ESC to pause", width / 2, height / 4 + 60);
 
-    this.entities.forEach(entity => {
-      entity.draw();
-    });
+    
   }
 
   aplygravity(): void {
