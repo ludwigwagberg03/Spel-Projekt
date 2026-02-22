@@ -6,12 +6,12 @@ abstract class entity {
     private health: number;
     private isAlive: boolean = true;
 
-    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         this.position = p;
         this.velocity = v;
         this.size = s;
         // console.log(p, v, s)
-        this.health = 100;
+        this.health = h;
     }
 
     entityDamage(damage: number){
@@ -24,6 +24,10 @@ abstract class entity {
 
     protected die() {
         this.isAlive = false
+    }
+
+    get lifeStatus(): boolean {
+        return this.health > 0;
     }
 
     public update() {

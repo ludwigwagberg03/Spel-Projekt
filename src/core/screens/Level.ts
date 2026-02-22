@@ -2,6 +2,7 @@ class Level implements IScreen {
   private game: Game;
   private entities: entity[];
   private gravity = 0.8;
+  private player: Player;
 
   constructor(game: Game) {
     this.game = game;
@@ -13,18 +14,21 @@ class Level implements IScreen {
       createVector(0, height / 2), createVector(0, 0), createVector(width, 10)
     ));
 
-    const player = new Player(
-      createVector(width / 4, height / 2), createVector(0, 0), createVector(50, 100)
+    this.player = new Player(
+      createVector(width / 4, height / 2),
+      createVector(0, 0),
+      createVector(50, 100),
+      100
     );
 
-    this.entities.push(player);
+    this.entities.push(this.player);
 
     this.entities.push(new enemy(
       createVector(width / 3, height / 2),
       createVector(0, 0),
       createVector(50, 100),
-      player
-    ));
+      this.player
+    )); 
   }
 
   update(): void {
@@ -34,6 +38,11 @@ class Level implements IScreen {
       entity.update();
     })
     this.checkColission(this.entities);
+
+    if(this.player.lifeStatus === false){
+      this.game.changeScreen(new StartScreen(this.game));
+    }
+
   }
 
   checkColission(entities: entity[]) {
