@@ -3,6 +3,7 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
+  private cameraX: number = 0;
 
   constructor(game: Game) {
     this.game = game;
@@ -31,6 +32,7 @@ class Level implements IScreen {
   }
 
   update(): void {
+    this.cameraX = this.player.position.x - width / 2;
     // update gameplay systems here later
     this.aplygravity();
     this.entities.forEach(entity => {
@@ -74,6 +76,7 @@ class Level implements IScreen {
 
   draw(): void {
     // background
+    translate(-this.cameraX, 0);
     image(images.testStage, 0, 0);
     //background(25, 35, 60);
 
