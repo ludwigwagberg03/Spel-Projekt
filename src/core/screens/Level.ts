@@ -71,7 +71,7 @@ class Level implements IScreen {
 
   draw(): void {
     // background
-    image(images.testStage, 0, 0, width, height);
+    image(images.testStage, 0, 0);
     //background(25, 35, 60);
 
     // demo text
