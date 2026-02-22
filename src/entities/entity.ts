@@ -3,14 +3,17 @@ abstract class entity {
     public velocity: p5.Vector;
     public size: p5.Vector;
     public isgravity: boolean = false;
+    private health: number;
+    private isAlive: boolean = true;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
         this.position = p;
         this.velocity = v;
         this.size = s;
         // console.log(p, v, s)
+        this.health = 100;
     }
-    
+
     public update() {
         this.position.add(this.velocity);
         // this.position.add(this.velocity.copy().mult(deltaTime));
