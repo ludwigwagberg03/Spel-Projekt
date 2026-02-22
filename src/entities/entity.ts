@@ -14,6 +14,18 @@ abstract class entity {
         this.health = 100;
     }
 
+    entityDamage(damage: number){
+        this.health -= damage;
+
+        if (this.health <= 0){
+            this.die()
+        }
+    }
+
+    protected die() {
+        this.isAlive = false
+    }
+
     public update() {
         this.position.add(this.velocity);
         // this.position.add(this.velocity.copy().mult(deltaTime));
