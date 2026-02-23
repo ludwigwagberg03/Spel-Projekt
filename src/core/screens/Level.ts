@@ -13,7 +13,9 @@ class Level implements IScreen {
 
     // console.log("fw")
     this.entities.push(new Platform(
-      createVector(this.worldWidth, height / 2), createVector(0, 0), createVector(width, 10)
+      createVector(0, height / 2),
+      createVector(0, 0),
+      createVector(this.worldWidth, 10)
     ));
 
     this.player = new Player(
@@ -55,15 +57,6 @@ class Level implements IScreen {
       }
     }
 
-    // if (player && plat) {
-
-    //   const playerBottom = player.position.y + player.size.y;
-    //   const platformTop = plat.position.y;
-    //   if (playerBottom >= platformTop && player.position.y < platformTop) {
-
-    //     player.onCollision(plat);
-    //   }
-    // }
   }
 
   draw(): void {
@@ -71,7 +64,8 @@ class Level implements IScreen {
     // background
     translate(-this.cameraX, 0);
     image(images.testStage, 0, 0);
-    //background(25, 35, 60);
+    // background(25, 35, 60);
+
 
     this.entities.forEach(entity => {
       entity.draw();
@@ -80,7 +74,7 @@ class Level implements IScreen {
     pop();
 
     // demo text
-    fill(255);
+    fill(255, 55, 99);
     textAlign(CENTER, CENTER);
     textSize(48);
     text("PLAYING", width / 2, height / 4);

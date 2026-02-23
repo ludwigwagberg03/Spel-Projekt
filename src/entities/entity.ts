@@ -26,7 +26,7 @@ abstract class entity {
     
     public draw() {
         push();
-        fill(255);
+        fill(63);
         rect(this.position.x, this.position.y, this.size.x, this.size.y);
         pop();
     }
