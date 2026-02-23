@@ -11,9 +11,9 @@ class Level implements IScreen {
 
     // console.log("fw")
     this.entities.push(new Platform(
-      createVector(height / 2), createVector(0, 0), createVector(width, 10)
+      createVector(0, height / 2), createVector(0, 0), createVector(width, 10)
     ));
-
+    
     this.player = new Player(
       createVector(width / 4, height / 2),
       createVector(0, 0),
@@ -49,6 +49,7 @@ class Level implements IScreen {
   checkColission(entities: entity[]) {
     let player!: Player;
     let plat!: Platform;
+    let ene!: enemy;
 
     for (const entity of entities) {
       if (entity instanceof Player) {
@@ -56,6 +57,9 @@ class Level implements IScreen {
       }
       if (entity instanceof Platform) {
         plat = entity
+      }
+      if (entity instanceof enemy) {
+        ene = entity
       }
     }
 
@@ -75,6 +79,16 @@ class Level implements IScreen {
       if (playerBottom >= platformTop && player.position.y < platformTop) {
 
         player.onCollision(plat);
+      }
+    }
+    if (player && ene) {
+
+      const playerPositionX = player.position.x
+      const playerPositionY = player.position.y
+      const enemyPositionX = ene.position.x
+      const enemyPositionY = ene.position.y
+      if (playerPositionX < enemyPositionX + ene.size.x && playerPositionX + player.size.x > enemyPositionX  && playerPositionY < enemyPositionY + ene.size.y && playerPositionY + player.size.y > enemyPositionY) {
+        player.entityDamage(3.33);    
       }
     }
   }

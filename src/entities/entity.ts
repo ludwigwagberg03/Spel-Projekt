@@ -5,6 +5,8 @@ abstract class entity {
     public isgravity: boolean = false;
     private health: number;
     private isAlive: boolean = true;
+    private notPlayedSound: boolean = true;
+    private timer: number = 1000;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number = 0) {
         this.position = p;
@@ -15,10 +17,21 @@ abstract class entity {
     }
 
     entityDamage(damage: number){
-        this.health -= damage;
+        
 
-        if (this.health <= 0){
-            this.die()
+        if (this.timer === 1000) {
+            this.timer -= deltaTime;
+            console.log(this.timer);
+            this.health -= damage;
+            //console.log(this.health);
+            if (this.health <= 0){
+                this.die();
+            }
+
+            
+            console.log("play sound");
+            sounds.tick.play();
+            
         }
     }
 
@@ -30,7 +43,19 @@ abstract class entity {
         return this.health > 0;
     }
 
+    healthPool(): number {
+        return this.health;
+    }
+
     public update() {
+        if (this.timer < 1000) {
+            this.timer -= deltaTime
+            console.log(this.timer);
+        }
+        if (this.timer < 0) {
+            this.timer = 1000
+            console.log(this.timer);
+        }
         this.position.add(this.velocity);
         // this.position.add(this.velocity.copy().mult(deltaTime));
     }

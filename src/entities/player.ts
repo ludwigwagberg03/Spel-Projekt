@@ -12,11 +12,11 @@ class Player extends entity {
     }
     onCollision(other: entity): void {
 
-        console.log(this.onPlatform)
+        //console.log(this.onPlatform)
         const platformTop = other.position.y;
-        if (this.onPlatform === true) {
+        if (this.onPlatform) {
 
-            // console.log("RIO")
+            //console.log("RIO")
             const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
 
             const freeFall = this.velocity.y > 0;
@@ -36,9 +36,9 @@ class Player extends entity {
         this.move();
         this.updateposition();
         // this.checkIfJumping();
+        super.update();
     }
     updateposition() {
-        this.position.add(this.velocity);
         // console.log("onGround", this.onGround, "onPlatform", this.onPlatform)
         if (this.position.y > height - this.size.y) {
             this.velocity.y = 0;
@@ -66,13 +66,13 @@ class Player extends entity {
             this.velocity.y = 0.8;
             this.onGround = false;
             this.onPlatform = false;
-            console.log("pressed s", this.onPlatform)
+            //console.log("pressed s", this.onPlatform)
         }
         if (keyIsDown(32)) { // space
             this.jump();
         }
         if (keyIsDown(75)) { // k
-            this.entityDamage(50);
+            this.entityDamage(3.33);
         }
     }
     private jump() { // space

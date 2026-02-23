@@ -40,7 +40,8 @@ class enemy extends entity {
     }
 
     public onCollision(other: entity): void {
-        //
+        //push enemy slightlty 
+
     }
 
     public update() {
