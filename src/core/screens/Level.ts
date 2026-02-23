@@ -37,22 +37,22 @@ class Level implements IScreen {
   }
 
   update(): void {
-    this.cameraX = this.player.position.x - width / 2;
+    this.cameraX = this.player.getPosition().x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
     // update gameplay systems here later
     this.entities.forEach(entity => {
       entity.update(this.gravity, this.worldWidth);
     })
-    this.checkCollision(this.entities);
+    this.checkCollision();
   }
 
-  checkCollision(entities: entity[]) {
-
-    for (let i = 0; i < entities.length; i++) {
-      for (let j = i + 1; j < entities.length; j++) {
-        if (entities[i].overlaps(entities[j])) {
-          entities[i].onCollision(entities[j]);
-          entities[j].onCollision(entities[i]);
+  checkCollision() {
+    // const { entities } = this;
+    for (let i = 0; i < this.entities.length; i++) {
+      for (let j = i + 1; j < this.entities.length; j++) {
+        if (this.entities[i].overlaps(this.entities[j])) {
+          this.entities[i].onCollision(this.entities[j]);
+          this.entities[j].onCollision(this.entities[i]);
         }
       }
     }

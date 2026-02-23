@@ -13,7 +13,7 @@ class enemy extends entity {
     }
 
     private playerPosition() {
-        let direction = p5.Vector.sub(this.player.position, this.position)
+        let direction = p5.Vector.sub(this.player.getPosition(), this.position)
         direction.normalize();
         direction.mult(this.speed);
         this.velocity = direction;

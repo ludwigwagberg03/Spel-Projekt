@@ -1,7 +1,7 @@
 abstract class entity {
-    public position: p5.Vector;
-    public velocity: p5.Vector;
-    public size: p5.Vector;
+    protected position: p5.Vector;
+    protected velocity: p5.Vector;
+    protected size: p5.Vector;
     private isGravity: boolean;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, g = false) {
@@ -10,6 +10,10 @@ abstract class entity {
         this.size = s;
         this.isGravity = g;
         // console.log(p, v, s)
+    }
+
+    public getPosition() {
+        return this.position.copy();
     }
     
     public update(gravity: number, worldWidth: number) {

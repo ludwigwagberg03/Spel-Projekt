@@ -14,7 +14,7 @@ class Player extends entity {
 
             if (this.isFalling) return;
 
-            const platformTop = other.position.y;
+            const platformTop = other.getPosition().y;
             const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
 
             const freeFall = this.velocity.y > 0;
@@ -56,7 +56,7 @@ class Player extends entity {
             this.isFalling = false;
         }
     }
-    checkIfPlayerIsOnGround() {
+    private checkIfPlayerIsOnGround() {
         if (this.position.y > height - this.size.y) {
             this.velocity.y = 0;
             this.position.y = height - this.size.y;
