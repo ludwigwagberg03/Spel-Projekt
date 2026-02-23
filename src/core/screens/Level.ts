@@ -29,12 +29,14 @@ class Level implements IScreen {
 
     this.entities.push(new enemy(
       createVector(this.worldWidth / 2 - 30
-        , height / 2),
+        , height / 2 - 100),
       createVector(0, 0),
       createVector(50, 100),
       100,
       this.player
     ));
+
+    this.player.setEnimies(this.entities);
   }
 
   update(): void {

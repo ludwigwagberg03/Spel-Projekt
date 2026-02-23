@@ -22,7 +22,7 @@ class Player extends entity {
     }
 
     public setEnimies(entities: entity[]){
-        this.enimes = entities;
+        this.enimies = entities;
     }
 
     public onCollision(other: entity): void {
@@ -121,6 +121,7 @@ class Player extends entity {
                 const hit = attackX < enemyX && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
                 if (hit){
+                    console.log("hit");
                     e.entityDamage(15);
                 }
             }
@@ -147,8 +148,8 @@ class Player extends entity {
         if (keyIsDown(32)) { // space
             this.jump();
         }
-        if (keyIsDown(75)) { // k
-            this.entityDamage(3.33);
+        if (keyIsDown(69)) { // E
+            this.swordAttack(this.enimies);
         }
     }
     private jump() {

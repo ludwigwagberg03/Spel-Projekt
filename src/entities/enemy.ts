@@ -45,7 +45,7 @@ class enemy extends entity {
     }
 
     public update(gravity: number, wordWidth: number) {
-        this.playerPosition();
+        //this.playerPosition();
         super.update(gravity, wordWidth);
     };
 
