@@ -13,11 +13,12 @@ class Level implements IScreen {
 
     // console.log("fw")
     this.entities.push(new Platform(
-      createVector(0, height / 2), createVector(0, 0), createVector(width, 10)
+      createVector(this.WORLD_WIDTH, height / 2), createVector(0, 0), createVector(width, 10)
     ));
 
     this.player = new Player(
-      createVector(width / 4, height / 2),
+      createVector(this.WORLD_WIDTH/2, height / 2),
+      
       createVector(0, 0),
       createVector(50, 100)
     );
@@ -25,7 +26,8 @@ class Level implements IScreen {
     this.entities.push(this.player);
 
     this.entities.push(new enemy(
-      createVector(width / 3, height / 2),
+      createVector(this.WORLD_WIDTH/2-30
+        , height / 2),
       createVector(0, 0),
       createVector(50, 100),
       this.player
