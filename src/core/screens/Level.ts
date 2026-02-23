@@ -45,6 +45,10 @@ class Level implements IScreen {
       entity.update(this.gravity, this.worldWidth);
     })
     this.checkCollision();
+
+    if(this.player.lifeStatus === false){
+      this.game.changeScreen(new StartScreen(this.game));
+    }
   }
 
   checkCollision() {

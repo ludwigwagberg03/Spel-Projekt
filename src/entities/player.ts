@@ -13,6 +13,9 @@ class Player extends entity {
         if (other instanceof Platform) {
             this.handlePlatformLanding(other);
         }
+        if (other instanceof enemy) {
+            this.entityDamage(10);
+        }
     }
     private handlePlatformLanding(other: entity) {
         if (this.isFalling) return;
