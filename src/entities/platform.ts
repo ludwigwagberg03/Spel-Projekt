@@ -5,6 +5,5 @@ class Platform extends entity {
         super(p, v, s);
         console.log("platform");
     }
-
     onCollision(other: entity): void {}
 }

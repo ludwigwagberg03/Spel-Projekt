@@ -5,8 +5,10 @@ class Player extends entity {
     private onPlatform: boolean = false;
     private isFalling: boolean = false;
 
-    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
-        super(p, v, s, true);
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
+        super(p, v, s, h);
+        this.isgravity = true;
+        console.log("player");
 
     }
     public onCollision(other: entity): void {
@@ -82,6 +84,9 @@ class Player extends entity {
         }
         if (keyIsDown(32)) { // space
             this.jump();
+        }
+        if (keyIsDown(75)) { // k
+            this.entityDamage(3.33);
         }
     }
     private jump() {

@@ -22,7 +22,8 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2, height / 2),
 
       createVector(0, 0),
-      createVector(50, 100)
+      createVector(50, 100),
+      100
     );
 
     this.entities.push(this.player);
@@ -32,8 +33,9 @@ class Level implements IScreen {
         , height / 2),
       createVector(0, 0),
       createVector(50, 100),
+      100,
       this.player
-    ));
+    )); 
   }
 
   update(): void {
@@ -54,6 +56,9 @@ class Level implements IScreen {
           this.entities[i].onCollision(this.entities[j]);
           this.entities[j].onCollision(this.entities[i]);
         }
+      }
+      if (entity instanceof enemy) {
+        ene = entity
       }
     }
 
