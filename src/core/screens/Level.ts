@@ -11,7 +11,6 @@ class Level implements IScreen {
 
     this.entities = [];
 
-    // console.log("fw")
     this.entities.push(new Platform(
       createVector(0, height / 2),
       createVector(0, 0),
@@ -35,7 +34,7 @@ class Level implements IScreen {
       createVector(50, 100),
       100,
       this.player
-    )); 
+    ));
   }
 
   update(): void {
@@ -57,11 +56,7 @@ class Level implements IScreen {
           this.entities[j].onCollision(this.entities[i]);
         }
       }
-      if (entity instanceof enemy) {
-        ene = entity
-      }
     }
-
   }
 
   draw(): void {
@@ -71,13 +66,11 @@ class Level implements IScreen {
     image(images.testStage, 0, 0);
     // background(25, 35, 60);
 
-
     this.entities.forEach(entity => {
       entity.draw();
     });
 
     pop();
-
     // demo text
     fill(255, 55, 99);
     textAlign(CENTER, CENTER);
@@ -86,11 +79,7 @@ class Level implements IScreen {
 
     textSize(18);
     text("Press ESC to pause", width / 2, height / 4 + 60);
-
-
   }
-
-
 
   keyPressed(code: number): void {
     //press ESC to go back to start menu

@@ -6,11 +6,9 @@ class Player extends entity {
     private isFalling: boolean = false;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
-        super(p, v, s, h);
-        this.isgravity = true;
-        console.log("player");
-
+        super(p, v, s, h, true);
     }
+    
     public onCollision(other: entity): void {
         if (other instanceof Platform) {
 

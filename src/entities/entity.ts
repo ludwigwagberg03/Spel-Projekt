@@ -1,8 +1,9 @@
 abstract class entity {
-    public position: p5.Vector;
-    public velocity: p5.Vector;
-    public size: p5.Vector;
-    public isgravity: boolean = false;
+    protected position: p5.Vector;
+    protected velocity: p5.Vector;
+    protected size: p5.Vector;
+    private isGravity: boolean;
+
     private health: number;
     private isAlive: boolean = true;
     private notPlayedSound: boolean = true;
@@ -12,14 +13,11 @@ abstract class entity {
         this.position = p;
         this.velocity = v;
         this.size = s;
-        this.isGravity = g;
-        // console.log(p, v, s)
         this.health = h;
+        this.isGravity = g;
     }
 
     entityDamage(damage: number){
-        
-
         if (this.timer === 1000) {
             this.timer -= deltaTime;
             console.log(this.timer);
@@ -28,11 +26,8 @@ abstract class entity {
             if (this.health <= 0){
                 this.die();
             }
-
-            
             console.log("play sound");
             sounds.tick.play();
-            
         }
     }
 
@@ -47,7 +42,6 @@ abstract class entity {
     healthPool(): number {
         return this.health;
     }
-
     
     public getPosition() {
         return this.position.copy();
