@@ -101,6 +101,27 @@ class Player extends entity {
         
     }
 
+    private attack(enemies: entity[]){
+        for (let e of enemies) {
+            if (e instanceof enemy){
+                const enemyX = e.getPosition().x;
+                const enemyY = e.getPosition().y;
+                const enemyWidth = e.getSize().x;
+                const enemyHight = e.getSize().y;
+
+                const attackX = this.attackHitBox.position.x;
+                const attackY = this.attackHitBox.position.y;
+                const attackWidth = this.attackHitBox.width;
+                const attackHight = this.attackHitBox.hight;
+                const hit = attackX < enemyX && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
+
+                if (hit){
+                    e.entityDamage(15);
+                }
+            }
+        }
+    }
+
     private move() {
         this.velocity.x = 0;
 

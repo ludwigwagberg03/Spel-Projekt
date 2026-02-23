@@ -46,6 +46,10 @@ abstract class entity {
     public getPosition() {
         return this.position.copy();
     }
+
+    public getSize() {
+        return this.size.copy();
+    }
     
     public update(gravity: number, worldWidth: number) {
       
