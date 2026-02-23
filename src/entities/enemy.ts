@@ -5,7 +5,7 @@ class enemy extends entity {
     private player: Player;
     private speed: number = 4;
 
-    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector,h: number, player: Player) {
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
         this.isgravity = false;
         console.log("enemy");
@@ -14,7 +14,7 @@ class enemy extends entity {
     }
 
     private playerPosition() {
-        let direction = p5.Vector.sub(this.player.position, this.position)
+        let direction = p5.Vector.sub(this.player.getPosition(), this.position)
         direction.normalize();
         direction.mult(this.speed);
         this.velocity = direction;
@@ -44,9 +44,9 @@ class enemy extends entity {
 
     }
 
-    public update() {
+    public update(gravity: number, wordWidth: number) {
         this.playerPosition();
-        super.update();
+        super.update(gravity, wordWidth);
     };
 
     public draw() {

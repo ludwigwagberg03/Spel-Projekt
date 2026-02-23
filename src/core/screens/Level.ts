@@ -3,6 +3,8 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
+  private cameraX: number = 0;
+  private worldWidth = 5760; // 1920 * 3
 
   constructor(game: Game) {
     this.game = game;
@@ -11,11 +13,14 @@ class Level implements IScreen {
 
     // console.log("fw")
     this.entities.push(new Platform(
-      createVector(0, height / 2), createVector(0, 0), createVector(width, 10)
+      createVector(0, height / 2),
+      createVector(0, 0),
+      createVector(this.worldWidth, 10)
     ));
-    
+
     this.player = new Player(
-      createVector(width / 4, height / 2),
+      createVector(this.worldWidth / 2, height / 2),
+
       createVector(0, 0),
       createVector(50, 100),
       100
@@ -24,7 +29,8 @@ class Level implements IScreen {
     this.entities.push(this.player);
 
     this.entities.push(new enemy(
-      createVector(width / 3, height / 2),
+      createVector(this.worldWidth / 2 - 30
+        , height / 2),
       createVector(0, 0),
       createVector(50, 100),
       100,
@@ -33,72 +39,47 @@ class Level implements IScreen {
   }
 
   update(): void {
+    this.cameraX = this.player.getPosition().x - width / 2;
+    this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
     // update gameplay systems here later
-    this.aplygravity();
     this.entities.forEach(entity => {
-      entity.update();
+      entity.update(this.gravity, this.worldWidth);
     })
-    this.checkColission(this.entities);
-
-    if(this.player.lifeStatus === false){
-      this.game.changeScreen(new StartScreen(this.game));
-    }
-
+    this.checkCollision();
   }
 
-  checkColission(entities: entity[]) {
-    let player!: Player;
-    let plat!: Platform;
-    let ene!: enemy;
-
-    for (const entity of entities) {
-      if (entity instanceof Player) {
-        player = entity
-      }
-      if (entity instanceof Platform) {
-        plat = entity
+  checkCollision() {
+    // const { entities } = this;
+    for (let i = 0; i < this.entities.length; i++) {
+      for (let j = i + 1; j < this.entities.length; j++) {
+        if (this.entities[i].overlaps(this.entities[j])) {
+          this.entities[i].onCollision(this.entities[j]);
+          this.entities[j].onCollision(this.entities[i]);
+        }
       }
       if (entity instanceof enemy) {
         ene = entity
       }
     }
 
-    // for (const e1 of entities) {
-    //     for (const e2 of entities) {
-    //         if (e1 === e2) continue;
-    //         if (e1.overlaps(e2)) {
-    //             e1.onCollision(e2);
-    //             e2.onCollision(e1);
-    //         }
-    //     }
-    // }
-    if (player && plat) {
-
-      const playerBottom = player.position.y + player.size.y;
-      const platformTop = plat.position.y;
-      if (playerBottom >= platformTop && player.position.y < platformTop) {
-
-        player.onCollision(plat);
-      }
-    }
-    if (player && ene) {
-
-      const playerPositionX = player.position.x
-      const playerPositionY = player.position.y
-      const enemyPositionX = ene.position.x
-      const enemyPositionY = ene.position.y
-      if (playerPositionX < enemyPositionX + ene.size.x && playerPositionX + player.size.x > enemyPositionX  && playerPositionY < enemyPositionY + ene.size.y && playerPositionY + player.size.y > enemyPositionY) {
-        player.entityDamage(3.33);    
-      }
-    }
   }
 
   draw(): void {
+    push();
     // background
-    background(25, 35, 60);
+    translate(-this.cameraX, 0);
+    image(images.testStage, 0, 0);
+    // background(25, 35, 60);
+
+
+    this.entities.forEach(entity => {
+      entity.draw();
+    });
+
+    pop();
 
     // demo text
-    fill(255);
+    fill(255, 55, 99);
     textAlign(CENTER, CENTER);
     textSize(48);
     text("PLAYING", width / 2, height / 4);
@@ -106,18 +87,10 @@ class Level implements IScreen {
     textSize(18);
     text("Press ESC to pause", width / 2, height / 4 + 60);
 
-    this.entities.forEach(entity => {
-      entity.draw();
-    });
+
   }
 
-  aplygravity(): void {
-    this.entities.forEach(entity => {
-      if (entity.isgravity) {
-        entity.velocity.y += this.gravity;
-      }
-    })
-  }
+
 
   keyPressed(code: number): void {
     //press ESC to go back to start menu

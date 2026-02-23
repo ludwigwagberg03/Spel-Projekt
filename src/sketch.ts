@@ -13,6 +13,7 @@ let images: {
   treasury: p5.Image;
   pirate: p5.Image;
   menu: p5.Image;
+  testStage: p5.Image;
 };
 
 /**
@@ -31,7 +32,7 @@ function preload() {
   };
   images = {
     menu: loadImage("/assets/images/menu_bg.png"),
-
+    testStage: loadImage("/assets/images/Frame 1 (1).png"),
     treasury: loadImage("/assets/images/treasury.png"),
     pirate: loadImage("/assets/images/pirate.png"),
   };
