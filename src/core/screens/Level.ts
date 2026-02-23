@@ -17,8 +17,8 @@ class Level implements IScreen {
     ));
 
     this.player = new Player(
-      createVector(this.worldWidth/2, height / 2),
-      
+      createVector(this.worldWidth / 2, height / 2),
+
       createVector(0, 0),
       createVector(50, 100)
     );
@@ -26,7 +26,7 @@ class Level implements IScreen {
     this.entities.push(this.player);
 
     this.entities.push(new enemy(
-      createVector(this.worldWidth/2-30
+      createVector(this.worldWidth / 2 - 30
         , height / 2),
       createVector(0, 0),
       createVector(50, 100),
@@ -38,44 +38,32 @@ class Level implements IScreen {
     this.cameraX = this.player.position.x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
     // update gameplay systems here later
-    this.aplygravity();
     this.entities.forEach(entity => {
-      entity.update();
+      entity.update(this.gravity, this.worldWidth);
     })
-    this.checkColission(this.entities);
+    this.checkCollision(this.entities);
   }
 
-  checkColission(entities: entity[]) {
-    let player!: Player;
-    let plat!: Platform;
+  checkCollision(entities: entity[]) {
 
-    for (const entity of entities) {
-      if (entity instanceof Player) {
-        player = entity
-      }
-      if (entity instanceof Platform) {
-        plat = entity
+    for (let i = 0; i < entities.length; i++) {
+      for (let j = i + 1; j < entities.length; j++) {
+        if (entities[i].overlaps(entities[j])) {
+          entities[i].onCollision(entities[j]);
+          entities[j].onCollision(entities[i]);
+        }
       }
     }
 
-    // for (const e1 of entities) {
-    //     for (const e2 of entities) {
-    //         if (e1 === e2) continue;
-    //         if (e1.overlaps(e2)) {
-    //             e1.onCollision(e2);
-    //             e2.onCollision(e1);
-    //         }
-    //     }
+    // if (player && plat) {
+
+    //   const playerBottom = player.position.y + player.size.y;
+    //   const platformTop = plat.position.y;
+    //   if (playerBottom >= platformTop && player.position.y < platformTop) {
+
+    //     player.onCollision(plat);
+    //   }
     // }
-    if (player && plat) {
-
-      const playerBottom = player.position.y + player.size.y;
-      const platformTop = plat.position.y;
-      if (playerBottom >= platformTop && player.position.y < platformTop) {
-
-        player.onCollision(plat);
-      }
-    }
   }
 
   draw(): void {
@@ -100,16 +88,10 @@ class Level implements IScreen {
     textSize(18);
     text("Press ESC to pause", width / 2, height / 4 + 60);
 
-    
+
   }
 
-  aplygravity(): void {
-    this.entities.forEach(entity => {
-      if (entity.isgravity) {
-        entity.velocity.y += this.gravity;
-      }
-    })
-  }
+
 
   keyPressed(code: number): void {
     //press ESC to go back to start menu

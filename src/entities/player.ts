@@ -1,45 +1,47 @@
 /// <reference path="entity.ts" />
 
 class Player extends entity {
-    onGround: boolean = false;
-    onPlatform: boolean = false;
-    private worldWidth = 5760;
+    private onGround: boolean = false;
+    private onPlatform: boolean = false;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
-        super(p, v, s);
-        this.isgravity = true;
+        super(p, v, s, true);
         console.log("player");
 
     }
-    onCollision(other: entity): void {
+    public onCollision(other: entity): void {
+        if (other instanceof Platform) {
 
-        console.log(this.onPlatform)
-        const platformTop = other.position.y;
-        if (this.onPlatform === true) {
+            console.log(this.onPlatform)
+            const platformTop = other.position.y;
+            if (this.onPlatform === true) {
 
-            // console.log("RIO")
-            const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
+                // console.log("RIO")
+                const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
 
-            const freeFall = this.velocity.y > 0;
+                const freeFall = this.velocity.y > 0;
 
-            if (freeFall && isAbovePlatform) {
-                this.position.y = platformTop - this.size.y;
-                this.velocity.y = 0;
-                this.onGround = true;
-                this.onPlatform = true;
+                if (freeFall && isAbovePlatform) {
+                    this.position.y = platformTop - this.size.y;
+                    this.velocity.y = 0;
+                    this.onGround = true;
+                    this.onPlatform = true;
+                }
             }
         }
     }
 
     private takedamage(n: number): void { }
 
-    update() {
+    public update(gravity: number, worldWidth: number) {
         this.move();
-        this.updateposition();
+        super.update(gravity, worldWidth)
+        this.updatePosition(worldWidth);
         // this.checkIfJumping();
     }
-    updateposition() {
-        this.position.add(this.velocity);
+
+    private updatePosition(worldWidth: number) {
+        // this.position.add(this.velocity);
         // console.log("onGround", this.onGround, "onPlatform", this.onPlatform)
         if (this.position.y > height - this.size.y) {
             this.velocity.y = 0;
@@ -47,9 +49,9 @@ class Player extends entity {
             this.onGround = true;
             this.onPlatform = false;
         }
-        if (this.position.x >= this.worldWidth - this.size.x) {
+        if (this.position.x >= worldWidth - this.size.x) {
             this.velocity.x = 0;
-            this.position.x = this.worldWidth - this.size.x;
+            this.position.x = worldWidth - this.size.x;
             this.onGround = true;
         }
         if (this.position.x < 0) {
