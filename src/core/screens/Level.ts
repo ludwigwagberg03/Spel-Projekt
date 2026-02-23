@@ -11,7 +11,7 @@ class Level implements IScreen {
 
     // console.log("fw")
     this.entities.push(new Platform(
-      createVector(0, height / 2), createVector(0, 0), createVector(width, 10)
+      createVector(height / 2), createVector(0, 0), createVector(width, 10)
     ));
 
     this.player = new Player(
@@ -27,6 +27,7 @@ class Level implements IScreen {
       createVector(width / 3, height / 2),
       createVector(0, 0),
       createVector(50, 100),
+      100,
       this.player
     )); 
   }

@@ -71,7 +71,7 @@ class Player extends entity {
         if (keyIsDown(32)) { // space
             this.jump();
         }
-        if (keyIsDown(32)) { // k
+        if (keyIsDown(75)) { // k
             this.entityDamage(50);
         }
     }

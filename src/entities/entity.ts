@@ -6,7 +6,7 @@ abstract class entity {
     private health: number;
     private isAlive: boolean = true;
 
-    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number = 0) {
         this.position = p;
         this.velocity = v;
         this.size = s;
