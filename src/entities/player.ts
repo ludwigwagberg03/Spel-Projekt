@@ -4,9 +4,19 @@ class Player extends entity {
     private onGround: boolean = false;
     private onPlatform: boolean = false;
     private isFalling: boolean = false;
+    private attackHitBox: {
+        position: p5.Vector;
+        width: number;
+        hight: number;
+    };
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         super(p, v, s, h, true);
+        this.attackHitBox = {
+            position: p,
+            width: 100,
+            hight: 50,
+        }
     }
 
     public onCollision(other: entity): void {
@@ -41,6 +51,12 @@ class Player extends entity {
         this.move();
         super.update(gravity, worldWidth)
         this.updatePosition(worldWidth);
+    }
+
+    draw() {
+        super.draw();
+
+        rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight)
     }
 
     private updatePosition(worldWidth: number) {
