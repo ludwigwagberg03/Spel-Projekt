@@ -9,11 +9,12 @@ class Player extends entity {
         width: number;
         hight: number;
     };
+    private isPlayerFacingRight: boolean = true;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         super(p, v, s, h, true);
         this.attackHitBox = {
-            position: p,
+            position: p.copy(),
             width: 100,
             hight: 50,
         }
@@ -49,8 +50,9 @@ class Player extends entity {
 
     public update(gravity: number, worldWidth: number) {
         this.move();
-        super.update(gravity, worldWidth)
+        super.update(gravity, worldWidth);
         this.updatePosition(worldWidth);
+        this.updateAttackHitBox();
     }
 
     draw() {
@@ -77,6 +79,7 @@ class Player extends entity {
             this.isFalling = false;
         }
     }
+
     private checkIfPlayerIsOnGround() {
         if (this.position.y > height - this.size.y) {
             this.velocity.y = 0;
@@ -86,14 +89,28 @@ class Player extends entity {
             this.isFalling = false;
         }
     }
+
+    private updateAttackHitBox(){
+        if(this.isPlayerFacingRight === true){
+            this.attackHitBox.position.x = this.position.x;
+            this.attackHitBox.position.y = this.position.y;
+        } else {
+            this.attackHitBox.position.x = this.position.x - this.size.x;
+            this.attackHitBox.position.y = this.position.y;
+        }
+        
+    }
+
     private move() {
         this.velocity.x = 0;
 
         if (keyIsDown(65)) { // a
             this.velocity.x = -5;
+            this.isPlayerFacingRight = false;
         }
         if (keyIsDown(68)) { // d
             this.velocity.x = 5;
+            this.isPlayerFacingRight = true;
         }
         if (keyIsDown(83) && this.onPlatform) { // s
             this.velocity.y = 0.8;
