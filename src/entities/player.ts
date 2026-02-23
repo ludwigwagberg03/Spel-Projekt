@@ -8,25 +8,27 @@ class Player extends entity {
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         super(p, v, s, h, true);
     }
-    
+
     public onCollision(other: entity): void {
         if (other instanceof Platform) {
+            this.handlePlatformLanding(other);
+        }
+    }
+    private handlePlatformLanding(other: entity) {
+        if (this.isFalling) return;
 
-            if (this.isFalling) return;
+        const platformTop = other.getPosition().y;
+        const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
 
-            const platformTop = other.getPosition().y;
-            const isAbovePlatform = this.position.y + this.size.y - this.velocity.y <= platformTop;
+        const freeFall = this.velocity.y > 0;
 
-            const freeFall = this.velocity.y > 0;
+        if (freeFall && isAbovePlatform) {
+            this.position.y = platformTop - this.size.y;
+            this.velocity.y = 0;
 
-            if (freeFall && isAbovePlatform) {
-                this.position.y = platformTop - this.size.y;
-                this.velocity.y = 0;
-
-                this.onGround = true;
-                this.onPlatform = true;
-                this.isFalling = false;
-            }
+            this.onGround = true;
+            this.onPlatform = true;
+            this.isFalling = false;
         }
     }
 
@@ -42,7 +44,7 @@ class Player extends entity {
 
         // player is on the ground 
         this.checkIfPlayerIsOnGround();
-        
+
         if (this.position.x >= worldWidth - this.size.x) {
             this.velocity.x = 0;
             this.position.x = worldWidth - this.size.x;
