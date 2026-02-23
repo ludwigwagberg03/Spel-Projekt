@@ -10,6 +10,7 @@ class Player extends entity {
         hight: number;
     };
     private isPlayerFacingRight: boolean = true;
+    private enimies: entity[] = [];
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         super(p, v, s, h, true);
@@ -18,6 +19,10 @@ class Player extends entity {
             width: 100,
             hight: 50,
         }
+    }
+
+    public setEnimies(entities: entity[]){
+        this.enimes = entities;
     }
 
     public onCollision(other: entity): void {
@@ -101,7 +106,7 @@ class Player extends entity {
         
     }
 
-    private attack(enemies: entity[]){
+    private swordAttack(enemies: entity[]){
         for (let e of enemies) {
             if (e instanceof enemy){
                 const enemyX = e.getPosition().x;
