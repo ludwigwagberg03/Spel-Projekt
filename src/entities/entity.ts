@@ -52,7 +52,9 @@ abstract class entity {
         return this.size.copy();
     }
 
-    
+    public isDead() {
+        return !this.isAlive;
+    }
     
     public update(gravity: number, worldWidth: number) {
       
