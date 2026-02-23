@@ -104,6 +104,14 @@ class Player extends entity {
       this.onPlatform = false;
     }
   }
+  public shoot(): Projectile {
+    let spawnPos = createVector(
+      this.position.x + this.size.x / 2,
+      this.position.y + this.size.y / 2,
+    );
+
+    return new Projectile(spawnPos, this.facing);
+  }
 
   // public overlaps(other: Entity) {
   //     if (other instanceof Platform) {
