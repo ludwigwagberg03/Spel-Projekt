@@ -48,6 +48,8 @@ class Level implements IScreen {
     })
     this.checkCollision();
 
+    this.entities = this.entities.filter(isDead => !isDead.lifeStatus);
+
     if(this.player.lifeStatus === false){
       this.game.changeScreen(new StartScreen(this.game));
     }

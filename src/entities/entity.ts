@@ -15,6 +15,7 @@ abstract class entity {
         this.size = s;
         this.health = h;
         this.isGravity = g;
+        this.isAlive = true;
     }
 
     entityDamage(damage: number){
@@ -50,6 +51,8 @@ abstract class entity {
     public getSize() {
         return this.size.copy();
     }
+
+    
     
     public update(gravity: number, worldWidth: number) {
       
