@@ -3,7 +3,7 @@
 class Player extends entity {
     onGround: boolean = false;
     onPlatform: boolean = false;
-    private worldWitdh = 5760;
+    private worldWidth = 5760;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector) {
         super(p, v, s);
@@ -47,9 +47,9 @@ class Player extends entity {
             this.onGround = true;
             this.onPlatform = false;
         }
-        if (this.position.x >= this.worldWitdh - this.size.x) {
+        if (this.position.x >= this.worldWidth - this.size.x) {
             this.velocity.x = 0;
-            this.position.x = this.worldWitdh - this.size.x;
+            this.position.x = this.worldWidth - this.size.x;
             this.onGround = true;
         }
         if (this.position.x < 0) {

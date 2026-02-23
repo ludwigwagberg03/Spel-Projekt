@@ -4,7 +4,7 @@ class Level implements IScreen {
   private gravity = 0.8;
   private player: Player;
   private cameraX: number = 0;
-  private worldWitdh = 5760; // 1920 * 3
+  private worldWidth = 5760; // 1920 * 3
 
   constructor(game: Game) {
     this.game = game;
@@ -13,11 +13,11 @@ class Level implements IScreen {
 
     // console.log("fw")
     this.entities.push(new Platform(
-      createVector(this.WORLD_WIDTH, height / 2), createVector(0, 0), createVector(width, 10)
+      createVector(this.worldWidth, height / 2), createVector(0, 0), createVector(width, 10)
     ));
 
     this.player = new Player(
-      createVector(this.WORLD_WIDTH/2, height / 2),
+      createVector(this.worldWidth/2, height / 2),
       
       createVector(0, 0),
       createVector(50, 100)
@@ -26,7 +26,7 @@ class Level implements IScreen {
     this.entities.push(this.player);
 
     this.entities.push(new enemy(
-      createVector(this.WORLD_WIDTH/2-30
+      createVector(this.worldWidth/2-30
         , height / 2),
       createVector(0, 0),
       createVector(50, 100),
@@ -36,7 +36,7 @@ class Level implements IScreen {
 
   update(): void {
     this.cameraX = this.player.position.x - width / 2;
-    this.cameraX = constrain(this.cameraX, 0, this.worldWitdh - width);
+    this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
     // update gameplay systems here later
     this.aplygravity();
     this.entities.forEach(entity => {
