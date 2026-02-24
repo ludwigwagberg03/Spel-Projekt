@@ -12,6 +12,9 @@ class Player extends entity {
     private isPlayerFacingRight: boolean = true;
     private enimies: entity[] = [];
     private swordSwipeTimer: number = 500;
+    private items: any[] = [];
+    private currentItemIndex: number = 0;
+    private currentItem: any;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         super(p, v, s, h, true);
@@ -24,6 +27,25 @@ class Player extends entity {
 
     public setEnimies(entities: entity[]){
         this.enimies = entities;
+    }
+
+    public setSwords(items: any[]){
+        this.items = items;
+        this.equipItem(0);
+    }
+
+    private equipItem(index: number){
+        if (index >= 0 && index < this.items.length) {
+            this.currentItemIndex = index;
+            this.currentItem = this.items[index];
+
+            this.attackHitBox.width = this.currentItem.hitboxWidth;
+            this.attackHitBox.hight = this.currentItem.hitboxHight;
+
+            this.swordSwipeTimer = this.currentItem.cooldown;
+
+            console.log("Equipped:", this.currentItem.name);
+        }
     }
 
     public onCollision(other: entity): void {
