@@ -40,7 +40,7 @@ class Player extends entity {
             this.currentItem = this.items[index];
 
             this.attackHitBox.width = this.currentItem.hitboxWidth;
-            this.attackHitBox.hight = this.currentItem.hitboxHight;
+            this.attackHitBox.hight = this.currentItem.hitboxHeight;
 
             this.swordSwipeTimer = this.currentItem.cooldown;
 
@@ -77,13 +77,8 @@ class Player extends entity {
     private takedamage(n: number): void { }
 
     public update(gravity: number, worldWidth: number) {
-        if (this.swordSwipeTimer < 500) {
-            this.swordSwipeTimer -= deltaTime
-            console.log(this.swordSwipeTimer);
-        }
-        if (this.swordSwipeTimer < 0) {
-            this.swordSwipeTimer = 500
-            console.log(this.swordSwipeTimer);
+        if(this.swordSwipeTimer > 0){
+            this.swordSwipeTimer -= deltaTime;
         }
         this.move();
         super.update(gravity, worldWidth);
@@ -128,37 +123,45 @@ class Player extends entity {
 
     private updateAttackHitBox(){
         if(this.isPlayerFacingRight === true){
-            this.attackHitBox.position.x = this.position.x;
+            this.attackHitBox.position.x = this.position.x + this.size.x;
             this.attackHitBox.position.y = this.position.y;
         } else {
-            this.attackHitBox.position.x = this.position.x - this.size.x;
+            this.attackHitBox.position.x = this.position.x - 2*this.size.x;
             this.attackHitBox.position.y = this.position.y;
         }
         
     }
 
     private swordAttack(enemies: entity[]){
-        if (this.swordSwipeTimer === 500){
+        if(!this.currentItem) return console.log(this.swordSwipeTimer,"swordAttack exit");
+
+        if (this.swordSwipeTimer <= 0){
             for (let e of enemies) {
-            if (e instanceof enemy){
-                const enemyX = e.getPosition().x;
-                const enemyY = e.getPosition().y;
-                const enemyWidth = e.getSize().x;
-                const enemyHight = e.getSize().y;
+                if (e instanceof enemy){
+                    console.log("test1");
 
-                const attackX = this.attackHitBox.position.x;
-                const attackY = this.attackHitBox.position.y;
-                const attackWidth = this.attackHitBox.width;
-                const attackHight = this.attackHitBox.hight;
-                const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
+                    const enemyX = e.getPosition().x;
+                    const enemyY = e.getPosition().y;
+                    const enemyWidth = e.getSize().x;
+                    const enemyHight = e.getSize().y;
 
-                if (hit){
-                    console.log("hit");
-                    e.entityDamage(15);
-                    this.swordSwipeTimer -= deltaTime;
+                    const attackX = this.attackHitBox.position.x;
+                    const attackY = this.attackHitBox.position.y;
+                    const attackWidth = this.attackHitBox.width;
+                    const attackHight = this.attackHitBox.hight;
+
+                    console.log("Attack:", attackX, attackY, attackWidth, attackHight);
+                    console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
+
+                    const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
+
+                    if (hit){
+                        console.log("hit");
+                        e.entityDamage(this.currentItem.damage);
+                        this.swordSwipeTimer = this.currentItem.cooldown;
+                    }
+                    }
                 }
-                }
-            }
         }
         
     }
@@ -184,6 +187,7 @@ class Player extends entity {
             this.jump();
         }
         if (keyIsDown(69)) { // E
+            console.log("pressed e");
             this.swordAttack(this.enimies);
         }
         if (keyIsDown(49)) { // E
