@@ -5,55 +5,86 @@ class Level implements IScreen {
   private player: Player;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
+  // Stores all active projectiles
+  private projectiles: Projectile[] = [];
+
+  public addProjectile(p: Projectile) {
+    this.projectiles.push(p);
+  }
 
   constructor(game: Game) {
     this.game = game;
 
     this.entities = [];
 
-    this.entities.push(new Platform(
-      createVector(0, height / 2),
-      createVector(0, 0),
-      createVector(this.worldWidth, 10)
-    ));
+    this.entities.push(
+      new Platform(
+        createVector(0, height / 2),
+        createVector(0, 0),
+        createVector(this.worldWidth, 10),
+      ),
+    );
 
     this.player = new Player(
       createVector(this.worldWidth / 2, height / 2),
 
       createVector(0, 0),
       createVector(50, 100),
-      100
+      100,
     );
 
     this.entities.push(this.player);
 
-    this.entities.push(new enemy(
-      createVector(this.worldWidth / 2 - 30
-        , height / 2),
-      createVector(0, 0),
-      createVector(50, 100),
-      100,
-      this.player
-    ));
+    this.entities.push(
+      new enemy(
+        createVector(this.worldWidth / 2 - 30, height / 2),
+        createVector(0, 0),
+        createVector(50, 100),
+        100,
+        this.player,
+      ),
+    );
   }
 
   update(): void {
+    // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
-    // update gameplay systems here later
-    this.entities.forEach(entity => {
+
+    // Update all entities (player, enemies, platforms)
+    this.entities.forEach((entity) => {
       entity.update(this.gravity, this.worldWidth);
-    })
+    });
+
+    // Update all active projectiles
+    this.projectiles.forEach((projectile) => {
+      projectile.update(this.gravity, this.worldWidth);
+    });
+
+    // Check collisions between objects
     this.checkCollision();
+
+    // Remove projectiles that are no longer alive
+    this.projectiles = this.projectiles.filter((p) => p.alive);
   }
 
   checkCollision() {
-    // const { entities } = this;
+    // ENTITY vs ENTITY
     for (let i = 0; i < this.entities.length; i++) {
       for (let j = i + 1; j < this.entities.length; j++) {
         if (this.entities[i].overlaps(this.entities[j])) {
           this.entities[i].onCollision(this.entities[j]);
           this.entities[j].onCollision(this.entities[i]);
+        }
+      }
+    }
+
+    // PROJECTILE vs ENTITY
+    for (let projectile of this.projectiles) {
+      for (let entity of this.entities) {
+        if (entity !== this.player && projectile.overlaps(entity)) {
+          projectile.onCollision(entity);
+          entity.onCollision(projectile);
         }
       }
     }
@@ -66,8 +97,13 @@ class Level implements IScreen {
     image(images.testStage, 0, 0);
     // background(25, 35, 60);
 
-    this.entities.forEach(entity => {
+    this.entities.forEach((entity) => {
       entity.draw();
+    });
+
+    // Draw all projectiles
+    this.projectiles.forEach((projectile) => {
+      projectile.draw();
     });
 
     pop();

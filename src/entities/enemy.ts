@@ -7,7 +7,7 @@ class enemy extends entity {
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
-        this.isgravity = false;
+        this.isGravity = false;
         console.log("enemy");
 
         this.player = player;

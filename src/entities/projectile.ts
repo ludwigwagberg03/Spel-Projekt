@@ -5,20 +5,19 @@
 class Projectile extends entity {
   private speed: number = 12;
   private direction: number;
-  public isAlive: boolean = true;
+
   private damage: number = 1;
 
   constructor(pos: p5.Vector, dir: number) {
     super(pos.copy(), createVector(dir * 12, 0), createVector(20, 8), 1);
 
     this.direction = dir;
-    this.isgravity = false;
+    this.isGravity = false;
   }
 
-  update() {
-    this.updateposition();
+  public update(gravity: number, worldWidth: number) {
+    super.update(gravity, worldWidth);
 
-    // Remove if outside screen
     if (this.position.x > width || this.position.x < 0) {
       this.isAlive = false;
     }
@@ -29,9 +28,10 @@ class Projectile extends entity {
     rect(this.position.x, this.position.y, this.size.x, this.size.y);
   }
 
+  //
   onCollision(other: entity) {
-    if (other instanceof Enemy) {
-      other.takeDamage(this.damage);
+    if (other instanceof enemy) {
+      (other as enemy).entityDamage(this.damage);
       this.isAlive = false;
     }
 
