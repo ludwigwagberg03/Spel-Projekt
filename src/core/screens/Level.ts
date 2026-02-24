@@ -82,7 +82,24 @@ class Level implements IScreen {
       this.shakeTime -= deltaTime;
     }
   }
+  //
+  private findClosestEnemy(): p5.Vector | null {
+    let closest: enemy | null = null;
+    let minDist = Infinity;
 
+    for (let e of this.entities) {
+      if (e instanceof enemy && e.alive) {
+        let d = p5.Vector.dist(this.player.getPosition(), e.getPosition());
+
+        if (d < minDist) {
+          minDist = d;
+          closest = e;
+        }
+      }
+    }
+
+    return closest ? closest.getPosition() : null;
+  }
   checkCollision() {
     // ENTITY vs ENTITY
     for (let i = 0; i < this.entities.length; i++) {
@@ -176,14 +193,21 @@ class Level implements IScreen {
     if (code === 74) {
       // J key
       console.log("J pressed");
+      let enemyTarget = this.findClosestEnemy();
 
-      if (this.player.canShoot()) {
-        console.log("Can shoot");
-
-        const bullet = this.player.shoot(); // create projectile
-        this.addProjectile(bullet); // store it
-        sounds.shoot.play(); //real shoot sound
+      if (enemyTarget) {
+        const bullet = this.player.shoot(enemyTarget);
+        this.addProjectile(bullet);
+        sounds.shoot.play();
       }
+
+      // if (this.player.canShoot()) {
+      //   console.log("Can shoot");
+
+      //   const bullet = this.player.shoot(); // create projectile
+      //   this.addProjectile(bullet); // store it
+      //   sounds.shoot.play(); //real shoot sound
+      // }
     }
   }
 }

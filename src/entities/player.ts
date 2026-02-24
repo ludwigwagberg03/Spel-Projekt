@@ -112,35 +112,25 @@ class Player extends entity {
       this.onPlatform = false;
     }
   }
-  //   public shoot(): Projectile {
-  //     this.shootCooldown = 300; // 300ms cooldown
-  //     let spawnPos = createVector(
-  //       this.position.x + this.size.x / 2,
-  //       this.position.y + this.size.y / 2,
-  //     );
 
-  //     return new Projectile(spawnPos, this.facing);
-  //   }
+  public shoot(target: p5.Vector): Projectile {
+    let spawnPos = this.getPosition().copy();
+    spawnPos.add(createVector(this.size.x / 2, this.size.y / 2));
 
-  public shoot(): Projectile {
-    this.shootCooldown = 300;
-
-    let gunOffsetX = this.facing === 1 ? this.size.x : 0;
-    let gunOffsetY = this.size.y / 2;
-
-    let spawnPos = createVector(
-      this.position.x + gunOffsetX,
-      this.position.y + gunOffsetY,
-    );
-
-    return new Projectile(spawnPos, this.facing);
+    return new Projectile(spawnPos, target);
   }
 
-  // public overlaps(other: Entity) {
-  //     if (other instanceof Platform) {
-  //         // Speciell lösning
-  //     } else {
-  //         super.overlaps(other);
-  //     }
+  // public shoot(): Projectile {
+  //   this.shootCooldown = 300;
+
+  //   let gunOffsetX = this.facing === 1 ? this.size.x : 0;
+  //   let gunOffsetY = this.size.y / 2;
+
+  //   let spawnPos = createVector(
+  //     this.position.x + gunOffsetX,
+  //     this.position.y + gunOffsetY,
+  //   );
+
+  //   return new Projectile(spawnPos, this.facing);
   // }
 }

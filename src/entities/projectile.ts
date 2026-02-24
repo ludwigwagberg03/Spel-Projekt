@@ -8,10 +8,15 @@ class Projectile extends entity {
 
   private damage: number = 1;
 
-  constructor(pos: p5.Vector, dir: number) {
-    super(pos.copy(), createVector(dir * 12, 0), createVector(20, 8), 1);
+  constructor(pos: p5.Vector, target: p5.Vector) {
+    const speed = 12; // local constant
 
-    this.direction = dir;
+    let direction = p5.Vector.sub(target, pos);
+    direction.normalize();
+    direction.mult(speed);
+
+    super(pos.copy(), direction, createVector(12, 12), 1);
+
     this.isGravity = false;
   }
 
