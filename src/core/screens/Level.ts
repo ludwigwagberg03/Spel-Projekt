@@ -79,6 +79,9 @@ class Level implements IScreen {
     });
 
     pop();
+
+    this.player.drawHealthBar(width-300, 20, 200, 20);
+
     // demo text
     fill(255, 55, 99);
     textAlign(CENTER, CENTER);
