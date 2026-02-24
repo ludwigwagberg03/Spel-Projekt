@@ -3,11 +3,12 @@ abstract class entity {
   protected velocity: p5.Vector;
   protected size: p5.Vector;
   protected isGravity: boolean;
+  protected hitFlash: number = 0;
 
-  private health: number;
+  protected health: number;
   protected isAlive: boolean = true;
   private notPlayedSound: boolean = true;
-  private timer: number = 1000;
+  protected timer: number = 1000;
 
   constructor(
     p: p5.Vector,
@@ -23,8 +24,9 @@ abstract class entity {
     this.isGravity = g;
   }
 
-  entityDamage(damage: number) {
+ public entityDamage(damage: number) {
     if (this.timer === 1000) {
+        this.hitFlash = 120;
       this.timer -= deltaTime;
       console.log(this.timer);
       this.health -= damage;
@@ -58,6 +60,10 @@ abstract class entity {
   }
 
   public update(gravity: number, worldWidth: number) {
+    if (this.hitFlash > 0) {
+      this.hitFlash -= deltaTime;
+    }
+
     if (this.timer < 1000) {
       this.timer -= deltaTime;
       console.log(this.timer);
@@ -79,7 +85,13 @@ abstract class entity {
 
   public draw() {
     push();
-    fill(63);
+    // fill(63);
+    if (this.hitFlash > 0) {
+      fill(255, 0, 0); // red
+    } else {
+      fill(63);
+    }
+
     rect(this.position.x, this.position.y, this.size.x, this.size.y);
     pop();
   }
