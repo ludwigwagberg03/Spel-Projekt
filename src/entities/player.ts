@@ -4,12 +4,17 @@ class Player extends entity {
   private onGround: boolean = false;
   private onPlatform: boolean = false;
   private isFalling: boolean = false;
-  public facing: number = 1; // 1 = right, -1 = left
+  public facing: number = 1;
+  private shootCooldown: number = 0;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
     super(p, v, s, h, true);
   }
 
+  public canShoot(): boolean {
+    return this.shootCooldown <= 0;
+  }
+  
   public onCollision(other: entity): void {
     if (other instanceof Platform) {
       this.handlePlatformLanding(other);
@@ -37,6 +42,9 @@ class Player extends entity {
   private takedamage(n: number): void {}
 
   public update(gravity: number, worldWidth: number) {
+    if (this.shootCooldown > 0) {
+      this.shootCooldown -= deltaTime;
+    }
     this.move();
     super.update(gravity, worldWidth);
     this.updatePosition(worldWidth);
@@ -105,6 +113,7 @@ class Player extends entity {
     }
   }
   public shoot(): Projectile {
+    this.shootCooldown = 300; // 300ms cooldown
     let spawnPos = createVector(
       this.position.x + this.size.x / 2,
       this.position.y + this.size.y / 2,

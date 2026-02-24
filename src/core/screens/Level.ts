@@ -117,11 +117,18 @@ class Level implements IScreen {
     text("Press ESC to pause", width / 2, height / 4 + 60);
   }
 
-  keyPressed(code: number): void {
+  public keyPressed(code: number): void {
     //press ESC to go back to start menu
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new PauseScreen(this.game));
+    }
+    if (code === 74) {
+      console.log("J pressed");
+
+      if (this.player.canShoot()) {
+        console.log("Can shoot");
+      }
     }
   }
 }
