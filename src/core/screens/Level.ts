@@ -124,10 +124,14 @@ class Level implements IScreen {
       this.game.changeScreen(new PauseScreen(this.game));
     }
     if (code === 74) {
+      // J key
       console.log("J pressed");
 
       if (this.player.canShoot()) {
         console.log("Can shoot");
+
+        const bullet = this.player.shoot(); // create projectile
+        this.addProjectile(bullet); // store it
       }
     }
   }
