@@ -114,9 +114,21 @@ class Player extends entity {
   }
 
   public shoot(target: p5.Vector): Projectile {
+    //  Reset cooldown
+    this.shootCooldown = 300;
+
+    //  Bullet spawn position (center of player)
     let spawnPos = this.getPosition().copy();
     spawnPos.add(createVector(this.size.x / 2, this.size.y / 2));
 
+    //  Calculate direction to target
+    let direction = p5.Vector.sub(target, spawnPos);
+    direction.normalize();
+
+    //  RECOIL (push player backwards)
+    this.velocity.add(direction.copy().mult(-3));
+
+    // Create projectile
     return new Projectile(spawnPos, target);
   }
 

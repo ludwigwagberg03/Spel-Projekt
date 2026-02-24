@@ -9,6 +9,7 @@ abstract class entity {
   protected isAlive: boolean = true;
   private notPlayedSound: boolean = true;
   protected timer: number = 1000;
+  protected scaleEffect: number = 1;
 
   constructor(
     p: p5.Vector,
@@ -24,17 +25,24 @@ abstract class entity {
     this.isGravity = g;
   }
 
-  public entityDamage(damage: number) {
+  public entityDamage(damage: number, hitFrom?: p5.Vector) {
+    this.scaleEffect = 1.3;
     if (this.timer === 1000) {
-      this.hitFlash = 120;
-      this.timer -= deltaTime;
-      console.log(this.timer);
+      this.hitFlash = 150;
       this.health -= damage;
-      //console.log(this.health);
+
+      // Knockback away from hit source
+      if (hitFrom) {
+        let force = p5.Vector.sub(this.position, hitFrom);
+        force.normalize();
+        force.mult(6);
+        this.velocity.add(force);
+      }
+
       if (this.health <= 0) {
         this.die();
       }
-      console.log("play sound");
+
       sounds.tick.play();
     }
   }
@@ -60,6 +68,10 @@ abstract class entity {
   }
 
   public update(gravity: number, worldWidth: number) {
+    if (this.scaleEffect > 1) {
+      this.scaleEffect -= 0.02;
+    }
+
     if (this.hitFlash > 0) {
       this.hitFlash -= deltaTime;
     }
@@ -85,17 +97,25 @@ abstract class entity {
 
   public draw() {
     push();
-    // fill(63);
+
+    translate(
+      this.position.x + this.size.x / 2,
+      this.position.y + this.size.y / 2,
+    );
+
+    scale(this.scaleEffect);
+
     if (this.hitFlash > 0) {
-      fill(255);
-      stroke(255, 0, 0);
-      strokeWeight(4);
+      fill(255, 50, 50);
+      stroke(255);
+      strokeWeight(3);
     } else {
       fill(63);
       noStroke();
     }
 
-    rect(this.position.x, this.position.y, this.size.x, this.size.y);
+    rect(-this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
+
     pop();
   }
 

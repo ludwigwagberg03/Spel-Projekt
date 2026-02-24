@@ -192,22 +192,16 @@ class Level implements IScreen {
     }
     if (code === 74) {
       // J key
-      console.log("J pressed");
+      if (!this.player.canShoot()) return;
+
       let enemyTarget = this.findClosestEnemy();
 
-      if (enemyTarget) {
-        const bullet = this.player.shoot(enemyTarget);
-        this.addProjectile(bullet);
-        sounds.shoot.play();
-      }
+      if (!enemyTarget) return;
 
-      // if (this.player.canShoot()) {
-      //   console.log("Can shoot");
+      const bullet = this.player.shoot(enemyTarget);
+      this.addProjectile(bullet);
 
-      //   const bullet = this.player.shoot(); // create projectile
-      //   this.addProjectile(bullet); // store it
-      //   sounds.shoot.play(); //real shoot sound
-      // }
+      sounds.shoot.play();
     }
   }
 }

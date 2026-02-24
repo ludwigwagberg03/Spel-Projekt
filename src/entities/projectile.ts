@@ -4,7 +4,7 @@
 
 class Projectile extends entity {
   private speed: number = 12;
-  private direction: number;
+ 
 
   private damage: number = 1;
 
@@ -23,9 +23,9 @@ class Projectile extends entity {
   public update(gravity: number, worldWidth: number) {
     super.update(gravity, worldWidth);
 
-    if (this.position.x > width || this.position.x < 0) {
-      this.isAlive = false;
-    }
+   if (this.position.x > worldWidth || this.position.x < 0) {
+     this.isAlive = false;
+   }
   }
 
   draw() {
@@ -41,7 +41,7 @@ class Projectile extends entity {
 
   onCollision(other: entity) {
     if (other instanceof enemy) {
-      (other as enemy).entityDamage(this.damage);
+      (other as enemy).entityDamage(this.damage, this.position.copy());
 
       sounds.confirm.play(); // impact sound
 
