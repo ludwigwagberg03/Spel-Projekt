@@ -8,6 +8,8 @@ class Level implements IScreen {
   // Stores all active projectiles
   private projectiles: Projectile[] = [];
   private impacts: { pos: p5.Vector; life: number }[] = [];
+  private shakeTime: number = 0;
+  private shakeStrength: number = 0;
 
   public addProjectile(p: Projectile) {
     this.projectiles.push(p);
@@ -72,10 +74,13 @@ class Level implements IScreen {
     this.checkCollision();
 
     // Remove projectiles that are no longer alive
-   this.projectiles = this.projectiles.filter((p) => p.getIsAlive());
+    this.projectiles = this.projectiles.filter((p) => p.getIsAlive());
 
     this.impacts.forEach((i) => (i.life -= deltaTime));
     this.impacts = this.impacts.filter((i) => i.life > 0);
+    if (this.shakeTime > 0) {
+      this.shakeTime -= deltaTime;
+    }
   }
 
   checkCollision() {
@@ -96,8 +101,14 @@ class Level implements IScreen {
           projectile.onCollision(entity);
           entity.onCollision(projectile);
 
+          // ONLY when hitting enemy
           if (entity instanceof enemy) {
+            // impact effect
             this.triggerImpact(projectile.getPosition().copy());
+
+            //screen shake
+            this.shakeTime = 150;
+            this.shakeStrength = 6;
           }
         }
       }
@@ -107,7 +118,15 @@ class Level implements IScreen {
   draw(): void {
     push();
     // background
-    translate(-this.cameraX, 0);
+    let shakeX = 0;
+    let shakeY = 0;
+
+    if (this.shakeTime > 0) {
+      shakeX = random(-this.shakeStrength, this.shakeStrength);
+      shakeY = random(-this.shakeStrength, this.shakeStrength);
+    }
+
+    translate(-this.cameraX + shakeX, shakeY);
     image(images.testStage, 0, 0);
     // background(25, 35, 60);
 
