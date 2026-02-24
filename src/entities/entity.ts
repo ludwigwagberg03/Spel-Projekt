@@ -24,9 +24,9 @@ abstract class entity {
     this.isGravity = g;
   }
 
- public entityDamage(damage: number) {
+  public entityDamage(damage: number) {
     if (this.timer === 1000) {
-        this.hitFlash = 120;
+      this.hitFlash = 120;
       this.timer -= deltaTime;
       console.log(this.timer);
       this.health -= damage;
@@ -87,9 +87,12 @@ abstract class entity {
     push();
     // fill(63);
     if (this.hitFlash > 0) {
-      fill(255, 0, 0); // red
+      fill(255);
+      stroke(255, 0, 0);
+      strokeWeight(4);
     } else {
       fill(63);
+      noStroke();
     }
 
     rect(this.position.x, this.position.y, this.size.x, this.size.y);
@@ -103,6 +106,9 @@ abstract class entity {
       this.position.y < other.position.y + other.size.y &&
       this.position.y + this.size.y > other.position.y
     );
+  }
+  public getIsAlive(): boolean {
+    return this.isAlive;
   }
 
   abstract onCollision(other: entity): void;

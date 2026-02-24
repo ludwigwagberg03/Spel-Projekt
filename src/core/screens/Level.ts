@@ -7,9 +7,16 @@ class Level implements IScreen {
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
   private projectiles: Projectile[] = [];
+  private impacts: { pos: p5.Vector; life: number }[] = [];
 
   public addProjectile(p: Projectile) {
     this.projectiles.push(p);
+  }
+  public triggerImpact(pos: p5.Vector) {
+    this.impacts.push({
+      pos: pos.copy(),
+      life: 200,
+    });
   }
 
   constructor(game: Game) {
@@ -65,7 +72,10 @@ class Level implements IScreen {
     this.checkCollision();
 
     // Remove projectiles that are no longer alive
-    this.projectiles = this.projectiles.filter((p) => p.alive);
+   this.projectiles = this.projectiles.filter((p) => p.getIsAlive());
+
+    this.impacts.forEach((i) => (i.life -= deltaTime));
+    this.impacts = this.impacts.filter((i) => i.life > 0);
   }
 
   checkCollision() {
@@ -85,6 +95,10 @@ class Level implements IScreen {
         if (entity !== this.player && projectile.overlaps(entity)) {
           projectile.onCollision(entity);
           entity.onCollision(projectile);
+
+          if (entity instanceof enemy) {
+            this.triggerImpact(projectile.getPosition().copy());
+          }
         }
       }
     }
@@ -115,6 +129,12 @@ class Level implements IScreen {
 
     textSize(18);
     text("Press ESC to pause", width / 2, height / 4 + 60);
+
+    this.impacts.forEach((i) => {
+      fill(255, 200, 0, i.life);
+      noStroke();
+      ellipse(i.pos.x, i.pos.y, 30);
+    });
   }
 
   public keyPressed(code: number): void {
@@ -132,6 +152,7 @@ class Level implements IScreen {
 
         const bullet = this.player.shoot(); // create projectile
         this.addProjectile(bullet); // store it
+        sounds.shoot.play(); //real shoot sound
       }
     }
   }

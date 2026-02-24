@@ -8,6 +8,7 @@ let sounds: {
   coin: p5.SoundFile;
   tick: p5.SoundFile;
   confirm: p5.SoundFile;
+  shoot: p5.SoundFile;
 };
 let images: {
   treasury: p5.Image;
@@ -29,6 +30,7 @@ function preload() {
     tick: loadSound("/assets/sounds/menu-selection.mp3"),
     confirm: loadSound("/assets/sounds/confirm.mp3"),
     coin: loadSound("/assets/sounds/coin.wav"),
+    shoot: loadSound("/assets/sounds/gun-shot.mp3"),
   };
   images = {
     menu: loadImage("/assets/images/menu_bg.png"),

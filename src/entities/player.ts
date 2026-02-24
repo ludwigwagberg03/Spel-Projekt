@@ -14,7 +14,7 @@ class Player extends entity {
   public canShoot(): boolean {
     return this.shootCooldown <= 0;
   }
-  
+
   public onCollision(other: entity): void {
     if (other instanceof Platform) {
       this.handlePlatformLanding(other);
@@ -112,11 +112,25 @@ class Player extends entity {
       this.onPlatform = false;
     }
   }
+  //   public shoot(): Projectile {
+  //     this.shootCooldown = 300; // 300ms cooldown
+  //     let spawnPos = createVector(
+  //       this.position.x + this.size.x / 2,
+  //       this.position.y + this.size.y / 2,
+  //     );
+
+  //     return new Projectile(spawnPos, this.facing);
+  //   }
+
   public shoot(): Projectile {
-    this.shootCooldown = 300; // 300ms cooldown
+    this.shootCooldown = 300;
+
+    let gunOffsetX = this.facing === 1 ? this.size.x : 0;
+    let gunOffsetY = this.size.y / 2;
+
     let spawnPos = createVector(
-      this.position.x + this.size.x / 2,
-      this.position.y + this.size.y / 2,
+      this.position.x + gunOffsetX,
+      this.position.y + gunOffsetY,
     );
 
     return new Projectile(spawnPos, this.facing);

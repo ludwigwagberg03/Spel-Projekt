@@ -24,14 +24,22 @@ class Projectile extends entity {
   }
 
   draw() {
-    fill(255, 200, 0);
-    rect(this.position.x, this.position.y, this.size.x, this.size.y);
+    push();
+    fill(255, 220, 100);
+    noStroke();
+    ellipse(this.position.x, this.position.y, 12);
+
+    fill(255, 255, 180);
+    ellipse(this.position.x, this.position.y, 6);
+    pop();
   }
 
-  //
   onCollision(other: entity) {
     if (other instanceof enemy) {
       (other as enemy).entityDamage(this.damage);
+
+      sounds.confirm.play(); // impact sound
+
       this.isAlive = false;
     }
 
