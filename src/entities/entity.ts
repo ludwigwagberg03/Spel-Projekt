@@ -20,6 +20,10 @@ abstract class entity {
         this.isAlive = true;
     }
 
+    public drawHealthBar(x: number, y: number, w: number, h: number){
+        //
+    }
+
     entityDamage(damage: number){
         if (this.timer === 1000) {
             this.timer -= deltaTime;
