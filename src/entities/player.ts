@@ -63,6 +63,8 @@ class Player extends entity {
     draw() {
         super.draw();
 
+        this.drawHealthBar(width-300, 20, 200, 20);
+
         rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight)
     }
 
