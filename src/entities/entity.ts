@@ -21,7 +21,15 @@ abstract class entity {
     }
 
     public drawHealthBar(x: number, y: number, w: number, h: number){
-        //
+        const healthProcent = this.health / this.maxHealth;
+
+        push();
+        fill(120); // red
+        rect(x,y,w,h)
+
+        fill(0, 250, 0) // green
+        rect(x,y,w * healthProcent, h)
+        pop();
     }
 
     entityDamage(damage: number){
