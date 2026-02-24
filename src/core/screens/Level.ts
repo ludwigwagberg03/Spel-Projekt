@@ -3,6 +3,7 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
+  private enemy: enemy;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
 
@@ -27,14 +28,16 @@ class Level implements IScreen {
 
     this.entities.push(this.player);
 
-    this.entities.push(new enemy(
+    this.enemy = new enemy(
       createVector(this.worldWidth / 2 - 30
         , height / 2 - 100),
       createVector(0, 0),
       createVector(50, 100),
       100,
       this.player
-    ));
+    );
+
+    this.entities.push(this.enemy);
 
     this.player.setEnimies(this.entities);
   }
@@ -81,6 +84,7 @@ class Level implements IScreen {
     pop();
 
     this.player.drawHealthBar(width-400, 20, 350, 50);
+    this.enemy.drawHealthBar(width/2, height - 40 , 350, 50);
 
     // demo text
     fill(255, 55, 99);
