@@ -11,6 +11,7 @@ class Player extends entity {
     };
     private isPlayerFacingRight: boolean = true;
     private enimies: entity[] = [];
+    private swordSwipeTimer: number = 500;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
         super(p, v, s, h, true);
@@ -54,6 +55,14 @@ class Player extends entity {
     private takedamage(n: number): void { }
 
     public update(gravity: number, worldWidth: number) {
+        if (this.swordSwipeTimer < 500) {
+            this.swordSwipeTimer -= deltaTime
+            console.log(this.swordSwipeTimer);
+        }
+        if (this.swordSwipeTimer < 0) {
+            this.swordSwipeTimer = 500
+            console.log(this.swordSwipeTimer);
+        }
         this.move();
         super.update(gravity, worldWidth);
         this.updatePosition(worldWidth);
@@ -107,7 +116,8 @@ class Player extends entity {
     }
 
     private swordAttack(enemies: entity[]){
-        for (let e of enemies) {
+        if (this.swordSwipeTimer === 500){
+            for (let e of enemies) {
             if (e instanceof enemy){
                 const enemyX = e.getPosition().x;
                 const enemyY = e.getPosition().y;
@@ -118,14 +128,17 @@ class Player extends entity {
                 const attackY = this.attackHitBox.position.y;
                 const attackWidth = this.attackHitBox.width;
                 const attackHight = this.attackHitBox.hight;
-                const hit = attackX < enemyX && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
+                const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
                 if (hit){
                     console.log("hit");
                     e.entityDamage(15);
+                    this.swordSwipeTimer -= deltaTime;
+                }
                 }
             }
         }
+        
     }
 
     private move() {

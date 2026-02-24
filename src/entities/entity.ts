@@ -60,11 +60,9 @@ abstract class entity {
       
         if (this.timer < 1000) {
             this.timer -= deltaTime
-            console.log(this.timer);
         }
         if (this.timer < 0) {
             this.timer = 1000
-            console.log(this.timer);
         }
         this.position.add(this.velocity);
         // this.position.add(this.velocity.copy().mult(deltaTime));
