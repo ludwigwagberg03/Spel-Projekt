@@ -123,7 +123,7 @@ class Player extends entity {
                 const attackY = this.attackHitBox.position.y;
                 const attackWidth = this.attackHitBox.width;
                 const attackHight = this.attackHitBox.hight;
-                const hit = attackX < enemyX && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
+                const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
                 if (hit){
                     console.log("hit");

@@ -84,7 +84,7 @@ class Level implements IScreen {
     pop();
 
     this.player.drawHealthBar(width-400, 20, 350, 50);
-    this.enemy.drawHealthBar(width/2, height - 40 , 350, 50);
+    this.enemy.drawHealthBar(width / 2 - 400, height - 80 , 800, 50);
 
     // demo text
     fill(255, 55, 99);
