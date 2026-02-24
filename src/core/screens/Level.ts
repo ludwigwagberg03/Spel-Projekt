@@ -117,7 +117,7 @@ class Level implements IScreen {
 
   draw(): void {
     push();
-    // background
+
     let shakeX = 0;
     let shakeY = 0;
 
@@ -127,20 +127,37 @@ class Level implements IScreen {
     }
 
     translate(-this.cameraX + shakeX, shakeY);
-    image(images.testStage, 0, 0);
-    // background(25, 35, 60);
 
+    image(images.testStage, 0, 0);
+
+    // Draw entities
     this.entities.forEach((entity) => {
       entity.draw();
     });
 
-    // Draw all projectiles
+    // Draw projectiles
     this.projectiles.forEach((projectile) => {
       projectile.draw();
     });
 
-    pop();
-    // demo text
+    // Draw impacts INSIDE camera
+    this.impacts.forEach((i) => {
+      push();
+
+      textAlign(CENTER, CENTER);
+      fill(255, 150, 0, i.life);
+
+      let size = map(i.life, 0, 200, 20, 60);
+      textSize(size);
+
+      text("💥", i.pos.x, i.pos.y);
+
+      pop();
+    });
+
+    pop(); // end camera
+
+    // UI text (screen space)
     fill(255, 55, 99);
     textAlign(CENTER, CENTER);
     textSize(48);
@@ -148,12 +165,6 @@ class Level implements IScreen {
 
     textSize(18);
     text("Press ESC to pause", width / 2, height / 4 + 60);
-
-    this.impacts.forEach((i) => {
-      fill(255, 200, 0, i.life);
-      noStroke();
-      ellipse(i.pos.x, i.pos.y, 30);
-    });
   }
 
   public keyPressed(code: number): void {
