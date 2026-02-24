@@ -186,6 +186,18 @@ class Player extends entity {
         if (keyIsDown(69)) { // E
             this.swordAttack(this.enimies);
         }
+        if (keyIsDown(49)) { // E
+            this.equipItem(0);
+        }
+        if (keyIsDown(50)) { // E
+            this.equipItem(1);
+        }
+        if (keyIsDown(51)) { // E
+            this.equipItem(2);
+        }
+        if (keyIsDown(52)) { // E
+            this.equipItem(3);
+        }
     }
     private jump() {
         if (this.onGround) {

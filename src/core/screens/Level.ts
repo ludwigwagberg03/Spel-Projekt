@@ -24,7 +24,7 @@ class Level implements IScreen {
       createVector(50, 100),
       100
     );
-
+    this.player.setSwords(itemData.swords);
     this.entities.push(this.player);
 
     this.entities.push(new enemy(
