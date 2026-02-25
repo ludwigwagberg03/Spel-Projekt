@@ -9,6 +9,7 @@ class enemy extends entity {
   private deathTimer: number = 0;
   private fadeAlpha: number = 255;
   private shrinkScale: number = 1;
+  private deathTriggeredOnce: boolean = false;
 
   constructor(
     p: p5.Vector,
@@ -27,6 +28,7 @@ class enemy extends entity {
   // --- Start Death ---
   private startDeath(): void {
     this.isDying = true;
+    this.deathTriggeredOnce = true;
     this.velocity.mult(0);
     this.knockbackForce.mult(0);
   }
@@ -73,6 +75,21 @@ class enemy extends entity {
       this.startDeath();
     }
   }
+  //
+  public consumeDeathTrigger(): boolean {
+    if (this.deathTriggeredOnce) {
+      this.deathTriggeredOnce = false;
+      return true;
+    }
+    return false;
+  }
+
+  public getCenter(): p5.Vector {
+    return createVector(
+      this.position.x + this.size.x / 2,
+      this.position.y + this.size.y / 2,
+    );
+  }
 
   public update(gravity: number, wordWidth: number) {
     // --- Death State ---
@@ -102,11 +119,19 @@ class enemy extends entity {
     scale(this.scaleEffect);
 
     // Body
+    let alpha = 255;
+
+    if (this.isDying) alpha = this.fadeAlpha;
+
     if (this.hitFlash > 0) {
-      fill(255, 50, 50);
+      fill(255, 50, 50, alpha);
     } else {
-      fill(120, 0, 200);
+      fill(120, 0, 200, alpha);
     }
+
+    // dying shrink
+    const s = this.isDying ? this.shrinkScale : 1;
+    scale(s);
 
     ellipse(0, 0, this.size.x, this.size.y);
 
