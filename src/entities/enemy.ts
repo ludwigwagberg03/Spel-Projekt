@@ -26,24 +26,6 @@ class enemy extends entity {
     this.velocity = direction;
   }
 
-  private updatePosition() {
-    this.position.add(this.velocity);
-    if (this.position.x < 0) {
-      this.position.x = width;
-    }
-    if (this.position.x > width) {
-      this.position.x = 0;
-    }
-    if (this.position.y < 0) {
-      this.position.y = height;
-      this.velocity.y = 0;
-    }
-    if (this.position.y > height) {
-      this.position.y = 0;
-      this.velocity.y = 0;
-    }
-  }
-
   public onCollision(other: entity): void {
     //push enemy slightlty
   }
