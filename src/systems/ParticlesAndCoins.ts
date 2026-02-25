@@ -92,4 +92,19 @@ class CoinDrop {
 
     pop();
   }
+
+  tryCollect(playerPos: p5.Vector): boolean {
+    if (this.collected) return false;
+
+    const d = dist(this.pos.x, this.pos.y, playerPos.x, playerPos.y);
+    if (d < 40) {
+      this.collected = true;
+      return true;
+    }
+    return false;
+  }
+
+  get isCollected(): boolean {
+    return this.collected;
+  }
 }
