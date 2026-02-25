@@ -2,7 +2,7 @@ abstract class entity {
     protected position: p5.Vector;
     protected velocity: p5.Vector;
     protected size: p5.Vector;
-    private isGravity: boolean;
+    protected isGravity: boolean;
 
     private health: number;
     private isAlive: boolean = true;

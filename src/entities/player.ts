@@ -25,16 +25,16 @@ class Player extends entity {
         }
     }
 
-    public setEnimies(entities: entity[]){
+    public setEnimies(entities: entity[]) {
         this.enimies = entities;
     }
 
-    public setSwords(items: any[]){
+    public setSwords(items: any[]) {
         this.items = items;
         this.equipItem(0);
     }
 
-    private equipItem(index: number){
+    private equipItem(index: number) {
         if (index >= 0 && index < this.items.length) {
             this.currentItemIndex = index;
             this.currentItem = this.items[index];
@@ -77,7 +77,7 @@ class Player extends entity {
     private takedamage(n: number): void { }
 
     public update(gravity: number, worldWidth: number) {
-        if(this.swordSwipeTimer > 0){
+        if (this.swordSwipeTimer > 0) {
             this.swordSwipeTimer -= deltaTime;
         }
         this.move();
@@ -121,23 +121,23 @@ class Player extends entity {
         }
     }
 
-    private updateAttackHitBox(){
-        if(this.isPlayerFacingRight === true){
+    private updateAttackHitBox() {
+        if (this.isPlayerFacingRight === true) {
             this.attackHitBox.position.x = this.position.x + this.size.x;
             this.attackHitBox.position.y = this.position.y;
         } else {
-            this.attackHitBox.position.x = this.position.x - 2*this.size.x;
+            this.attackHitBox.position.x = this.position.x - 2 * this.size.x;
             this.attackHitBox.position.y = this.position.y;
         }
-        
+
     }
 
-    private swordAttack(enemies: entity[]){
-        if(!this.currentItem) return console.log(this.swordSwipeTimer,"swordAttack exit");
+    private swordAttack(enemies: entity[]) {
+        if (!this.currentItem) return console.log(this.swordSwipeTimer, "swordAttack exit");
 
-        if (this.swordSwipeTimer <= 0){
+        if (this.swordSwipeTimer <= 0) {
             for (let e of enemies) {
-                if (e instanceof enemy){
+                if (e instanceof enemy) {
                     console.log("test1");
 
                     const enemyX = e.getPosition().x;
@@ -155,15 +155,14 @@ class Player extends entity {
 
                     const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
-                    if (hit){
+                    if (hit) {
                         console.log("hit");
                         e.entityDamage(this.currentItem.damage);
                         this.swordSwipeTimer = this.currentItem.cooldown;
                     }
-                    }
                 }
+            }
         }
-        
     }
 
     private move() {
