@@ -140,7 +140,14 @@ class Level implements IScreen {
         if (e.consumeDeathTrigger()) {
           const center = e.getCenter();
           this.spawnExplosion(center);
-          this.spawnCoins(center);
+
+          // spawn coins + instantly add to counter
+          const amount = floor(random(3, 7));
+          this.coinCount += amount;
+
+          for (let i = 0; i < amount; i++) {
+            this.coins.push(new CoinDrop(center));
+          }
         }
 
         // If fully finished dying -> remove from entities
