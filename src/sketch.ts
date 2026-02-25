@@ -39,22 +39,20 @@ function preload() {
     pirate: loadImage("/assets/images/pirate.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
-
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
   music.mystery.setVolume(0.8);
-  
 
   game = new Game();
-};
+}
 
 function draw() {
   game.update();
   game.draw();
-};
+}
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);

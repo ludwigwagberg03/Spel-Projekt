@@ -4,6 +4,11 @@ class enemy extends entity {
   private player: Player;
   private speed: number = 4;
   private knockbackForce: p5.Vector = createVector(0, 0);
+  // Death State System
+  private isDying: boolean = false;
+  private deathTimer: number = 0;
+  private fadeAlpha: number = 255;
+  private shrinkScale: number = 1;
 
   constructor(
     p: p5.Vector,
@@ -19,6 +24,27 @@ class enemy extends entity {
     this.player = player;
   }
 
+  // --- Start Death ---
+  private startDeath(): void {
+    this.isDying = true;
+    this.velocity.mult(0);
+    this.knockbackForce.mult(0);
+  }
+
+  // --- Death Animation ---
+  private handleDeath(): void {
+    this.deathTimer++;
+
+    this.shrinkScale -= 0.04; // shrink
+    this.fadeAlpha -= 10; // fade
+
+    if (this.shrinkScale < 0) this.shrinkScale = 0;
+    if (this.fadeAlpha < 0) this.fadeAlpha = 0;
+
+    if (this.deathTimer > 25) {
+      this.isDead = true; // safe removal
+    }
+  }
   private playerPosition() {
     let direction = p5.Vector.sub(this.player.getPosition(), this.position);
     direction.normalize();
@@ -30,18 +56,30 @@ class enemy extends entity {
     //push enemy slightlty
   }
   public entityDamage(damage: number, hitFrom?: p5.Vector) {
+    if (this.isDying) return; // dying
+
     super.entityDamage(damage, hitFrom);
 
+    // knockback
     if (hitFrom) {
       let force = p5.Vector.sub(this.position, hitFrom);
       force.normalize();
       force.mult(8);
-
       this.knockbackForce = force;
+    }
+
+    // trigger animated death
+    if (this.health <= 0) {
+      this.startDeath();
     }
   }
 
   public update(gravity: number, wordWidth: number) {
+    // --- Death State ---
+    if (this.isDying) {
+      this.handleDeath();
+      return;
+    }
     // Normal chasing movement
     this.playerPosition();
 

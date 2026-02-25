@@ -10,6 +10,7 @@ abstract class entity {
   private notPlayedSound: boolean = true;
   protected timer: number = 1000;
   protected scaleEffect: number = 1;
+  public isDead: boolean = false;
 
   constructor(
     p: p5.Vector,
@@ -34,19 +35,19 @@ abstract class entity {
     this.hitFlash = 150;
 
     this.health -= damage;
-   
+
     if (this.health <= 0) {
-      this.die();
+      this.die(); // base death
     }
 
     sounds.tick.play();
   }
-
   protected die() {
     this.isAlive = false;
+   
   }
 
-  get lifeStatus(): boolean {
+   get lifeStatus(): boolean {
     return this.health > 0;
   }
 
