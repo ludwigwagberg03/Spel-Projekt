@@ -55,4 +55,41 @@ class CoinDrop {
     this.pos = spawn.copy();
     this.vel = createVector(random(-3, 3), random(-10, -5));
   }
+  update(gravity: number, groundY: number): void {
+    if (this.collected) return;
+
+    // gravity
+    this.vel.y += gravity * 0.6;
+
+    // move
+    this.pos.add(this.vel);
+
+    // ground bounce
+    if (this.pos.y > groundY) {
+      this.pos.y = groundY;
+      this.vel.y *= -0.45; // bounce
+      this.vel.x *= 0.75; // friction
+    }
+  }
+
+  draw(): void {
+    if (this.collected) return;
+
+    push();
+    noStroke();
+
+    // glow
+    fill(255, 210, 80, 80);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2.2);
+
+    // coin
+    fill(255, 205, 60);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2);
+
+    // inner shine
+    fill(255, 240, 180, 160);
+    ellipse(this.pos.x - 3, this.pos.y - 3, this.radius);
+
+    pop();
+  }
 }
