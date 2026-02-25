@@ -8,6 +8,7 @@ class Level implements IScreen {
   // Stores all active projectiles
   private projectiles: Projectile[] = [];
   private impacts: { pos: p5.Vector; life: number }[] = [];
+  private damageNumbers: { pos: p5.Vector; value: number; life: number }[] = [];
   private shakeTime: number = 0;
   private shakeStrength: number = 0;
 
@@ -18,6 +19,13 @@ class Level implements IScreen {
     this.impacts.push({
       pos: pos.copy(),
       life: 200,
+    });
+  }
+  public spawnDamageNumber(pos: p5.Vector, value: number) {
+    this.damageNumbers.push({
+      pos: pos.copy(),
+      value: value,
+      life: 800,
     });
   }
 
@@ -81,6 +89,12 @@ class Level implements IScreen {
     if (this.shakeTime > 0) {
       this.shakeTime -= deltaTime;
     }
+    this.damageNumbers.forEach((d) => {
+      d.life -= deltaTime;
+      d.pos.y -= 0.5; // float upward
+    });
+
+    this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
   }
   //
   private findClosestEnemy(): p5.Vector | null {
@@ -122,6 +136,13 @@ class Level implements IScreen {
           if (entity instanceof enemy) {
             // impact effect
             this.triggerImpact(projectile.getPosition().copy());
+            // damage value
+            let isCrit = random() < 0.2; // 20% chance
+            let damageValue = isCrit ? 5 : floor(random(1, 4));
+            this.spawnDamageNumber(
+              projectile.getPosition().copy(),
+              damageValue,
+            );
 
             //screen shake
             this.shakeTime = 150;
@@ -171,7 +192,28 @@ class Level implements IScreen {
 
       pop();
     });
+    
+    // Draw floating damage numbers
+    this.damageNumbers.forEach((d) => {
+      push();
 
+      textAlign(CENTER, CENTER);
+
+      // First calculate size
+      let size = map(d.life, 0, 800, 20, 40);
+
+      if (d.value >= 5) {
+        fill(255, 220, 0, d.life / 3); // yellow crit
+        textSize(size + 10);
+      } else {
+        fill(255, 50, 50, d.life / 3);
+        textSize(size);
+      }
+
+      text(d.value.toString(), d.pos.x, d.pos.y);
+
+      pop();
+    });
     pop(); // end camera
 
     // UI text (screen space)

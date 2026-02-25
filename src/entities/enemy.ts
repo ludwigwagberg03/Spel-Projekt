@@ -3,6 +3,7 @@
 class enemy extends entity {
   private player: Player;
   private speed: number = 4;
+  private knockbackForce: p5.Vector = createVector(0, 0);
 
   constructor(
     p: p5.Vector,
@@ -46,9 +47,28 @@ class enemy extends entity {
   public onCollision(other: entity): void {
     //push enemy slightlty
   }
+  public entityDamage(damage: number, hitFrom?: p5.Vector) {
+    super.entityDamage(damage, hitFrom);
+
+    if (hitFrom) {
+      let force = p5.Vector.sub(this.position, hitFrom);
+      force.normalize();
+      force.mult(8);
+
+      this.knockbackForce = force;
+    }
+  }
 
   public update(gravity: number, wordWidth: number) {
+    // Normal chasing movement
     this.playerPosition();
+
+    // Apply knockback separately
+    this.position.add(this.knockbackForce);
+
+    // Slowly reduce knockback (friction)
+    this.knockbackForce.mult(0.85);
+
     super.update(gravity, wordWidth);
   }
 

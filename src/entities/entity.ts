@@ -26,25 +26,20 @@ abstract class entity {
   }
 
   public entityDamage(damage: number, hitFrom?: p5.Vector) {
+    if (this.timer > 0) return;
+
+    this.timer = 300; // cooldown timer
+
     this.scaleEffect = 1.3;
-    if (this.timer === 1000) {
-      this.hitFlash = 150;
-      this.health -= damage;
+    this.hitFlash = 150;
 
-      // Knockback away from hit source
-      if (hitFrom) {
-        let force = p5.Vector.sub(this.position, hitFrom);
-        force.normalize();
-        force.mult(6);
-        this.velocity.add(force);
-      }
-
-      if (this.health <= 0) {
-        this.die();
-      }
-
-      sounds.tick.play();
+    this.health -= damage;
+   
+    if (this.health <= 0) {
+      this.die();
     }
+
+    sounds.tick.play();
   }
 
   protected die() {
@@ -68,24 +63,25 @@ abstract class entity {
   }
 
   public update(gravity: number, worldWidth: number) {
+    // Smooth scale return
     if (this.scaleEffect > 1) {
       this.scaleEffect -= 0.02;
     }
 
+    // Flash timer
     if (this.hitFlash > 0) {
       this.hitFlash -= deltaTime;
     }
 
-    if (this.timer < 1000) {
+    // CLEAN DAMAGE COOLDOWN TIMER
+    if (this.timer > 0) {
       this.timer -= deltaTime;
-      console.log(this.timer);
     }
-    if (this.timer < 0) {
-      this.timer = 1000;
-      console.log(this.timer);
-    }
+
+    // Movement
     this.position.add(this.velocity);
-    // this.position.add(this.velocity.copy().mult(deltaTime));
+
+    // Gravity
     this.applyGravity(gravity);
   }
 

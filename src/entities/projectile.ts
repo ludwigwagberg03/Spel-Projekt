@@ -4,18 +4,19 @@
 
 class Projectile extends entity {
   private speed: number = 12;
- 
 
   private damage: number = 1;
 
-  constructor(pos: p5.Vector, target: p5.Vector) {
+  constructor(pos: p5.Vector, target: p5.Vector, damage: number) {
     const speed = 12; // local constant
+    
 
     let direction = p5.Vector.sub(target, pos);
     direction.normalize();
     direction.mult(speed);
 
     super(pos.copy(), direction, createVector(12, 12), 1);
+    this.damage = damage;
 
     this.isGravity = false;
   }
@@ -23,9 +24,9 @@ class Projectile extends entity {
   public update(gravity: number, worldWidth: number) {
     super.update(gravity, worldWidth);
 
-   if (this.position.x > worldWidth || this.position.x < 0) {
-     this.isAlive = false;
-   }
+    if (this.position.x > worldWidth || this.position.x < 0) {
+      this.isAlive = false;
+    }
   }
 
   draw() {
