@@ -91,7 +91,7 @@ class Level implements IScreen {
   }
 
   private drawCoinUI(): void {
-    // UI 
+    // UI
     push();
     textFont(gameFont);
 
@@ -129,6 +129,75 @@ class Level implements IScreen {
 
     // Check collisions between objects
     this.checkCollision();
+    // =========================
+    // ENEMY DEATH EVENTS + REMOVE DEAD
+    // =========================
+    for (let i = this.entities.length - 1; i >= 0; i--) {
+      const e = this.entities[i];
+
+      if (e instanceof enemy) {
+        // If death just started: spawn explosion + coins ONCE
+        if (e.consumeDeathTrigger()) {
+          const center = e.getCenter();
+          this.spawnExplosion(center);
+          this.spawnCoins(center);
+        }
+
+        // If fully finished dying -> remove from entities
+        if (e.isDead) {
+          this.entities.splice(i, 1);
+        }
+      }
+    }
+
+    // =========================
+    // UPDATE PARTICLES
+    // =========================
+    this.particles.forEach((p) => p.update());
+    this.particles = this.particles.filter((p) => p.alive);
+
+    // =========================
+    // UPDATE COINS + COLLECT
+    // =========================
+    const playerCenter = this.player.getPosition().copy();
+    playerCenter.add(createVector(25, 50)); // rough center
+
+    const groundY = height - 20; // simple floor
+    this.coins.forEach((c) => {
+      c.update(this.gravity, groundY);
+
+      if (c.tryCollect(playerCenter)) {
+        this.coinCount += 1;
+        sounds.coin.play();
+      }
+    });
+    this.coins = this.coins.filter((c) => !c.isCollected);
+
+    // =========================
+    // LOSE CONDITION -> GameOverScreen
+    // =========================
+    if (!this.gameOverTriggered && !this.player.alive) {
+      this.gameOverTriggered = true;
+      this.game.changeScreen(new GameOverScreen(this.game, false));
+      return;
+    }
+
+    // =========================
+    // WIN CONDITION (last enemy removed)
+    // =========================
+    const enemiesLeft = this.entities.some((x) => x instanceof enemy);
+
+    if (!this.victoryActive && !enemiesLeft) {
+      this.victoryActive = true;
+      this.victoryTimer = 0;
+    }
+
+    if (this.victoryActive) {
+      this.victoryTimer += deltaTime;
+
+      // smooth zoom in
+      this.victoryZoom = lerp(this.victoryZoom, 1.18, 0.05);
+    }
 
     // Remove projectiles that are no longer alive
     this.projectiles = this.projectiles.filter((p) => p.getIsAlive());
