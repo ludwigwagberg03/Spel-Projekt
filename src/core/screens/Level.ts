@@ -1,3 +1,4 @@
+/// <reference path="../../systems/ParticlesAndCoins.ts" />
 class Level implements IScreen {
   private game: Game;
   private entities: entity[];
@@ -11,6 +12,19 @@ class Level implements IScreen {
   private damageNumbers: { pos: p5.Vector; value: number; life: number }[] = [];
   private shakeTime: number = 0;
   private shakeStrength: number = 0;
+
+  // ===== particles + coins =====
+  private particles: ExplosionParticle[] = [];
+  private coins: CoinDrop[] = [];
+  private coinCount: number = 0;
+
+  // ===== victory state =====
+  private victoryActive: boolean = false;
+  private victoryTimer: number = 0;
+  private victoryZoom: number = 1;
+
+  // ===== lose lock =====
+  private gameOverTriggered: boolean = false;
 
   public addProjectile(p: Projectile) {
     this.projectiles.push(p);
@@ -63,6 +77,41 @@ class Level implements IScreen {
     );
   }
 
+  private spawnExplosion(pos: p5.Vector): void {
+    for (let i = 0; i < 18; i++) {
+      this.particles.push(new ExplosionParticle(pos));
+    }
+  }
+
+  private spawnCoins(pos: p5.Vector): void {
+    const amount = floor(random(3, 7));
+    for (let i = 0; i < amount; i++) {
+      this.coins.push(new CoinDrop(pos));
+    }
+  }
+
+  private drawCoinUI(): void {
+    // UI 
+    push();
+    textFont(gameFont);
+
+    // panel
+    noStroke();
+    fill(0, 0, 0, 120);
+    rect(20, 20, 180, 55, 12);
+
+    // coin icon
+    fill(255, 205, 60);
+    ellipse(45, 47, 22);
+
+    // text
+    fill(255);
+    textSize(18);
+    textAlign(LEFT, CENTER);
+    text(`Coins: ${this.coinCount}`, 65, 47);
+
+    pop();
+  }
   update(): void {
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
@@ -192,7 +241,7 @@ class Level implements IScreen {
 
       pop();
     });
-    
+
     // Draw floating damage numbers
     this.damageNumbers.forEach((d) => {
       push();
