@@ -71,7 +71,7 @@ class Level implements IScreen {
         createVector(this.worldWidth / 2 - 30, height / 2),
         createVector(0, 0),
         createVector(50, 100),
-        100,
+        20, //health
         this.player,
       ),
     );
@@ -140,14 +140,8 @@ class Level implements IScreen {
         if (e.consumeDeathTrigger()) {
           const center = e.getCenter();
           this.spawnExplosion(center);
-
-          // spawn coins + instantly add to counter
-          const amount = floor(random(3, 7));
-          this.coinCount += amount;
-
-          for (let i = 0; i < amount; i++) {
-            this.coins.push(new CoinDrop(center));
-          }
+          this.spawnCoins(center);
+          
         }
 
         // If fully finished dying -> remove from entities
@@ -166,8 +160,7 @@ class Level implements IScreen {
     // =========================
     // UPDATE COINS + COLLECT
     // =========================
-    const playerCenter = this.player.getPosition().copy();
-    playerCenter.add(createVector(25, 50)); // rough center
+    const playerCenter = this.player.getCenter();
 
     const groundY = height / 2; //platform is created at y = height / 2
     this.coins.forEach((c) => {
@@ -194,7 +187,14 @@ class Level implements IScreen {
     // =========================
     const enemiesLeft = this.entities.some((x) => x instanceof enemy);
 
-    if (!this.victoryActive && !enemiesLeft) {
+    const coinsStillOnGround = this.coins.length > 0;
+
+    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround) {
+      this.victoryActive = true;
+      this.victoryTimer = 0;
+    }
+
+    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround) {
       this.victoryActive = true;
       this.victoryTimer = 0;
     }
@@ -295,29 +295,17 @@ class Level implements IScreen {
       shakeX = random(-this.shakeStrength, this.shakeStrength);
       shakeY = random(-this.shakeStrength, this.shakeStrength);
     }
-
+    // =========================
+    // BACKGROUND (scrolling world)
+    // =========================
     translate(-this.cameraX + shakeX, shakeY);
 
-    // image(images.testStage, 0, 0);
-    // =========================
-    // PARALLAX BACKGROUND
-    // =========================
-    const baseY = 0;
-
-    // far layer (slow)
-    for (let x = 0; x < this.worldWidth; x += images.treasury.width) {
-      image(images.treasury, x - this.cameraX * 0.2, baseY);
+    // repeat background to fill world width
+    for (let x = 0; x < this.worldWidth; x += images.background.width) {
+      image(images.background, x, 0);
     }
 
-    // mid layer
-    for (let x = 0; x < this.worldWidth; x += images.pirate.width) {
-      image(images.pirate, x - this.cameraX * 0.45, baseY + 80);
-    }
-
-    // main stage layer (fast / gameplay ground)
-    for (let x = 0; x < this.worldWidth; x += images.testStage.width) {
-      image(images.testStage, x - this.cameraX * 1.0, baseY);
-    }
+    //  image(images.testStage, 0, 0);
 
     // Draw entities
     this.entities.forEach((entity) => {

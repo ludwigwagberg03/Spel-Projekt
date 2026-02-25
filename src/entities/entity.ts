@@ -25,6 +25,12 @@ abstract class entity {
     this.health = h;
     this.isGravity = g;
   }
+  public getCenter(): p5.Vector {
+    return createVector(
+      this.position.x + this.size.x / 2,
+      this.position.y + this.size.y / 2,
+    );
+  }
 
   public entityDamage(damage: number, hitFrom?: p5.Vector) {
     if (this.timer > 0) return;
@@ -44,10 +50,9 @@ abstract class entity {
   }
   protected die() {
     this.isAlive = false;
-   
   }
 
-   get lifeStatus(): boolean {
+  get lifeStatus(): boolean {
     return this.health > 0;
   }
 

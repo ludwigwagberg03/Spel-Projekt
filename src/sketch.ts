@@ -11,9 +11,8 @@ let sounds: {
   shoot: p5.SoundFile;
 };
 let images: {
-  treasury: p5.Image;
-  pirate: p5.Image;
   menu: p5.Image;
+  background: p5.Image;
   testStage: p5.Image;
 };
 
@@ -35,8 +34,7 @@ function preload() {
   images = {
     menu: loadImage("/assets/images/menu_bg.png"),
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
-    treasury: loadImage("/assets/images/treasury.png"),
-    pirate: loadImage("/assets/images/pirate.png"),
+    background: loadImage("/assets/images/Terr-style-bg1.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }

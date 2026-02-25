@@ -65,8 +65,8 @@ class CoinDrop {
     this.pos.add(this.vel);
 
     // ground bounce
-    if (this.pos.y > groundY) {
-      this.pos.y = groundY;
+    if (this.pos.y + this.radius > groundY) {
+      this.pos.y = groundY - this.radius;
       this.vel.y *= -0.45; // bounce
       this.vel.x *= 0.75; // friction
     }
@@ -97,7 +97,7 @@ class CoinDrop {
     if (this.collected) return false;
 
     const d = dist(this.pos.x, this.pos.y, playerPos.x, playerPos.y);
-    if (d < 40) {
+    if (d < 80) {
       this.collected = true;
       return true;
     }

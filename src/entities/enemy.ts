@@ -4,6 +4,8 @@ class enemy extends entity {
   private player: Player;
   private speed: number = 4;
   private knockbackForce: p5.Vector = createVector(0, 0);
+  private maxHealth: number;
+
   // Death State System
   private isDying: boolean = false;
   private deathTimer: number = 0;
@@ -17,13 +19,16 @@ class enemy extends entity {
     s: p5.Vector,
     h: number,
     player: Player,
+    
   ) {
     super(p, v, s, h);
+    this.maxHealth = h;
     this.isGravity = false;
     console.log("enemy");
 
     this.player = player;
   }
+  
 
   // --- Start Death ---
   private startDeath(): void {
@@ -142,8 +147,8 @@ class enemy extends entity {
 
     pop();
 
-    //  Health Bar (draw outside scaling)
-    let healthPercent = this.health / 100;
+    //  Health Bar 
+    let healthPercent = this.health / this.maxHealth;
 
     push();
     noStroke();
