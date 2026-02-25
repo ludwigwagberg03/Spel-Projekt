@@ -7,7 +7,7 @@ abstract class entity {
 
   protected health: number;
   protected isAlive: boolean = true;
-  private notPlayedSound: boolean = true;
+  // private notPlayedSound: boolean = true;
   protected timer: number = 1000;
   protected scaleEffect: number = 1;
   public isDead: boolean = false;

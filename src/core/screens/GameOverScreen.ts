@@ -10,5 +10,9 @@ class GameOverScreen implements IScreen {
   }
 
   public update() {}
-  public draw() {}
+  public draw() {
+    text(this.isWin ? "YOU WIN!" : "GAME OVER", width / 2, height / 2 - 70);
+    this.game.changeScreen(new Level(this.game));
+  }
 }
+   

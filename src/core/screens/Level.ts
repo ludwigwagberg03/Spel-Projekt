@@ -309,6 +309,7 @@ class Level implements IScreen {
       text("💥", i.pos.x, i.pos.y);
 
       pop();
+      this.drawCoinUI();
     });
 
     // Draw floating damage numbers
