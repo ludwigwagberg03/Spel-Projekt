@@ -274,6 +274,13 @@ class Level implements IScreen {
   draw(): void {
     push();
 
+    // Victory zoom (camera + world will zoom)
+    if (this.victoryActive) {
+      translate(width / 2, height / 2);
+      scale(this.victoryZoom);
+      translate(-width / 2, -height / 2);
+    }
+
     let shakeX = 0;
     let shakeY = 0;
 
@@ -284,7 +291,26 @@ class Level implements IScreen {
 
     translate(-this.cameraX + shakeX, shakeY);
 
-    image(images.testStage, 0, 0);
+    // image(images.testStage, 0, 0);
+    // =========================
+    // PARALLAX BACKGROUND
+    // =========================
+    const baseY = 0;
+
+    // far layer (slow)
+    for (let x = 0; x < this.worldWidth; x += images.treasury.width) {
+      image(images.treasury, x - this.cameraX * 0.2, baseY);
+    }
+
+    // mid layer
+    for (let x = 0; x < this.worldWidth; x += images.pirate.width) {
+      image(images.pirate, x - this.cameraX * 0.45, baseY + 80);
+    }
+
+    // main stage layer (fast / gameplay ground)
+    for (let x = 0; x < this.worldWidth; x += images.testStage.width) {
+      image(images.testStage, x - this.cameraX * 1.0, baseY);
+    }
 
     // Draw entities
     this.entities.forEach((entity) => {
@@ -295,6 +321,11 @@ class Level implements IScreen {
     this.projectiles.forEach((projectile) => {
       projectile.draw();
     });
+    // Draw explosion particles
+    this.particles.forEach((p) => p.draw());
+
+    // Draw coins
+    this.coins.forEach((c) => c.draw());
 
     // Draw impacts INSIDE camera
     this.impacts.forEach((i) => {
@@ -309,7 +340,6 @@ class Level implements IScreen {
       text("💥", i.pos.x, i.pos.y);
 
       pop();
-      this.drawCoinUI();
     });
 
     // Draw floating damage numbers
@@ -335,17 +365,46 @@ class Level implements IScreen {
     });
     pop(); // end camera
 
-    // UI text (screen space)
-    fill(255, 55, 99);
-    textAlign(CENTER, CENTER);
-    textSize(48);
-    text("PLAYING", width / 2, height / 4);
+    // =========================
+    // UI (screen space)
+    // =========================
+    this.drawCoinUI();
 
-    textSize(18);
-    text("Press ESC to pause", width / 2, height / 4 + 60);
+    // Victory overlay
+    if (this.victoryActive) {
+      push();
+      textFont(gameFont);
+      textAlign(CENTER, CENTER);
+
+      fill(0, 0, 0, 160);
+      rect(width / 2 - 260, height / 2 - 120, 520, 220, 18);
+
+      fill(255);
+      textSize(34);
+      text("VICTORY!", width / 2, height / 2 - 40);
+
+      textSize(18);
+      text("Press R to restart", width / 2, height / 2 + 25);
+
+      pop();
+    }
+
+    // // UI text (screen space)
+    // fill(255, 55, 99);
+    // textAlign(CENTER, CENTER);
+    // textSize(48);
+    // text("PLAYING", width / 2, height / 4);
+
+    // textSize(18);
+    // text("Press ESC to pause", width / 2, height / 4 + 60);
   }
 
   public keyPressed(code: number): void {
+    // R = restart
+    if (code === 82) {
+      this.game.changeScreen(new Level(this.game));
+      return;
+    }
     //press ESC to go back to start menu
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));

@@ -31,6 +31,7 @@ class Projectile extends entity {
 
   draw() {
     push();
+        
     fill(255, 220, 100);
     noStroke();
     ellipse(this.position.x, this.position.y, 12);
@@ -39,6 +40,7 @@ class Projectile extends entity {
     ellipse(this.position.x, this.position.y, 6);
     pop();
   }
+  
 
   onCollision(other: entity) {
     if (other instanceof enemy) {
