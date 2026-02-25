@@ -162,7 +162,7 @@ class Level implements IScreen {
     const playerCenter = this.player.getPosition().copy();
     playerCenter.add(createVector(25, 50)); // rough center
 
-    const groundY = height - 20; // simple floor
+    const groundY = height / 2; //platform is created at y = height / 2
     this.coins.forEach((c) => {
       c.update(this.gravity, groundY);
 
