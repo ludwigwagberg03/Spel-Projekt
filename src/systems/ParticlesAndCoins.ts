@@ -43,11 +43,16 @@ class ExplosionParticle {
   get alive(): boolean {
     return this.life > 0;
   }
+}
 
+class CoinDrop {
+  public pos: p5.Vector;
+  private vel: p5.Vector;
+  private radius: number = 10;
+  private collected: boolean = false;
 
-
-
-
-
-  
+  constructor(spawn: p5.Vector) {
+    this.pos = spawn.copy();
+    this.vel = createVector(random(-3, 3), random(-10, -5));
+  }
 }
