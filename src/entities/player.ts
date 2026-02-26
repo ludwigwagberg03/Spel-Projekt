@@ -4,6 +4,9 @@ class Player extends entity {
   private onGround: boolean = false;
   private onPlatform: boolean = false;
   private isFalling: boolean = false;
+  public facing: number = 1;
+  private shootCooldown: number = 0;
+
   private attackHitBox: {
     position: p5.Vector;
     width: number;
@@ -35,6 +38,9 @@ class Player extends entity {
         price: 50
       }
     ]);
+  }
+public canShoot(): boolean {
+    return this.shootCooldown <= 0;
   }
 
   public setEnimies(entities: entity[]) {
@@ -88,11 +94,15 @@ class Player extends entity {
   public update(gravity: number, worldWidth: number) {
     if (this.swordSwipeTimer > 0) {
       this.swordSwipeTimer -= deltaTime;
+      
+    if (this.shootCooldown > 0) {
+      this.shootCooldown -= deltaTime;
     }
     this.move();
     super.update(gravity, worldWidth);
     this.updatePosition(worldWidth);
     this.updateAttackHitBox();
+     
   }
 
   draw() {
@@ -177,10 +187,12 @@ class Player extends entity {
 
     if (keyIsDown(65)) { // a
       this.velocity.x = -5;
+      this.facing = -1;
       this.isPlayerFacingRight = false;
     }
     if (keyIsDown(68)) { // d
       this.velocity.x = 5;
+      this.facing = 1;
       this.isPlayerFacingRight = true;
     }
     if (keyIsDown(83) && this.onPlatform) { // s
@@ -217,11 +229,38 @@ class Player extends entity {
     }
   }
 
-  // public overlaps(other: Entity) {
-  //     if (other instanceof Platform) {
-  //         // Speciell lösning
-  //     } else {
-  //         super.overlaps(other);
-  //     }
+  public shoot(target: p5.Vector): Projectile {
+    // Reset cooldown
+    this.shootCooldown = 300;
+
+    // Spawn position (center of player)
+    let spawnPos = this.getPosition().copy();
+    spawnPos.add(createVector(this.size.x / 2, this.size.y / 2));
+
+    // Calculate direction
+    let direction = p5.Vector.sub(target, spawnPos);
+    direction.normalize();
+
+    // Recoil
+    this.velocity.add(direction.copy().mult(-3));
+
+    // Random damage (1–3)
+    let damageValue = floor(random(1, 4));
+
+    return new Projectile(spawnPos, target, damageValue);
+  }
+
+  // public shoot(): Projectile {
+  //   this.shootCooldown = 300;
+
+  //   let gunOffsetX = this.facing === 1 ? this.size.x : 0;
+  //   let gunOffsetY = this.size.y / 2;
+
+  //   let spawnPos = createVector(
+  //     this.position.x + gunOffsetX,
+  //     this.position.y + gunOffsetY,
+  //   );
+
+  //   return new Projectile(spawnPos, this.facing);
   // }
 }
