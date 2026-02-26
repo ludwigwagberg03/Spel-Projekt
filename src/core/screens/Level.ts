@@ -29,12 +29,14 @@ class Level implements IScreen {
 
     this.entities.push(new enemy(
       createVector(this.worldWidth / 2 - 30
-        , height / 2),
+        , height / 2 - 100),
       createVector(0, 0),
       createVector(50, 100),
       100,
       this.player
     ));
+
+    this.player.setEnimies(this.entities);
   }
 
   update(): void {
@@ -45,6 +47,12 @@ class Level implements IScreen {
       entity.update(this.gravity, this.worldWidth);
     })
     this.checkCollision();
+
+    this.entities = this.entities.filter(isDead => !isDead.isDead());
+
+    if(this.player.lifeStatus === false){
+      this.game.changeScreen(new StartScreen(this.game));
+    }
   }
 
   checkCollision() {
