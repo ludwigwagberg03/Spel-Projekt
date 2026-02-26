@@ -24,7 +24,6 @@ class Level implements IScreen {
       createVector(50, 100),
       100
     );
-    this.player.setSwords(itemData.swords);
     this.entities.push(this.player);
 
     this.entities.push(new enemy(
@@ -94,6 +93,10 @@ class Level implements IScreen {
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new PauseScreen(this.game));
+    }
+     if (code === 66) {
+      // this.game.changeScreen(new StartScreen(this.game));
+      this.game.changeScreen(new ShopScreen(this.game));
     }
   }
 }

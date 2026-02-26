@@ -15,7 +15,7 @@ let images: {
   menu: p5.Image;
   testStage: p5.Image;
 };
-let itemData: any;
+// let itemData: any;
 
 /**
  * Built in preload function in P5
@@ -38,7 +38,7 @@ function preload() {
     pirate: loadImage("/assets/images/pirate.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
-  itemData = loadJSON("/assets/items/sword.json")
+  // itemData = loadJSON("/assets/items/sword.json")
 }
 
 function setup() {
