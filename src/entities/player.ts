@@ -7,10 +7,10 @@ class Player extends entity {
     private currentImage: p5.Image;
     private frameIndex: number = 0;
     private frameTimer: number = 0;
-    private frameDelay: number = 100;
+    private frameDelay: number = 2500;
     private totalFrames: number = 6; // default idle
-    private frameWidth: number = 64;
-    private frameHeight: number = 64;
+    private frameWidth: number = 16;
+    private frameHeight: number = 32;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
     super(p, v, s, h, true);
@@ -18,7 +18,7 @@ class Player extends entity {
     this.currentImage = images.playerIdle;
 }
 
-    private updateAnimation() {
+private updateAnimation() {
 
     let newImage = this.currentImage;
     let newTotalFrames = this.totalFrames;
@@ -27,18 +27,22 @@ class Player extends entity {
         if (this.velocity.y < 0) {
             newImage = images.playerJump;
             newTotalFrames = 14;
+            this.frameDelay = 1000;
         } else {
             newImage = images.playerAir;
             newTotalFrames = 10;
         }
     }
     else if (this.velocity.x !== 0) {
+        console.log("walking");
         newImage = images.playerWalk;
         newTotalFrames = 4;
+        this.frameDelay = 8000;
     }
     else {
         newImage = images.playerIdle;
-        newTotalFrames = 6;
+        newTotalFrames = 5;
+        this.frameDelay = 2000;
     }
 
     if (newImage !== this.currentImage) {
@@ -62,7 +66,7 @@ class Player extends entity {
 }
 
     public draw() {
-        console.log("drawing player", this.currentImage, this.currentImage?.width);
+        //console.log("drawing player", this.currentImage, this.currentImage?.width);
     noSmooth();
 
     const sx = this.frameIndex * this.frameWidth;
