@@ -221,7 +221,7 @@ class Level implements IScreen {
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
   }
-  //
+  // Finds the closest alive enemy to the player and returns its position
   private findClosestEnemy(): p5.Vector | null {
     let closest: enemy | null = null;
     let minDist = Infinity;
