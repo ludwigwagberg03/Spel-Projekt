@@ -8,14 +8,28 @@ abstract class entity {
     private isAlive: boolean = true;
     private notPlayedSound: boolean = true;
     private timer: number = 1000;
+    private maxHealth: number;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number = 0, g = false) {
         this.position = p;
         this.velocity = v;
         this.size = s;
         this.health = h;
+        this.maxHealth = h;
         this.isGravity = g;
         this.isAlive = true;
+    }
+
+    public drawHealthBar(x: number, y: number, w: number, h: number){
+        const healthProcent = this.health / this.maxHealth;
+
+        push();
+        fill(120); // red
+        rect(x,y,w,h)
+
+        fill(0, 250, 0) // green
+        rect(x,y,w * healthProcent, h)
+        pop();
     }
 
     entityDamage(damage: number){

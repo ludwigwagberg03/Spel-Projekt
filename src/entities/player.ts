@@ -97,12 +97,10 @@ class Player extends entity {
 
   draw() {
     super.draw();
-
     rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight)
   }
 
   private updatePosition(worldWidth: number) {
-
     // player is on the ground 
     this.checkIfPlayerIsOnGround();
 
