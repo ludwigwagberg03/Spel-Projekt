@@ -2,7 +2,7 @@ abstract class entity {
     protected position: p5.Vector;
     protected velocity: p5.Vector;
     protected size: p5.Vector;
-    private isGravity: boolean;
+    protected isGravity: boolean;
 
     private health: number;
     private isAlive: boolean = true;
@@ -74,11 +74,9 @@ abstract class entity {
       
         if (this.timer < 1000) {
             this.timer -= deltaTime
-            console.log(this.timer);
         }
         if (this.timer < 0) {
             this.timer = 1000
-            console.log(this.timer);
         }
         this.position.add(this.velocity);
         // this.position.add(this.velocity.copy().mult(deltaTime));
