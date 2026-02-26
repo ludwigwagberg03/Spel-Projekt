@@ -39,6 +39,13 @@ class enemy extends entity {
         }
     }
 
+    private dash() {
+        let direction = p5.Vector.sub(this.player.getPosition(), this.position);
+        direction.normalize();
+        direction.mult(this.speed * 2);
+        this.velocity = direction;
+    }
+
     public onCollision(other: entity): void {
         //push enemy slightlty 
 
