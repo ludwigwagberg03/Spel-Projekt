@@ -7,6 +7,12 @@ class Player extends entity {
   public facing: number = 1;
   private shootCooldown: number = 0;
 
+  private maxHp: number = 100;
+  private hp: number = 100;
+
+  private damageCooldown: number = 0;
+  private damageCooldownTime: number = 60; // 1 second (60fps)
+
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
     super(p, v, s, h, true);
   }
@@ -76,6 +82,15 @@ class Player extends entity {
       this.isFalling = false;
     }
   }
+
+  public takeDamage(amount: number): void {
+    if (this.damageCooldown > 0) return;
+
+    this.hp -= amount;
+    this.damageCooldown = this.damageCooldownTime;
+
+    if (this.hp < 0) this.hp = 0;
+  }
   private move() {
     this.velocity.x = 0;
 
@@ -133,18 +148,4 @@ class Player extends entity {
 
     return new Projectile(spawnPos, target, damageValue);
   }
-
-  // public shoot(): Projectile {
-  //   this.shootCooldown = 300;
-
-  //   let gunOffsetX = this.facing === 1 ? this.size.x : 0;
-  //   let gunOffsetY = this.size.y / 2;
-
-  //   let spawnPos = createVector(
-  //     this.position.x + gunOffsetX,
-  //     this.position.y + gunOffsetY,
-  //   );
-
-  //   return new Projectile(spawnPos, this.facing);
-  // }
 }
