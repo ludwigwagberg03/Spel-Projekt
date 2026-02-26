@@ -72,6 +72,13 @@ class Player extends entity {
       this.onGround = true;
       this.isFalling = false;
     }
+    // damage cooldown
+    if (this.damageCooldown > 0) {
+      this.damageCooldown--;
+    }
+  }
+  public getHp(): number {
+    return this.hp;
   }
   private checkIfPlayerIsOnGround() {
     if (this.position.y > height - this.size.y) {
@@ -85,6 +92,7 @@ class Player extends entity {
 
   public takeDamage(amount: number): void {
     if (this.damageCooldown > 0) return;
+     console.log("Player took damage!");
 
     this.hp -= amount;
     this.damageCooldown = this.damageCooldownTime;

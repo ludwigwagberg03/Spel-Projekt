@@ -112,6 +112,7 @@ class Level implements IScreen {
 
     pop();
   }
+  
   update(): void {
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
@@ -129,6 +130,7 @@ class Level implements IScreen {
 
     // Check collisions between objects
     this.checkCollision();
+
     // =========================
     // ENEMY DEATH EVENTS + REMOVE DEAD
     // =========================
@@ -141,12 +143,20 @@ class Level implements IScreen {
           const center = e.getCenter();
           this.spawnExplosion(center);
           this.spawnCoins(center);
-          
         }
 
         // If fully finished dying -> remove from entities
         if (e.isDead) {
           this.entities.splice(i, 1);
+        }
+      }
+    }
+
+    //  Player takes damage when touching enemy
+    for (let e of this.entities) {
+      if (e instanceof enemy && e.alive) {
+        if (this.player.overlaps(e)) {
+          this.player.takeDamage(10);
         }
       }
     }
@@ -176,7 +186,7 @@ class Level implements IScreen {
     // =========================
     // LOSE CONDITION -> GameOverScreen
     // =========================
-    if (!this.gameOverTriggered && !this.player.alive) {
+    if (!this.gameOverTriggered && this.player.getHp() <= 0) {
       this.gameOverTriggered = true;
       this.game.changeScreen(new GameOverScreen(this.game, false));
       return;
@@ -364,6 +374,20 @@ class Level implements IScreen {
     // UI (screen space)
     // =========================
     this.drawCoinUI();
+    // ===== HP UI =====
+push();
+noStroke();
+fill(0, 0, 0, 120);
+rect(20, 90, 200, 40, 10);
+
+fill(200, 0, 0);
+rect(30, 100, this.player.getHp() * 1.5, 20);
+
+fill(255);
+textSize(14);
+textAlign(LEFT, CENTER);
+text("HP: " + this.player.getHp(), 30, 90);
+pop();
 
     // Victory overlay
     if (this.victoryActive) {
