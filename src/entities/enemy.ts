@@ -40,9 +40,9 @@ class enemy extends entity {
     }
 
     private dash() {
-        let direction = p5.Vector.sub(this.player.getPosition(), this.position);
-        direction.normalize();
-        direction.mult(this.speed * 2);
+        let target = this.player.getPosition().mult(2);
+        let direction = p5.Vector.sub(target, this.position);
+        direction.setMag(this.speed * 2);
         this.velocity = direction;
     }
 

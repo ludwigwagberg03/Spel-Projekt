@@ -43,7 +43,7 @@ abstract class entity {
         return this.health;
     }
     
-    public getPosition() {
+    public getPosition(): p5.Vector {
         return this.position.copy();
     }
     
