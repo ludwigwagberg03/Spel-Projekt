@@ -94,16 +94,16 @@ class Player extends entity {
   public update(gravity: number, worldWidth: number) {
     if (this.swordSwipeTimer > 0) {
       this.swordSwipeTimer -= deltaTime;
-
-      if (this.shootCooldown > 0) {
-        this.shootCooldown -= deltaTime;
-      }
-      this.move();
-      super.update(gravity, worldWidth);
-      this.updatePosition(worldWidth);
-      this.updateAttackHitBox();
-
     }
+    if (this.shootCooldown > 0) {
+      this.shootCooldown -= deltaTime;
+    }
+    this.move();
+    super.update(gravity, worldWidth);
+    this.updatePosition(worldWidth);
+    this.updateAttackHitBox();
+
+
   }
   draw() {
     super.draw();

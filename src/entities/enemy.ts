@@ -94,7 +94,7 @@ class enemy extends entity {
       return;
     }
     // Normal chasing movement
-    this.playerPosition();
+    //this.playerPosition();
 
     // Apply knockback separately
     this.position.add(this.knockbackForce);

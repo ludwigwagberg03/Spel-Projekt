@@ -97,7 +97,7 @@ abstract class entity {
     if (this.hitFlash > 0) {
       this.hitFlash -= deltaTime;
     // CLEAN DAMAGE COOLDOWN TIMER
-      
+    }  
     if (this.timer > 0) {
       this.timer -= deltaTime;
     }
@@ -106,7 +106,7 @@ abstract class entity {
     // Gravity
     this.applyGravity(gravity);
   }
-}
+
   private applyGravity(gravity: number): void {
     if (this.isGravity) {
       this.velocity.y += gravity;

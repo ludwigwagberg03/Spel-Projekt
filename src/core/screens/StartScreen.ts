@@ -59,7 +59,7 @@ function drawStoneButton(
 class StartScreen implements IScreen {
   private game: Game;
   private time = 0;
-
+  private inputLocked: boolean = true;
   private stars: { x: number; y: number; size: number; speed: number }[] = [];
 
   // Menu
@@ -175,9 +175,10 @@ class StartScreen implements IScreen {
 
   // ================= INPUT =================
   keyPressed(code: number): void {
+    console.log("StartScreen key:", code);
     // remember old selection
     this.lastSelected = this.selected;
-
+    if(this.inputLocked) return;
     // move selection
     if (code === UP_ARROW) this.selected--;
     if (code === DOWN_ARROW) this.selected++;
@@ -209,5 +210,7 @@ class StartScreen implements IScreen {
 
   onEnter(): void {
     console.log("Start screen entered");
+
+    setTimeout(()=>{this.inputLocked = false;}, 200);
   }
 }
