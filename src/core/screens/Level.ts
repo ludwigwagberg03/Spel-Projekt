@@ -375,7 +375,7 @@ class Level implements IScreen {
 
       pop();
     });
-    pop(); // end camera
+    // end camera
 
     // =========================
     // UI (screen space)
@@ -441,4 +441,9 @@ class Level implements IScreen {
       this.game.changeScreen(new ShopScreen(this.game));
     }
   }
+
+  onEnter(): void {
+    console.log("level screen entered");
+  }
+
 }

@@ -12,7 +12,7 @@ class Player extends entity {
     width: number;
     hight: number;
   };
-  
+
   private isPlayerFacingRight: boolean = true;
   private enimies: entity[] = [];
   private swordSwipeTimer: number = 500;
@@ -39,7 +39,7 @@ class Player extends entity {
       }
     ]);
   }
-public canShoot(): boolean {
+  public canShoot(): boolean {
     return this.shootCooldown <= 0;
   }
 
@@ -94,20 +94,20 @@ public canShoot(): boolean {
   public update(gravity: number, worldWidth: number) {
     if (this.swordSwipeTimer > 0) {
       this.swordSwipeTimer -= deltaTime;
-      
-    if (this.shootCooldown > 0) {
-      this.shootCooldown -= deltaTime;
-    }
-    this.move();
-    super.update(gravity, worldWidth);
-    this.updatePosition(worldWidth);
-    this.updateAttackHitBox();
-     
-  }
 
+      if (this.shootCooldown > 0) {
+        this.shootCooldown -= deltaTime;
+      }
+      this.move();
+      super.update(gravity, worldWidth);
+      this.updatePosition(worldWidth);
+      this.updateAttackHitBox();
+
+    }
+  }
   draw() {
     super.draw();
-    rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight)
+    rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
   }
 
   private updatePosition(worldWidth: number) {
