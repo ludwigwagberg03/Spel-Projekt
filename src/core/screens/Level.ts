@@ -4,6 +4,7 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
+  private enemy: enemy;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
@@ -63,18 +64,19 @@ class Level implements IScreen {
       createVector(50, 100),
       100,
     );
-
     this.entities.push(this.player);
 
-    this.entities.push(
-      new enemy(
-        createVector(this.worldWidth / 2 - 30, height / 2),
-        createVector(0, 0),
-        createVector(50, 100),
-        20, //health
-        this.player,
-      ),
+    this.enemy = new enemy(
+      createVector(this.worldWidth / 2 - 30
+        , height / 2 - 100),
+      createVector(0, 0),
+      createVector(50, 100),
+      100,
+      this.player
     );
+
+    this.entities.push(this.enemy);
+    this.player.setEnimies(this.entities);
   }
 
   private spawnExplosion(pos: p5.Vector): void {
@@ -88,7 +90,6 @@ class Level implements IScreen {
     for (let i = 0; i < amount; i++) {
       this.coins.push(new CoinDrop(pos));
     }
-  }
 
   private drawCoinUI(): void {
     // UI
@@ -220,6 +221,12 @@ class Level implements IScreen {
     });
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
+
+    this.entities = this.entities.filter(isDead => !isDead.isDead());
+
+    if(this.player.lifeStatus === false){
+      this.game.changeScreen(new StartScreen(this.game));
+    }
   }
   //
   private findClosestEnemy(): p5.Vector | null {
@@ -318,6 +325,16 @@ class Level implements IScreen {
     });
     // Draw explosion particles
     this.particles.forEach((p) => p.draw());
+    pop();
+
+    this.player.drawHealthBar(width-400, 20, 350, 50);
+    this.enemy.drawHealthBar(width / 2 - 400, height - 80 , 800, 50);
+
+    // demo text
+    fill(255, 55, 99);
+    textAlign(CENTER, CENTER);
+    textSize(48);
+    text("PLAYING", width / 2, height / 4);
 
     // Draw coins
     this.coins.forEach((c) => c.draw());
@@ -417,6 +434,9 @@ class Level implements IScreen {
       this.addProjectile(bullet);
 
       sounds.shoot.play();
+     if (code === 66) {
+      // this.game.changeScreen(new StartScreen(this.game));
+      this.game.changeScreen(new ShopScreen(this.game));
     }
   }
 }

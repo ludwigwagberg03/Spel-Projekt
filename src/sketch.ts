@@ -15,6 +15,7 @@ let images: {
   background: p5.Image;
   testStage: p5.Image;
 };
+// let itemData: any;
 
 /**
  * Built in preload function in P5

@@ -13,20 +13,12 @@ class enemy extends entity {
   private shrinkScale: number = 1;
   private deathTriggeredOnce: boolean = false;
 
-  constructor(
-    p: p5.Vector,
-    v: p5.Vector,
-    s: p5.Vector,
-    h: number,
-    player: Player,
-    
-  ) {
-    super(p, v, s, h);
-    this.maxHealth = h;
-    this.isGravity = false;
-    console.log("enemy");
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
+        super(p, v, s, h);
+        this.isGravity = false;
+        console.log("enemy");
 
-    this.player = player;
+   this.player = player;
   }
   
 
@@ -115,6 +107,7 @@ class enemy extends entity {
   }
 
   public draw() {
+    super.draw();
     push();
 
     let centerX = this.position.x + this.size.x / 2;
@@ -159,4 +152,8 @@ class enemy extends entity {
     rect(this.position.x, this.position.y - 15, this.size.x * healthPercent, 6);
     pop();
   }
+  public update(gravity: number, wordWidth: number) {
+        //this.playerPosition();
+        super.update(gravity, wordWidth);
+    };
 }

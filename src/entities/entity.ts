@@ -1,9 +1,37 @@
 abstract class entity {
-  protected position: p5.Vector;
-  protected velocity: p5.Vector;
-  protected size: p5.Vector;
-  protected isGravity: boolean;
-  protected hitFlash: number = 0;
+    protected hitFlash: number = 0;
+    protected position: p5.Vector;
+    protected velocity: p5.Vector;
+    protected size: p5.Vector;
+    protected isGravity: boolean;
+
+    private health: number;
+    private isAlive: boolean = true;
+    private notPlayedSound: boolean = true;
+    private timer: number = 1000;
+    private maxHealth: number;
+
+    constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number = 0, g = false) {
+        this.position = p;
+        this.velocity = v;
+        this.size = s;
+        this.health = h;
+        this.maxHealth = h;
+        this.isGravity = g;
+        this.isAlive = true;
+    }
+
+    public drawHealthBar(x: number, y: number, w: number, h: number){
+        const healthProcent = this.health / this.maxHealth;
+
+        push();
+        fill(120); // red
+        rect(x,y,w,h)
+
+        fill(0, 250, 0) // green
+        rect(x,y,w * healthProcent, h)
+        pop();
+    }
 
   protected health: number;
   protected isAlive: boolean = true;
@@ -67,30 +95,37 @@ abstract class entity {
   public getPosition() {
     return this.position.copy();
   }
+  public getSize() {
+        return this.size.copy();
+    }
+  public isDead() {
+        return !this.isAlive;
+    }
 
   public update(gravity: number, worldWidth: number) {
+    if (this.timer < 1000) {
+            this.timer -= deltaTime
+        }
+    if (this.timer < 0) {
+            this.timer = 1000
+        }
     // Smooth scale return
     if (this.scaleEffect > 1) {
       this.scaleEffect -= 0.02;
     }
-
     // Flash timer
     if (this.hitFlash > 0) {
       this.hitFlash -= deltaTime;
-    }
-
     // CLEAN DAMAGE COOLDOWN TIMER
+      
     if (this.timer > 0) {
       this.timer -= deltaTime;
     }
-
     // Movement
     this.position.add(this.velocity);
-
     // Gravity
     this.applyGravity(gravity);
   }
-
   private applyGravity(gravity: number): void {
     if (this.isGravity) {
       this.velocity.y += gravity;
