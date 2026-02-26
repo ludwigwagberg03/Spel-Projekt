@@ -4,10 +4,82 @@ class Player extends entity {
     private onGround: boolean = false;
     private onPlatform: boolean = false;
     private isFalling: boolean = false;
+    private currentImage: p5.Image;
+    private frameIndex: number = 0;
+    private frameTimer: number = 0;
+    private frameDelay: number = 100;
+    private totalFrames: number = 6; // default idle
+    private frameWidth: number = 64;
+    private frameHeight: number = 64;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
-        super(p, v, s, h, true);
+    super(p, v, s, h, true);
+
+    this.currentImage = images.playerIdle;
+}
+
+    private updateAnimation() {
+
+    let newImage = this.currentImage;
+    let newTotalFrames = this.totalFrames;
+
+    if (!this.onGround) {
+        if (this.velocity.y < 0) {
+            newImage = images.playerJump;
+            newTotalFrames = 14;
+        } else {
+            newImage = images.playerAir;
+            newTotalFrames = 10;
+        }
     }
+    else if (this.velocity.x !== 0) {
+        newImage = images.playerWalk;
+        newTotalFrames = 4;
+    }
+    else {
+        newImage = images.playerIdle;
+        newTotalFrames = 6;
+    }
+
+    if (newImage !== this.currentImage) {
+        this.frameIndex = 0;
+        this.frameTimer = 0;
+    }
+
+    this.currentImage = newImage;
+    this.totalFrames = newTotalFrames;
+
+    this.frameTimer += deltaTime;
+
+    if (this.frameTimer > this.frameDelay) {
+        this.frameIndex++;
+        this.frameTimer = 0;
+
+        if (this.frameIndex >= this.totalFrames) {
+            this.frameIndex = 0;
+        }
+    }
+}
+
+    public draw() {
+        console.log("drawing player", this.currentImage, this.currentImage?.width);
+    noSmooth();
+
+    const sx = this.frameIndex * this.frameWidth;
+    const sy = 0;
+
+    image(
+        this.currentImage,
+        this.position.x,
+        this.position.y,
+        this.size.x,
+        this.size.y,
+        sx,
+        sy,
+        this.frameWidth,
+        this.frameHeight
+    );
+}
 
     public onCollision(other: entity): void {
         if (other instanceof Platform) {
@@ -35,10 +107,11 @@ class Player extends entity {
     private takedamage(n: number): void { }
 
     public update(gravity: number, worldWidth: number) {
-        this.move();
-        super.update(gravity, worldWidth)
-        this.updatePosition(worldWidth);
-    }
+    this.move();
+    super.update(gravity, worldWidth);
+    this.updatePosition(worldWidth);
+    this.updateAnimation();
+}
 
     private updatePosition(worldWidth: number) {
 

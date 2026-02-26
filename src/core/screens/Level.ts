@@ -21,7 +21,7 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2, height / 2),
 
       createVector(0, 0),
-      createVector(50, 100),
+      createVector(64, 64),
       100
     );
 
@@ -31,7 +31,7 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2 - 30
         , height / 2),
       createVector(0, 0),
-      createVector(50, 100),
+      createVector(16, 16),
       100,
       this.player
     ));

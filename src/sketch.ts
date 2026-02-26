@@ -14,6 +14,11 @@ let images: {
   pirate: p5.Image;
   menu: p5.Image;
   testStage: p5.Image;
+
+  playerIdle: p5.Image;
+  playerWalk: p5.Image;
+  playerJump: p5.Image;
+  playerAir: p5.Image;
 };
 
 /**
@@ -35,13 +40,19 @@ function preload() {
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     treasury: loadImage("/assets/images/treasury.png"),
     pirate: loadImage("/assets/images/pirate.png"),
-  };
+
+    playerIdle: loadImage("/assets/images/playerIdle.png"),
+    playerWalk: loadImage("/assets/images/playerWalk.png"),
+    playerJump: loadImage("/assets/images/playerJump.png"),
+    playerAir: loadImage("/assets/images/playerAir.png"),
+};
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  pixelDensity(1);
   frameRate(60);
   music.mystery.setVolume(0.8);
   

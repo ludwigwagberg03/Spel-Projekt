@@ -69,10 +69,6 @@ abstract class entity {
     }
     
     public draw() {
-        push();
-        fill(63);
-        rect(this.position.x, this.position.y, this.size.x, this.size.y);
-        pop();
     }
 
     public overlaps(other: entity) {
