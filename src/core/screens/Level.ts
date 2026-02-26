@@ -91,24 +91,30 @@ class Level implements IScreen {
   }
 
   private drawCoinUI(): void {
-    // UI
     push();
     textFont(gameFont);
 
-    // panel
+    // ===== Panel Background =====
     noStroke();
     fill(0, 0, 0, 120);
-    rect(20, 20, 180, 55, 12);
+    rect(20, 20, 360, 60, 12);
 
-    // coin icon
+    // ===== Coin Icon =====
     fill(255, 205, 60);
-    ellipse(45, 47, 22);
+    ellipse(45, 50, 22);
 
-    // text
+    // ===== Coin Text =====
     fill(255);
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(`Coins: ${this.coinCount}`, 65, 47);
+    text(`Coins: ${this.coinCount}`, 65, 50);
+
+    // ===== HP Label =====
+    text(`HP: ${this.player.getHp()}`, 200, 35);
+
+    // ===== HP Bar =====
+    fill(200, 0, 0);
+    rect(200, 50, this.player.getHp() * 1.2, 15, 4);
 
     pop();
   }
@@ -374,22 +380,7 @@ class Level implements IScreen {
     // UI (screen space)
     // =========================
     this.drawCoinUI();
-    // ===== HP UI =====
-    push();
-    noStroke();
-    fill(0, 0, 0, 120);
-    rect(20, 90, 200, 40, 10);
-
-    fill(200, 0, 0);
-    rect(30, 100, this.player.getHp() * 1.5, 20);
-
-    fill(255);
-    textSize(14);
-    textAlign(LEFT, CENTER);
-    text("HP: " + this.player.getHp(), 30, 90);
-    pop();
-
-    // Victory overlay
+       // Victory overlay
     if (this.victoryActive) {
       push();
       textFont(gameFont);

@@ -1,54 +1,35 @@
 class Game {
+  // Currently active screen
   private currentScreen: IScreen;
-  private gameWon: boolean = false;
-  private enemies: enemy[] = [];
 
   constructor() {
+    // Start the game at the main menu
     this.currentScreen = new StartScreen(this);
-    // this.currentScreen.onEnter?.();
   }
 
-  // --- Win Game ---
-  private handleWin(): void {
-    this.gameWon = true;
-
-    // Option 1: Go To GameOverScreen as WIN
-    this.changeScreen(new GameOverScreen(this, true));
-
-    // Option 2: Load Next Level instead
-    // this.loadNextLevel();
-  }
+  // Called every frame (logic update)
   update(): void {
     this.currentScreen.update();
-    // --- Remove Dead Enemies ---
-    for (let i = this.enemies.length - 1; i >= 0; i--) {
-      if (this.enemies[i].isDead) {
-        this.enemies.splice(i, 1);
-      }
-    }
-
-    // --- Check Win ---
-    if (!this.gameWon && this.enemies.length === 0) {
-      this.handleWin();
-    }
   }
 
+  // Called every frame (render)
   draw(): void {
     this.currentScreen.draw();
   }
 
+  // Switch to a different screen
   changeScreen(newScreen: IScreen): void {
     this.currentScreen.onExit?.();
     this.currentScreen = newScreen;
     this.currentScreen.onEnter?.();
   }
 
+  // Forward keyboard input to active screen
   keyPressed(code: number): void {
-    if (this.currentScreen && this.currentScreen.keyPressed) {
-      this.currentScreen.keyPressed(code);
-    }
+    this.currentScreen.keyPressed?.(code);
   }
 
+  // Forward mouse input to active screen
   mousePressed(): void {
     this.currentScreen.mousePressed?.();
   }
