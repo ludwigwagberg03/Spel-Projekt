@@ -112,7 +112,7 @@ class Level implements IScreen {
 
     pop();
   }
-  
+
   update(): void {
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
@@ -375,19 +375,19 @@ class Level implements IScreen {
     // =========================
     this.drawCoinUI();
     // ===== HP UI =====
-push();
-noStroke();
-fill(0, 0, 0, 120);
-rect(20, 90, 200, 40, 10);
+    push();
+    noStroke();
+    fill(0, 0, 0, 120);
+    rect(20, 90, 200, 40, 10);
 
-fill(200, 0, 0);
-rect(30, 100, this.player.getHp() * 1.5, 20);
+    fill(200, 0, 0);
+    rect(30, 100, this.player.getHp() * 1.5, 20);
 
-fill(255);
-textSize(14);
-textAlign(LEFT, CENTER);
-text("HP: " + this.player.getHp(), 30, 90);
-pop();
+    fill(255);
+    textSize(14);
+    textAlign(LEFT, CENTER);
+    text("HP: " + this.player.getHp(), 30, 90);
+    pop();
 
     // Victory overlay
     if (this.victoryActive) {
@@ -400,41 +400,45 @@ pop();
 
       fill(255);
       textSize(34);
-      text("VICTORY!", width / 2, height / 2 - 40);
+      text("VICTORY!", width / 2, height / 2 - 50);
 
       textSize(18);
-      text("Press R to restart", width / 2, height / 2 + 25);
+      text("R - Restart", width / 2, height / 2 + 20);
+      text("M - Main Menu", width / 2, height / 2 + 50);
 
       pop();
     }
-
-    // // UI text (screen space)
-    // fill(255, 55, 99);
-    // textAlign(CENTER, CENTER);
-    // textSize(48);
-    // text("PLAYING", width / 2, height / 4);
-
-    // textSize(18);
-    // text("Press ESC to pause", width / 2, height / 4 + 60);
   }
 
   public keyPressed(code: number): void {
-    // R = restart
-    if (code === 82) {
-      this.game.changeScreen(new Level(this.game));
+    // ===== Victory Controls =====
+    if (this.victoryActive) {
+      // R = Restart
+      if (code === 82) {
+        this.game.changeScreen(new Level(this.game));
+        return;
+      }
+
+      // M = Main Menu
+      if (code === 77) {
+        this.game.changeScreen(new StartScreen(this.game));
+        return;
+      }
+    }
+
+    // =====  Gameplay Controls =====
+
+    // ESC → Pause
+    if (code === ESCAPE) {
+      this.game.changeScreen(new PauseScreen(this.game));
       return;
     }
-    //press ESC to go back to start menu
-    if (code === ESCAPE) {
-      // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new PauseScreen(this.game));
-    }
+
+    // J → Shoot
     if (code === 74) {
-      // J key
       if (!this.player.canShoot()) return;
 
       let enemyTarget = this.findClosestEnemy();
-
       if (!enemyTarget) return;
 
       const bullet = this.player.shoot(enemyTarget);

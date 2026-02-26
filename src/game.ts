@@ -5,7 +5,7 @@ class Game {
 
   constructor() {
     this.currentScreen = new StartScreen(this);
-    this.currentScreen.onEnter?.();
+    // this.currentScreen.onEnter?.();
   }
 
   // --- Win Game ---
