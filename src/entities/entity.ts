@@ -5,11 +5,14 @@ abstract class entity {
     protected size: p5.Vector;
     protected isGravity: boolean;
 
-    private health: number;
+    protected health: number;
     private isAlive: boolean = true;
     private notPlayedSound: boolean = true;
     private timer: number = 1000;
-    private maxHealth: number;
+    protected maxHealth: number;
+
+    protected scaleEffect: number = 1;
+    public isDead: boolean = false;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number = 0, g = false) {
         this.position = p;
@@ -33,26 +36,9 @@ abstract class entity {
         pop();
     }
 
-  protected health: number;
-  protected isAlive: boolean = true;
-  // private notPlayedSound: boolean = true;
-  protected timer: number = 1000;
-  protected scaleEffect: number = 1;
-  public isDead: boolean = false;
 
-  constructor(
-    p: p5.Vector,
-    v: p5.Vector,
-    s: p5.Vector,
-    h: number = 0,
-    g = false,
-  ) {
-    this.position = p;
-    this.velocity = v;
-    this.size = s;
-    this.health = h;
-    this.isGravity = g;
-  }
+  
+
   public getCenter(): p5.Vector {
     return createVector(
       this.position.x + this.size.x / 2,
@@ -98,17 +84,11 @@ abstract class entity {
   public getSize() {
         return this.size.copy();
     }
-  public isDead() {
+  public isItDead() {
         return !this.isAlive;
     }
 
   public update(gravity: number, worldWidth: number) {
-    if (this.timer < 1000) {
-            this.timer -= deltaTime
-        }
-    if (this.timer < 0) {
-            this.timer = 1000
-        }
     // Smooth scale return
     if (this.scaleEffect > 1) {
       this.scaleEffect -= 0.02;
@@ -126,6 +106,7 @@ abstract class entity {
     // Gravity
     this.applyGravity(gravity);
   }
+}
   private applyGravity(gravity: number): void {
     if (this.isGravity) {
       this.velocity.y += gravity;

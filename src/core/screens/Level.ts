@@ -90,7 +90,7 @@ class Level implements IScreen {
     for (let i = 0; i < amount; i++) {
       this.coins.push(new CoinDrop(pos));
     }
-
+  }
   private drawCoinUI(): void {
     // UI
     push();
@@ -142,7 +142,7 @@ class Level implements IScreen {
           const center = e.getCenter();
           this.spawnExplosion(center);
           this.spawnCoins(center);
-          
+
         }
 
         // If fully finished dying -> remove from entities
@@ -222,9 +222,9 @@ class Level implements IScreen {
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
 
-    this.entities = this.entities.filter(isDead => !isDead.isDead());
+    this.entities = this.entities.filter(isDead => !isDead.isItDead());
 
-    if(this.player.lifeStatus === false){
+    if (this.player.lifeStatus === false) {
       this.game.changeScreen(new StartScreen(this.game));
     }
   }
@@ -327,8 +327,8 @@ class Level implements IScreen {
     this.particles.forEach((p) => p.draw());
     pop();
 
-    this.player.drawHealthBar(width-400, 20, 350, 50);
-    this.enemy.drawHealthBar(width / 2 - 400, height - 80 , 800, 50);
+    this.player.drawHealthBar(width - 400, 20, 350, 50);
+    this.enemy.drawHealthBar(width / 2 - 400, height - 80, 800, 50);
 
     // demo text
     fill(255, 55, 99);
@@ -434,7 +434,9 @@ class Level implements IScreen {
       this.addProjectile(bullet);
 
       sounds.shoot.play();
-     if (code === 66) {
+
+    }
+    if (code === 66) {
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new ShopScreen(this.game));
     }

@@ -4,7 +4,6 @@ class enemy extends entity {
   private player: Player;
   private speed: number = 4;
   private knockbackForce: p5.Vector = createVector(0, 0);
-  private maxHealth: number;
 
   // Death State System
   private isDying: boolean = false;
@@ -17,8 +16,8 @@ class enemy extends entity {
         super(p, v, s, h);
         this.isGravity = false;
         console.log("enemy");
-
-   this.player = player;
+        this.player = player;
+        
   }
   
 
@@ -152,8 +151,4 @@ class enemy extends entity {
     rect(this.position.x, this.position.y - 15, this.size.x * healthPercent, 6);
     pop();
   }
-  public update(gravity: number, wordWidth: number) {
-        //this.playerPosition();
-        super.update(gravity, wordWidth);
-    };
 }
