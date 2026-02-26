@@ -7,13 +7,13 @@ class enemy extends entity {
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
-        this.isgravity = false;
+        this.isGravity = false;
         console.log("enemy");
 
         this.player = player;
     }
 
-    private playerPosition() {
+    private followPlayer() {
         let direction = p5.Vector.sub(this.player.getPosition(), this.position)
         direction.normalize();
         direction.mult(this.speed);
@@ -46,13 +46,23 @@ class enemy extends entity {
         this.velocity = direction;
     }
 
+    private movementChoise() {
+        let distance = p5.Vector.dist(this.position, this.player.getPosition());
+
+        if (distance < 200) {
+            this.dash();
+        } else {
+            this.followPlayer();
+        }
+    }
+
     public onCollision(other: entity): void {
         //push enemy slightlty 
 
     }
 
     public update(gravity: number, wordWidth: number) {
-        this.playerPosition();
+        this.movementChoise();
         super.update(gravity, wordWidth);
     };
 
