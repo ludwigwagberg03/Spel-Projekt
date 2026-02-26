@@ -4,6 +4,7 @@ class enemy extends entity {
 
     private player: Player;
     private speed: number = 4;
+    private dashTimer: number = 5000;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
@@ -41,8 +42,8 @@ class enemy extends entity {
 
     private dash() {
         let target = this.player.getPosition().mult(2);
-        let direction = p5.Vector.sub(target, this.position);
-        direction.setMag(this.speed * 2);
+        let direction = p5.Vector.sub(this.position, target);
+        //direction.mult(this.speed * 2);
         this.velocity = direction;
     }
 
@@ -51,6 +52,7 @@ class enemy extends entity {
 
         if (distance < 200) {
             this.dash();
+            this.dashTimer -= deltaTime;
         } else {
             this.followPlayer();
         }
@@ -62,6 +64,12 @@ class enemy extends entity {
     }
 
     public update(gravity: number, wordWidth: number) {
+        if (this.dashTimer < 5000){
+            this.dashTimer -= deltaTime;
+        }
+        if (this.dashTimer <= 0) {
+            this.dashTimer = 5000;
+        }
         this.movementChoise();
         super.update(gravity, wordWidth);
     };
