@@ -5,12 +5,15 @@ class enemy extends entity {
     private player: Player;
     private speed: number = 4;
     private dashTimer: number = 5000;
+    isFacingRight: boolean;
+    previousPositionX: p5.Vector;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
         this.isGravity = false;
         console.log("enemy");
-
+        this.previousPositionX = this.position;
+        this.isFacingRight = true;
         this.player = player;
     }
 
@@ -41,10 +44,19 @@ class enemy extends entity {
     }
 
     private dash() {
-        let target = this.player.getPosition().mult(2);
-        let direction = p5.Vector.sub(this.position, target);
-        //direction.mult(this.speed * 2);
-        this.velocity = direction;
+        if(this.isFacingRight = true){
+            let target = this.player.getPosition();
+            let direction = p5.Vector.sub(target, this.position);
+            direction.setMag(this.speed * 3);
+            this.velocity = direction;
+        }
+        if(this.isFacingRight = false){
+            let target = this.player.getPosition().mult(2);
+            let direction = p5.Vector.sub(target, this.position);
+            direction.setMag(this.speed * 3);
+            this.velocity = direction;
+        }
+        
     }
 
     private movementChoise() {
@@ -64,6 +76,11 @@ class enemy extends entity {
     }
 
     public update(gravity: number, wordWidth: number) {
+        if(this.position.x > this.previousPositionX.x) {
+            this.isFacingRight = true;
+        } else if (this.position.x < this.previousPositionX.x) {
+            this.isFacingRight = false;
+        }
         if (this.dashTimer < 5000){
             this.dashTimer -= deltaTime;
         }
@@ -72,6 +89,9 @@ class enemy extends entity {
         }
         this.movementChoise();
         super.update(gravity, wordWidth);
+
+        this.previousPositionX.x = this.position.x;
+        
     };
 
     public draw() {
