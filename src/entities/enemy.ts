@@ -4,7 +4,7 @@ class enemy extends entity {
 
     private player: Player;
     private speed: number = 4;
-    private dashTimer: number = 5000;
+    private dashTimer: number = 1000;
     isFacingRight: boolean;
     previousPositionX: p5.Vector;
 
@@ -44,25 +44,19 @@ class enemy extends entity {
     }
 
     private dash() {
-        if(this.isFacingRight = true){
             let target = this.player.getPosition();
             let direction = p5.Vector.sub(target, this.position);
-            direction.setMag(this.speed * 3);
-            this.velocity = direction;
-        }
-        if(this.isFacingRight = false){
-            let target = this.player.getPosition().mult(2);
-            let direction = p5.Vector.sub(target, this.position);
-            direction.setMag(this.speed * 3);
-            this.velocity = direction;
-        }
-        
+            direction.normalize();
+            let dashToLocation = p5.Vector.add(target, direction.mult(300))
+            let dashDirection = p5.Vector.sub(dashToLocation, this.position);
+            dashDirection.setMag(this.speed * 3);
+            this.velocity = dashDirection;
     }
 
     private movementChoise() {
         let distance = p5.Vector.dist(this.position, this.player.getPosition());
 
-        if (distance < 200) {
+        if (distance < 200 && this.dashTimer === 1000) {
             this.dash();
             this.dashTimer -= deltaTime;
         } else {
@@ -81,17 +75,17 @@ class enemy extends entity {
         } else if (this.position.x < this.previousPositionX.x) {
             this.isFacingRight = false;
         }
-        if (this.dashTimer < 5000){
+        if (this.dashTimer < 1000){
             this.dashTimer -= deltaTime;
         }
         if (this.dashTimer <= 0) {
-            this.dashTimer = 5000;
+            this.dashTimer = 1000;
         }
         this.movementChoise();
         super.update(gravity, wordWidth);
 
         this.previousPositionX.x = this.position.x;
-        
+        console.log(this.dashTimer);
     };
 
     public draw() {
