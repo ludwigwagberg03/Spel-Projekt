@@ -70,9 +70,12 @@ class enemy extends entity {
         let distance = p5.Vector.dist(this.position, this.player.getPosition());
         // && this.dashTimer === 1000
         if (distance < 400) {
-            if (this.dashTimer === this.dashTimerValue && this.dashAmount < 4){
+            if (this.dashTimer === this.dashTimerValue && this.dashAmount <= 3){
                 this.dash();
                 this.dashAmount++;
+            }if (this.dashAmount > 3) {
+                console.log("else follows player?");
+                this.followPlayer();
             }
             this.dashTimer -= deltaTime;
         } else {
@@ -104,9 +107,9 @@ class enemy extends entity {
         super.update(gravity, wordWidth);
 
         this.previousPositionX.x = this.position.x;
-        //console.log("Delay: ",this.dashTimer);
-        //console.log("Amount: ",this.dashAmount);
-        //console.log("Coldown: ", this.dashColdownTimer);
+        console.log("Delay: ",this.dashTimer);
+        console.log("Amount: ",this.dashAmount);
+        console.log("Coldown: ", this.dashColdownTimer);
     };
 
     public draw() {
