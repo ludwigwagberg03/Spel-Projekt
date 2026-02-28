@@ -38,7 +38,7 @@ function preload() {
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     background: loadImage("/assets/images/Terr-style-bg1.png"),
     player: loadImage("/assets/images/player1.png"),
-    enemy: loadImage("/assets/images/enemy1.png"),
+    enemy: loadImage("/assets/images/enemy2.svg"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }

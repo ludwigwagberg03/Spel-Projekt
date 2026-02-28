@@ -60,7 +60,7 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2, height / 2),
 
       createVector(0, 0),
-      createVector(50, 100),
+      createVector(90, 170), //width & height 
       100,
     );
 
@@ -70,7 +70,7 @@ class Level implements IScreen {
       new enemy(
         createVector(this.worldWidth / 2 - 30, height / 2),
         createVector(0, 0),
-        createVector(50, 100),
+        createVector(90, 170), //width & height 
         20, //health
         this.player,
       ),
