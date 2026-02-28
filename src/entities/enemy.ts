@@ -8,6 +8,8 @@ class enemy extends entity {
     isFacingRight: boolean;
     previousPositionX: p5.Vector;
     dashTimerValue: number;
+    dashAmount: number;
+    dashColdownTimer: number = 10000;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
@@ -17,6 +19,7 @@ class enemy extends entity {
         this.isFacingRight = true;
         this.player = player;
         this.dashTimerValue = this.dashTimer
+        this.dashAmount = 0;
     }
 
     private followPlayer() {
@@ -67,11 +70,13 @@ class enemy extends entity {
         let distance = p5.Vector.dist(this.position, this.player.getPosition());
         // && this.dashTimer === 1000
         if (distance < 400) {
-            if (this.dashTimer === this.dashTimerValue){
+            if (this.dashTimer === this.dashTimerValue && this.dashAmount < 4){
                 this.dash();
+                this.dashAmount++;
             }
             this.dashTimer -= deltaTime;
         } else {
+            console.log("follows player");
             this.followPlayer();
         }
     }
@@ -82,10 +87,12 @@ class enemy extends entity {
     }
 
     public update(gravity: number, wordWidth: number) {
-        if(this.position.x > this.previousPositionX.x) {
-            this.isFacingRight = true;
-        } else if (this.position.x < this.previousPositionX.x) {
-            this.isFacingRight = false;
+        if (this.dashAmount > 3){
+            this.dashColdownTimer -= deltaTime;
+        }
+        if (this.dashColdownTimer <= 0){
+            this.dashAmount = 0;
+            this.dashColdownTimer = 10000;
         }
         if (this.dashTimer < this.dashTimerValue){
             this.dashTimer -= deltaTime;
@@ -97,7 +104,9 @@ class enemy extends entity {
         super.update(gravity, wordWidth);
 
         this.previousPositionX.x = this.position.x;
-        console.log(this.dashTimer);
+        //console.log("Delay: ",this.dashTimer);
+        //console.log("Amount: ",this.dashAmount);
+        //console.log("Coldown: ", this.dashColdownTimer);
     };
 
     public draw() {
