@@ -4,9 +4,10 @@ class enemy extends entity {
 
     private player: Player;
     private speed: number = 4;
-    private dashTimer: number = 1000;
+    private dashTimer: number = 2500;
     isFacingRight: boolean;
     previousPositionX: p5.Vector;
+    dashTimerValue: number;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
@@ -15,6 +16,7 @@ class enemy extends entity {
         this.previousPositionX = this.position;
         this.isFacingRight = true;
         this.player = player;
+        this.dashTimerValue = this.dashTimer
     }
 
     private followPlayer() {
@@ -45,19 +47,29 @@ class enemy extends entity {
 
     private dash() {
             let target = this.player.getPosition();
+            let distance = p5.Vector.dist(this.position, target);
+
+            if(distance < 10){
+                return;
+            }
+
             let direction = p5.Vector.sub(target, this.position);
             direction.normalize();
-            let dashToLocation = p5.Vector.add(target, direction.mult(300))
+
+            let dashToLocation = p5.Vector.add(target, direction.mult(500))
             let dashDirection = p5.Vector.sub(dashToLocation, this.position);
+
             dashDirection.setMag(this.speed * 3);
             this.velocity = dashDirection;
     }
 
     private movementChoise() {
         let distance = p5.Vector.dist(this.position, this.player.getPosition());
-
-        if (distance < 200 && this.dashTimer === 1000) {
-            this.dash();
+        // && this.dashTimer === 1000
+        if (distance < 400) {
+            if (this.dashTimer === this.dashTimerValue){
+                this.dash();
+            }
             this.dashTimer -= deltaTime;
         } else {
             this.followPlayer();
@@ -75,11 +87,11 @@ class enemy extends entity {
         } else if (this.position.x < this.previousPositionX.x) {
             this.isFacingRight = false;
         }
-        if (this.dashTimer < 1000){
+        if (this.dashTimer < this.dashTimerValue){
             this.dashTimer -= deltaTime;
         }
         if (this.dashTimer <= 0) {
-            this.dashTimer = 1000;
+            this.dashTimer = this.dashTimerValue;
         }
         this.movementChoise();
         super.update(gravity, wordWidth);
