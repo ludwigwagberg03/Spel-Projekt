@@ -62,7 +62,7 @@ class enemy extends entity {
             let dashToLocation = p5.Vector.add(target, direction.mult(500))
             let dashDirection = p5.Vector.sub(dashToLocation, this.position);
 
-            dashDirection.setMag(this.speed * 3);
+            dashDirection.setMag(this.speed * 4.2);
             this.velocity = dashDirection;
     }
 
