@@ -14,6 +14,8 @@ let images: {
   menu: p5.Image;
   background: p5.Image;
   testStage: p5.Image;
+  player: p5.Image; 
+  enemy: p5.Image;
 };
 
 /**
@@ -35,6 +37,8 @@ function preload() {
     menu: loadImage("/assets/images/menu_bg.png"),
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     background: loadImage("/assets/images/Terr-style-bg1.png"),
+    player: loadImage("/assets/images/player1.png"),
+    enemy: loadImage("/assets/images/enemy1.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }

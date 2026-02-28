@@ -19,7 +19,6 @@ class enemy extends entity {
     s: p5.Vector,
     h: number,
     player: Player,
-    
   ) {
     super(p, v, s, h);
     this.maxHealth = h;
@@ -28,7 +27,6 @@ class enemy extends entity {
 
     this.player = player;
   }
-  
 
   // --- Start Death ---
   private startDeath(): void {
@@ -121,33 +119,26 @@ class enemy extends entity {
     let centerY = this.position.y + this.size.y / 2;
 
     translate(centerX, centerY);
+
+    // Apply hit scale
     scale(this.scaleEffect);
 
-    // Body
-    let alpha = 255;
-
-    if (this.isDying) alpha = this.fadeAlpha;
-
-    if (this.hitFlash > 0) {
-      fill(255, 50, 50, alpha);
-    } else {
-      fill(120, 0, 200, alpha);
-    }
-
-    // dying shrink
+    // Apply shrink during death
     const s = this.isDying ? this.shrinkScale : 1;
     scale(s);
 
-    ellipse(0, 0, this.size.x, this.size.y);
+    // Apply fade during death
+    let alpha = this.isDying ? this.fadeAlpha : 255;
+    tint(255, alpha);
 
-    // Eyes
-    fill(255);
-    ellipse(-10, -5, 8);
-    ellipse(10, -5, 8);
+    imageMode(CENTER);
 
+    image(images.enemy, 0, 0, this.size.x, this.size.y);
+
+    noTint(); // reset tint
     pop();
 
-    //  Health Bar 
+    // ===== Health Bar =====
     let healthPercent = this.health / this.maxHealth;
 
     push();

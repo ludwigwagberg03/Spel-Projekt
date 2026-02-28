@@ -4,10 +4,9 @@ class Player extends entity {
   private onGround: boolean = false;
   private onPlatform: boolean = false;
   private isFalling: boolean = false;
-  public facing: number = 1;
   private shootCooldown: number = 0;
+  private facing: number = 1; // 1 = right, -1 = left
 
-  private maxHp: number = 100;
   private hp: number = 100;
 
   private damageCooldown: number = 0;
@@ -45,8 +44,21 @@ class Player extends entity {
     }
   }
 
-  private takedamage(n: number): void {}
+  public draw(): void {
+    push();
 
+    let centerX = this.position.x + this.size.x / 2;
+    let centerY = this.position.y + this.size.y / 2;
+
+    translate(centerX, centerY);
+
+    scale(this.facing * this.scaleEffect, this.scaleEffect);
+
+    imageMode(CENTER);
+    image(images.player, 0, 0, this.size.x, this.size.y);
+
+    pop();
+  }
   public update(gravity: number, worldWidth: number) {
     if (this.shootCooldown > 0) {
       this.shootCooldown -= deltaTime;
@@ -92,7 +104,7 @@ class Player extends entity {
 
   public takeDamage(amount: number): void {
     if (this.damageCooldown > 0) return;
-     console.log("Player took damage!");
+    console.log("Player took damage!");
 
     this.hp -= amount;
     this.damageCooldown = this.damageCooldownTime;
@@ -102,29 +114,34 @@ class Player extends entity {
   private move() {
     this.velocity.x = 0;
 
+    let moving = false;
+
     if (keyIsDown(65)) {
-      // a
+      // A
       this.velocity.x = -5;
       this.facing = -1;
+      moving = true;
     }
+
     if (keyIsDown(68)) {
-      // d
+      // D
       this.velocity.x = 5;
       this.facing = 1;
+      moving = true;
     }
+
     if (keyIsDown(83) && this.onPlatform) {
-      // s
       this.velocity.y = 0.8;
       this.onGround = false;
       this.onPlatform = false;
       this.isFalling = true;
     }
+
     if (keyIsDown(32)) {
-      // space
       this.jump();
     }
+
     if (keyIsDown(75)) {
-      // k
       this.entityDamage(3.33);
     }
   }
@@ -137,23 +154,34 @@ class Player extends entity {
   }
 
   public shoot(target: p5.Vector): Projectile {
-    // Reset cooldown
     this.shootCooldown = 300;
 
-    // Spawn position (center of player)
-    let spawnPos = this.getPosition().copy();
-    spawnPos.add(createVector(this.size.x / 2, this.size.y / 2));
+    // True center
+    let spawnPos = this.getCenter();
 
-    // Calculate direction
+    // Direction
     let direction = p5.Vector.sub(target, spawnPos);
     direction.normalize();
+
+    // Face enemy FIRST
+    if (direction.x >= 0) {
+      this.facing = 1;
+    } else {
+      this.facing = -1;
+    }
+
+    // Move bullet to FRONT of player
+    const gunOffsetX = this.size.x * 0.6;
+    spawnPos.x += this.facing * gunOffsetX;
+
+    // Small vertical adjustment to align with gun 
+    spawnPos.y -= 10;
 
     // Recoil
     this.velocity.add(direction.copy().mult(-3));
 
-    // Random damage (1–3)
     let damageValue = floor(random(1, 4));
 
-    return new Projectile(spawnPos, target, damageValue);
+    return new Projectile(spawnPos, direction, damageValue);
   }
 }
