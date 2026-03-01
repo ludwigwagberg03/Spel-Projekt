@@ -17,15 +17,22 @@ class Player extends entity {
   private effectTimer: number = 0;
   private baseSpeed: number = 1;
   private speed: number = 1;
+  private currentImage: p5.Image;
+  private frameIndex: number = 0;
+  private frameTimer: number = 0;
+  private frameDelay: number = 2500;
+  private totalFrames: number = 6; // default idle
+  private frameWidth: number = 16;
+  private frameHeight: number = 32;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
     super(p, v, s, h, true);
+    this.currentImage = images.playerIdle;
     this.attackHitBox = {
       position: p.copy(),
       width: 100,
       hight: 50,
     }
-
     this.inventory = new Inventory([
       {
         id: "basicSword",
@@ -37,6 +44,55 @@ class Player extends entity {
         price: 50
       }
     ]);
+
+
+  }
+
+  private updateAnimation() {
+
+    let newImage = this.currentImage;
+    let newTotalFrames = this.totalFrames;
+
+    if (!this.onGround) {
+      if (this.velocity.y < 0) {
+        newImage = images.playerJump;
+        newTotalFrames = 14;
+        this.frameDelay = 1000;
+      } else {
+        newImage = images.playerAir;
+        newTotalFrames = 10;
+      }
+    }
+    else if (this.velocity.x !== 0) {
+      console.log("walking");
+      newImage = images.playerWalk;
+      newTotalFrames = 4;
+      this.frameDelay = 8000;
+    }
+    else {
+      newImage = images.playerIdle;
+      newTotalFrames = 5;
+      this.frameDelay = 2000;
+    }
+
+    if (newImage !== this.currentImage) {
+      this.frameIndex = 0;
+      this.frameTimer = 0;
+    }
+
+    this.currentImage = newImage;
+    this.totalFrames = newTotalFrames;
+
+    this.frameTimer += deltaTime;
+
+    if (this.frameTimer > this.frameDelay) {
+      this.frameIndex++;
+      this.frameTimer = 0;
+
+      if (this.frameIndex >= this.totalFrames) {
+        this.frameIndex = 0;
+      }
+    }
   }
 
   public applyEffect(type: string, duration: number) {
@@ -51,29 +107,29 @@ class Player extends entity {
     // add more effect like firedamage
   }
 
-  private proccessEffect(){
-    switch(this.effectType){
+  private proccessEffect() {
+    switch (this.effectType) {
       //logic for effects like firedamage
     }
   }
 
-  private clearEffect(){
+  private clearEffect() {
     this.effectTimer = 0;
     this.effectType = "";
 
     this.speed = this.baseSpeed;
   }
 
-  public updateEffect(deltaTime: number){
-      if (this.effectTimer > 0){
-        this.effectTimer -= deltaTime;
-        console.log("effect timer ",this.effectTimer);
-        if (this.effectTimer <= 0){
-          this.clearEffect();
-        } else {
-          this.proccessEffect();
-        }
+  public updateEffect(deltaTime: number) {
+    if (this.effectTimer > 0) {
+      this.effectTimer -= deltaTime;
+      console.log("effect timer ", this.effectTimer);
+      if (this.effectTimer <= 0) {
+        this.clearEffect();
+      } else {
+        this.proccessEffect();
       }
+    }
   }
 
   public canShoot(): boolean {
@@ -140,12 +196,9 @@ class Player extends entity {
     this.updatePosition(worldWidth);
     this.updateAttackHitBox();
     this.updateEffect(deltaTime);
-
+    this.updateAnimation();
   }
-  draw() {
-    super.draw();
-    rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
-  }
+  
 
   private updatePosition(worldWidth: number) {
     // player is on the ground 
@@ -245,7 +298,7 @@ class Player extends entity {
       console.log("pressed e");
       this.swordAttack(this.enimies);
       this.applyEffect("slow", 10000);
-      console.log("effect timer ",this.effectTimer);
+      console.log("effect timer ", this.effectTimer);
     }
     if (keyIsDown(49)) { // E
       this.equipItem(0);
@@ -302,4 +355,24 @@ class Player extends entity {
 
   //   return new Projectile(spawnPos, this.facing);
   // }
+  draw() {
+    super.draw();
+    noSmooth();
+
+    const sx = this.frameIndex * this.frameWidth;
+    const sy = 0;
+
+    image(
+      this.currentImage,
+      this.position.x,
+      this.position.y,
+      this.size.x,
+      this.size.y,
+      sx,
+      sy,
+      this.frameWidth,
+      this.frameHeight
+    );
+    rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
+  }
 }

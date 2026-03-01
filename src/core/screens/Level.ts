@@ -59,10 +59,9 @@ class Level implements IScreen {
 
     this.player = new Player(
       createVector(this.worldWidth / 2, height / 2),
-
       createVector(0, 0),
-      createVector(50, 100),
-      100,
+      createVector(64, 64),
+      100
     );
     this.entities.push(this.player);
 
@@ -70,7 +69,7 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2 - 30
         , height / 2 - 100),
       createVector(0, 0),
-      createVector(50, 100),
+      createVector(256, 256),
       100,
       this.player
     );
@@ -121,18 +120,18 @@ class Level implements IScreen {
 
     // Update all entities (player, enemies, platforms)
     this.entities.forEach((entity) => {
-      if(entity instanceof enemy){
+      if (entity instanceof enemy) {
         entity.update(this.gravity, this.worldWidth, this);
-      }else{
+      } else {
         entity.update(this.gravity, this.worldWidth);
       }
     });
 
-      for (let projectile of this.projectiles) {
-    if (projectile.overlaps(this.player)) {
-      console.log("Player kolliderar med testprojektil!");
+    for (let projectile of this.projectiles) {
+      if (projectile.overlaps(this.player)) {
+        console.log("Player kolliderar med testprojektil!");
+      }
     }
-}
 
     // Update all active projectiles
     this.projectiles.forEach((projectile) => {
@@ -296,6 +295,37 @@ class Level implements IScreen {
     }
   }
 
+  public keyPressed(code: number): void {
+    // R = restart
+    if (code === 82) {
+      this.game.changeScreen(new Level(this.game));
+      return;
+    }
+    //press ESC to go back to start menu
+    if (code === ESCAPE) {
+      // this.game.changeScreen(new StartScreen(this.game));
+      this.game.changeScreen(new PauseScreen(this.game));
+    }
+    if (code === 74) {
+      // J key
+      if (!this.player.canShoot()) return;
+
+      let enemyTarget = this.findClosestEnemy();
+
+      if (!enemyTarget) return;
+
+      const bullet = this.player.shoot(enemyTarget);
+      this.addProjectile(bullet);
+
+      sounds.shoot.play();
+
+    }
+    if (code === 66) {
+      // this.game.changeScreen(new StartScreen(this.game));
+      this.game.changeScreen(new ShopScreen(this.game));
+    }
+  }
+
   draw(): void {
     push();
 
@@ -339,7 +369,6 @@ class Level implements IScreen {
     pop();
 
     this.player.drawHealthBar(width - 400, 20, 350, 50);
-    this.enemy.drawHealthBar(width / 2 - 400, height - 80, 800, 50);
 
     // demo text
     fill(255, 55, 99);
@@ -420,37 +449,6 @@ class Level implements IScreen {
 
     // textSize(18);
     // text("Press ESC to pause", width / 2, height / 4 + 60);
-  }
-
-  public keyPressed(code: number): void {
-    // R = restart
-    if (code === 82) {
-      this.game.changeScreen(new Level(this.game));
-      return;
-    }
-    //press ESC to go back to start menu
-    if (code === ESCAPE) {
-      // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new PauseScreen(this.game));
-    }
-    if (code === 74) {
-      // J key
-      if (!this.player.canShoot()) return;
-
-      let enemyTarget = this.findClosestEnemy();
-
-      if (!enemyTarget) return;
-
-      const bullet = this.player.shoot(enemyTarget);
-      this.addProjectile(bullet);
-
-      sounds.shoot.play();
-
-    }
-    if (code === 66) {
-      // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new ShopScreen(this.game));
-    }
   }
 
   onEnter(): void {

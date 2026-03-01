@@ -21,6 +21,13 @@ class enemy extends entity {
   private deathTriggeredOnce: boolean = false;
   private shootTimer: number = 3000;
   private timeSinceLastShot: number = 0;
+  private currentImage: p5.Image;
+  private frameIndex: number = 0;
+  private frameTimer: number = 0;
+  private frameDelay: number = 2500;
+  private totalFrames: number = 6; // default idle
+  private frameWidth: number = 64;
+  private frameHeight: number = 80;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
@@ -33,6 +40,20 @@ class enemy extends entity {
     this.dashAmount = 0;
     this.positionA = 0;
     this.positionB = 0;
+    this.currentImage = images.iceBoss;
+  }
+
+  private updateAnimation(){
+    this.totalFrames = 4;
+    this.frameDelay = 172;
+    this.frameTimer += deltaTime;
+    if(this.frameTimer >= this.frameDelay){
+      this.frameIndex++
+      this.frameTimer = 0;
+      if (this.frameIndex >= this.totalFrames){
+        this.frameIndex = 0;
+      }
+    }
   }
 
   private tryIceGun(deltaTime: number, level: Level){
@@ -220,17 +241,18 @@ class enemy extends entity {
     if (this.dashTimer <= 0) {
       this.dashTimer = this.dashTimerValue;
     }
-    //this.movementChoise();
+    this.movementChoise();
     //this.hover();
 
     this.position.add(this.knockbackForce);
     this.knockbackForce.mult(0.85);
     
     if(level){
-      this.tryIceGun(deltaTime, level)
+      //this.tryIceGun(deltaTime, level)
     }
 
     this.previousPositionX.x = this.position.x;
+    this.updateAnimation();
     //console.log("Delay: ", this.dashTimer);
     //console.log("Amount: ", this.dashAmount);
     //console.log("Coldown: ", this.dashColdownTimer);
@@ -238,38 +260,23 @@ class enemy extends entity {
 
   public draw() {
     super.draw();
-    push();
+    noSmooth();
 
-    let centerX = this.position.x + this.size.x / 2;
-    let centerY = this.position.y + this.size.y / 2;
+    const sx = this.frameIndex * this.frameWidth;
+    const sy = 0;
 
-    translate(centerX, centerY);
-    scale(this.scaleEffect);
-
-    // Body
-    let alpha = 255;
-
-    if (this.isDying) alpha = this.fadeAlpha;
-
-    if (this.hitFlash > 0) {
-      fill(255, 50, 50, alpha);
-    } else {
-      fill(120, 0, 200, alpha);
-    }
-
-    // dying shrink
-    const s = this.isDying ? this.shrinkScale : 1;
-    scale(s);
-
-    ellipse(0, 0, this.size.x, this.size.y);
-
-    // Eyes
-    fill(255);
-    ellipse(-10, -5, 8);
-    ellipse(10, -5, 8);
-
-    pop();
-
+    image(
+      this.currentImage,
+      this.position.x,
+      this.position.y,
+      this.size.x,
+      this.size.y,
+      sx,
+      sy,
+      this.frameWidth,
+      this.frameHeight
+    );
+    
     //  Health Bar
     let healthPercent = this.health / this.maxHealth;
 

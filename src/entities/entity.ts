@@ -110,30 +110,6 @@ abstract class entity {
     }
   }
 
-  public draw() {
-    push();
-
-    translate(
-      this.position.x + this.size.x / 2,
-      this.position.y + this.size.y / 2,
-    );
-
-    scale(this.scaleEffect);
-
-    if (this.hitFlash > 0) {
-      fill(255, 50, 50);
-      stroke(255);
-      strokeWeight(3);
-    } else {
-      fill(63);
-      noStroke();
-    }
-
-    rect(-this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
-
-    pop();
-  }
-
   public overlaps(other: entity) {
     return (
       this.position.x < other.position.x + other.size.x &&
@@ -147,4 +123,9 @@ abstract class entity {
   }
 
   abstract onCollision(other: entity): void;
+
+  public draw() {
+  
+  }
+
 }

@@ -14,6 +14,12 @@ let images: {
   menu: p5.Image;
   background: p5.Image;
   testStage: p5.Image;
+
+  playerIdle: p5.Image;
+  playerWalk: p5.Image;
+  playerJump: p5.Image;
+  playerAir: p5.Image;
+  iceBoss: p5.Image;
 };
 // let itemData: any;
 
@@ -36,12 +42,18 @@ function preload() {
     menu: loadImage("/assets/images/menu_bg.png"),
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     background: loadImage("/assets/images/Terr-style-bg1.png"),
+    playerIdle: loadImage("/assets/images/playerIdle.png"),
+    playerWalk: loadImage("/assets/images/playerWalk.png"),
+    playerJump: loadImage("/assets/images/playerJump.png"),
+    playerAir: loadImage("/assets/images/playerAir.png"),
+    iceBoss: loadImage("/assets/images/IceBossWings.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  pixelDensity(1);
   frameRate(60);
   music.mystery.setVolume(0.8);
 
