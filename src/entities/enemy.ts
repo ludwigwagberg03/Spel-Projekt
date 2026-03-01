@@ -150,13 +150,13 @@ class enemy extends entity {
         this.dash();
         this.dashAmount++;
       } if (this.dashAmount > 3) {
-        console.log("else follows player?");
+        //console.log("else follows player?");
         setTimeout(() => this.followPlayer(), 200);
         this.hover();
       }
       this.dashTimer -= deltaTime;
     } else {
-      console.log("follows player");
+      //console.log("follows player");
       this.followPlayer()
     }
   }

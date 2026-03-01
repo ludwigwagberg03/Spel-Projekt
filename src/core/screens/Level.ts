@@ -79,6 +79,18 @@ class Level implements IScreen {
 
   }
 
+  public mousePressed(){
+    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+    const bullet = this.player.tryShoot(worldMouse);
+
+    console.log("mouse world",worldMouse.x, worldMouse.y);
+
+    if(bullet){
+      this.addProjectile(bullet);
+      sounds.shoot.play();
+    }
+  }
+
   private spawnExplosion(pos: p5.Vector): void {
     for (let i = 0; i < 18; i++) {
       this.particles.push(new ExplosionParticle(pos));
@@ -114,6 +126,7 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
+    
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
@@ -305,20 +318,6 @@ class Level implements IScreen {
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new PauseScreen(this.game));
-    }
-    if (code === 74) {
-      // J key
-      if (!this.player.canShoot()) return;
-
-      let enemyTarget = this.findClosestEnemy();
-
-      if (!enemyTarget) return;
-
-      const bullet = this.player.shoot(enemyTarget);
-      this.addProjectile(bullet);
-
-      sounds.shoot.play();
-
     }
     if (code === 66) {
       // this.game.changeScreen(new StartScreen(this.game));

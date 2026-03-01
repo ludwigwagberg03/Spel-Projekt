@@ -7,15 +7,15 @@ class Projectile extends entity {
   private owner?: entity;
   private damage: number = 1;
 
-  constructor(pos: p5.Vector, target: p5.Vector, damage: number, owner?: entity) {
+  constructor(pos: p5.Vector, direction: p5.Vector, damage: number, owner?: entity) {
     const speed = 12; // local constant
     
 
-    let direction = p5.Vector.sub(target, pos);
-    direction.normalize();
-    direction.mult(speed);
+    //let direction = p5.Vector.sub(target, pos);
+    //direction.normalize();
+    //direction.mult(speed);
 
-    super(pos.copy(), direction, createVector(12, 12), 1);
+    super(pos.copy(), direction.copy().mult(12), createVector(12, 12), 1);
     this.damage = damage;
     this.owner = owner;
     this.isGravity = false;
@@ -49,10 +49,6 @@ class Projectile extends entity {
 
       sounds.confirm.play(); // impact sound
 
-      this.isAlive = false;
-    }
-
-    if (other instanceof Platform) {
       this.isAlive = false;
     }
   }

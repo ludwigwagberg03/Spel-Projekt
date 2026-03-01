@@ -48,6 +48,12 @@ class Player extends entity {
 
   }
 
+  public tryShoot(mouseWorldPos: p5.Vector): Projectile | null{
+    if(!this.canShoot()) return null;
+
+    return this.shoot(mouseWorldPos);
+  }
+
   private updateAnimation() {
 
     let newImage = this.currentImage;
@@ -64,7 +70,7 @@ class Player extends entity {
       }
     }
     else if (this.velocity.x !== 0) {
-      console.log("walking");
+      //console.log("walking");
       newImage = images.playerWalk;
       newTotalFrames = 4;
       this.frameDelay = 8000;
@@ -339,7 +345,7 @@ class Player extends entity {
     // Random damage (1–3)
     let damageValue = floor(random(1, 4));
 
-    return new Projectile(spawnPos, target, damageValue);
+    return new Projectile(spawnPos, direction, damageValue);
   }
 
   // public shoot(): Projectile {
