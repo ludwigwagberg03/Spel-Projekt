@@ -6,19 +6,17 @@ class Player extends entity {
   private isFalling: boolean = false;
   public facing: number = 1;
   private shootCooldown: number = 0;
-
-  private attackHitBox: {
-    position: p5.Vector;
-    width: number;
-    hight: number;
-  };
-
+  private attackHitBox: { position: p5.Vector; width: number; hight: number; };
   private isPlayerFacingRight: boolean = true;
   private enimies: entity[] = [];
   private swordSwipeTimer: number = 500;
   private currentItem!: Item;
   public inventory: Inventory;
   private currentItemIndex: number = 0;
+  private effectType: string = "";
+  private effectTimer: number = 0;
+  private baseSpeed: number = 1;
+  private speed: number = 1;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
     super(p, v, s, h, true);
@@ -27,6 +25,7 @@ class Player extends entity {
       width: 100,
       hight: 50,
     }
+
     this.inventory = new Inventory([
       {
         id: "basicSword",
@@ -39,6 +38,20 @@ class Player extends entity {
       }
     ]);
   }
+
+  public applyEffect(type: string, duration: number) {
+    this.effectType = type;
+    this.effectTimer = duration;
+
+    switch (type) {
+      case "slow":
+        this.speed = this.baseSpeed / 2;
+        break;
+    }
+  }
+
+  
+
   public canShoot(): boolean {
     return this.shootCooldown <= 0;
   }
@@ -186,17 +199,17 @@ class Player extends entity {
     this.velocity.x = 0;
 
     if (keyIsDown(65)) { // a
-      this.velocity.x = -5;
+      this.velocity.x = -5 * this.speed;
       this.facing = -1;
       this.isPlayerFacingRight = false;
     }
     if (keyIsDown(68)) { // d
-      this.velocity.x = 5;
+      this.velocity.x = 5 * this.speed;
       this.facing = 1;
       this.isPlayerFacingRight = true;
     }
     if (keyIsDown(83) && this.onPlatform) { // s
-      this.velocity.y = 0.8;
+      this.velocity.y = 0.8 * this.speed;
       this.onGround = false;
       this.onPlatform = false;
       this.isFalling = true;
@@ -223,7 +236,7 @@ class Player extends entity {
   }
   private jump() {
     if (this.onGround) {
-      this.velocity.y = -30;
+      this.velocity.y = -30 * this.speed;
       this.onGround = false;
       this.onPlatform = false;
     }

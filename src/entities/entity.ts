@@ -36,9 +36,6 @@ abstract class entity {
     pop();
   }
 
-
-
-
   public getCenter(): p5.Vector {
     return createVector(
       this.position.x + this.size.x / 2,
