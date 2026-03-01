@@ -75,8 +75,8 @@ class enemy extends entity {
             let minX = targetX - hoverRange;
             let maxX = targetX + hoverRange;
 
-            this.position.x = constrain(this.position.x, minX, maxX);
-
+            targetX = random(minX,maxX);
+            
             let target = createVector(targetX, hoverDistance);
 
             let direction = p5.Vector.sub(target, this.position);
