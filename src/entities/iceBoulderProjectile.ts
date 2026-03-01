@@ -16,9 +16,9 @@ class IceBoulder extends Projectile{
         push();
         fill(100, 150, 255);
         noStroke();
-        ellipse(this.position.x, this.position.y, 18);
+        ellipse(this.position.x, this.position.y, 100);
         fill(180,220,255,100);
-        ellipse(this.position.x, this.position.y, 10);
+        ellipse(this.position.x, this.position.y, 80);
         pop();
     }
 }
