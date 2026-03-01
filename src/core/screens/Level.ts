@@ -67,7 +67,7 @@ class Level implements IScreen {
     this.entities.push(this.player);
 
     this.enemy = new enemy(
-      createVector(this.worldWidth / 2 - 30
+      createVector(this.worldWidth / 4 - 30
         , height / 2 - 100),
       createVector(0, 0),
       createVector(50, 100),
@@ -77,6 +77,15 @@ class Level implements IScreen {
 
     this.entities.push(this.enemy);
     this.player.setEnimies(this.entities);
+
+    // Skapa en statisk IceBoulder mitt på skärmen
+    let testPos = createVector(this.worldWidth / 2, height / 2 - 100);
+    let testTarget = testPos.copy(); // samma som start → ingen rörelse
+    let testIce = new IceBoulder(testPos, testTarget, 5);
+
+    // Lägg till i levelns projektil-array
+    this.addProjectile(testIce);
+
   }
 
   private spawnExplosion(pos: p5.Vector): void {
@@ -122,6 +131,12 @@ class Level implements IScreen {
     this.entities.forEach((entity) => {
       entity.update(this.gravity, this.worldWidth);
     });
+
+      for (let projectile of this.projectiles) {
+    if (projectile.overlaps(this.player)) {
+      console.log("Player kolliderar med testprojektil!");
+    }
+}
 
     // Update all active projectiles
     this.projectiles.forEach((projectile) => {
@@ -260,7 +275,7 @@ class Level implements IScreen {
     // PROJECTILE vs ENTITY
     for (let projectile of this.projectiles) {
       for (let entity of this.entities) {
-        if (entity !== this.player && projectile.overlaps(entity)) {
+        if (projectile.overlaps(entity)) {
           projectile.onCollision(entity);
           entity.onCollision(projectile);
 

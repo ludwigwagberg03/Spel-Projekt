@@ -9,8 +9,16 @@ class IceBoulder extends Projectile{
         super.onCollision(other);
 
         if (other instanceof Player){
-            
+            (other as Player).applyEffect("slow", 7500);
         }
     }
-
+    draw() {
+        push();
+        fill(100, 150, 255);
+        noStroke();
+        ellipse(this.position.x, this.position.y, 18);
+        fill(180,220,255,100);
+        ellipse(this.position.x, this.position.y, 10);
+        pop();
+    }
 }
