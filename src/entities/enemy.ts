@@ -117,12 +117,14 @@ class enemy extends entity {
                 this.dashAmount++;
             }if (this.dashAmount > 3) {
                 console.log("else follows player?");
-                this.followPlayer();
+                setTimeout(() => this.followPlayer(), 200);
+                this.hover();
             }
             this.dashTimer -= deltaTime;
         } else {
             console.log("follows player");
-            this.followPlayer();
+            setTimeout(() => this.followPlayer(), 200);
+            this.hover();
         }
     }
 
@@ -145,8 +147,8 @@ class enemy extends entity {
         if (this.dashTimer <= 0) {
             this.dashTimer = this.dashTimerValue;
         }
-        //this.movementChoise();
-        this.hover();
+        this.movementChoise();
+        //this.hover();
         super.update(gravity, wordWidth);
 
         this.previousPositionX.x = this.position.x;
