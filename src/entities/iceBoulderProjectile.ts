@@ -1,8 +1,10 @@
 /// <reference path="projectile.ts" />
 
 class IceBoulder extends Projectile{
+    private projectileDamgage: number;
     constructor(p: p5.Vector, t: p5.Vector, d: number, o: entity){
         super(p,t,d,o);
+        this.projectileDamgage = d;
     }
 
     onCollision(other: entity): void {
@@ -10,6 +12,8 @@ class IceBoulder extends Projectile{
 
         if (other instanceof Player){
             (other as Player).applyEffect("slow", 7500);
+            (other as Player).entityDamage(this.projectileDamgage);
+            this.isAlive = false;
         }
     }
     draw() {
