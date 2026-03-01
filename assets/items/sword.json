@@ -1,0 +1,32 @@
+{
+  "swords": [
+    {
+      "name": "Basic Sword",
+      "damage": 15,
+      "cooldown": 500,
+      "hitboxWidth": 100,
+      "hitboxHeight": 50
+    },
+    {
+      "name": "Short Sword",
+      "damage": 8,
+      "cooldown": 200,
+      "hitboxWidth": 80,
+      "hitboxHeight": 40
+    },
+    {
+      "name": "Heavy Sword",
+      "damage": 30,
+      "cooldown": 1000,
+      "hitboxWidth": 120,
+      "hitboxHeight": 60
+    },
+    {
+      "name": "Long Sword",
+      "damage": 20,
+      "cooldown": 600,
+      "hitboxWidth": 160,
+      "hitboxHeight": 50
+    }
+  ]
+}
