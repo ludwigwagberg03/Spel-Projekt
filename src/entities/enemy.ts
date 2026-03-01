@@ -19,6 +19,8 @@ class enemy extends entity {
   private fadeAlpha: number = 255;
   private shrinkScale: number = 1;
   private deathTriggeredOnce: boolean = false;
+  private shootTimer: number = 3000;
+  private timeSinceLastShot: number = 0;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
@@ -31,6 +33,18 @@ class enemy extends entity {
     this.dashAmount = 0;
     this.positionA = 0;
     this.positionB = 0;
+  }
+
+  private tryIceGun(deltaTime: number, level: Level){
+    this.timeSinceLastShot += deltaTime;
+    console.log("gun coldown",this.timeSinceLastShot);
+    let target = this.player.getCenter();
+    let distance = p5.Vector.dist(this.position, target);
+
+    if(distance < 600 && this.timeSinceLastShot >= this.shootTimer){
+      this.iceShooter(target, level);
+      this.timeSinceLastShot = 0;
+    }
   }
 
   public iceShooter(target: p5.Vector, level: Level){
@@ -182,7 +196,8 @@ class enemy extends entity {
     );
   }
 
-  public update(gravity: number, wordWidth: number) {
+  public update(gravity: number, wordWidth: number, level?: Level) {
+    super.update(gravity, wordWidth);
     if (this.isDying) {
       this.handleDeath();
       return;
@@ -206,7 +221,10 @@ class enemy extends entity {
 
     this.position.add(this.knockbackForce);
     this.knockbackForce.mult(0.85);
-    super.update(gravity, wordWidth);
+    
+    if(level){
+      this.tryIceGun(this.deathTimer, level)
+    }
 
     this.previousPositionX.x = this.position.x;
     //console.log("Delay: ", this.dashTimer);
