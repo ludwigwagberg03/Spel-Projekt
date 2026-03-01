@@ -66,6 +66,18 @@ class enemy extends entity {
             this.velocity = dashDirection;
     }
 
+    private hover() {
+            
+            let targetX = this.player.getPosition().x;
+
+            let target = createVector(targetX, this.position.y);
+
+            let direction = p5.Vector.sub(target, this.position);
+            direction.normalize();
+            direction.mult(this.speed);
+            this.velocity = direction;
+    }
+
     private movementChoise() {
         let distance = p5.Vector.dist(this.position, this.player.getPosition());
         // && this.dashTimer === 1000
@@ -103,7 +115,8 @@ class enemy extends entity {
         if (this.dashTimer <= 0) {
             this.dashTimer = this.dashTimerValue;
         }
-        this.movementChoise();
+        //this.movementChoise();
+        this.hover();
         super.update(gravity, wordWidth);
 
         this.previousPositionX.x = this.position.x;
