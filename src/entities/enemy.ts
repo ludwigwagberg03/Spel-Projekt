@@ -33,6 +33,13 @@ class enemy extends entity {
     this.positionB = 0;
   }
 
+  public iceShooter(target: p5.Vector, level: Level){
+    let startPositon = this.getCenter();
+    let ice = new IceBoulder(startPositon.copy(), target.copy(), 5);
+
+    level.addProjectile(ice);
+  }
+
   private followPlayer() {
     let direction = p5.Vector.sub(this.player.getPosition(), this.position)
     direction.normalize();
