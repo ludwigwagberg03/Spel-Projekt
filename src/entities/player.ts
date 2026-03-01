@@ -21,6 +21,7 @@ class Player extends entity {
   private currentItemIndex: number = 0;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
+
     super(p, v, s, h, true);
     this.attackHitBox = {
       position: p.copy(),
@@ -38,9 +39,15 @@ class Player extends entity {
         price: 50
       }
     ]);
+    this.equipItem(0);
+    console.log("onwed", this.inventory.getItems());
+    // console.log(this.inventory.getItems())
   }
   public canShoot(): boolean {
     return this.shootCooldown <= 0;
+  }
+  public setPLayerPosition(p: p5.Vector) {
+    this.position = p.copy()
   }
 
   public setEnimies(entities: entity[]) {
@@ -48,8 +55,9 @@ class Player extends entity {
   }
 
   private equipItem(index: number) {
+    
+    console.log("onwed", this.inventory.getItems());
     const items = this.inventory.getItems();
-    console.log(items)
     if (index >= 0 && index < items.length) {
       this.currentItemIndex = index;
       this.currentItem = items[index];
@@ -155,7 +163,7 @@ class Player extends entity {
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
         if (e instanceof enemy) {
-          console.log("test1");
+          // console.log("test1");
 
           const enemyX = e.getPosition().x;
           const enemyY = e.getPosition().y;
@@ -167,13 +175,13 @@ class Player extends entity {
           const attackWidth = this.attackHitBox.width;
           const attackHight = this.attackHitBox.hight;
 
-          console.log("Attack:", attackX, attackY, attackWidth, attackHight);
-          console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
+          // console.log("Attack:", attackX, attackY, attackWidth, attackHight);
+          // console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
 
           const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
           if (hit) {
-            console.log("hit");
+            // console.log("hit");
             e.entityDamage(this.currentItem.damage);
             this.swordSwipeTimer = this.currentItem.cooldown;
           }
@@ -205,7 +213,7 @@ class Player extends entity {
       this.jump();
     }
     if (keyIsDown(69)) { // E
-      console.log("pressed e");
+      // console.log("pressed e");
       this.swordAttack(this.enimies);
     }
     if (keyIsDown(49)) { // E

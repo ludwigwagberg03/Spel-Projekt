@@ -16,7 +16,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 200,
             hitboxWidth: 80,
             hitboxHeight: 40,
-            price: 30
+            price: 1
         },
         {
             id: "heavySword",

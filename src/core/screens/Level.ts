@@ -17,7 +17,6 @@ class Level implements IScreen {
   // ===== particles + coins =====
   private particles: ExplosionParticle[] = [];
   private coins: CoinDrop[] = [];
-  private coinCount: number = 0;
 
   // ===== victory state =====
   private victoryActive: boolean = false;
@@ -27,24 +26,7 @@ class Level implements IScreen {
   // ===== lose lock =====
   private gameOverTriggered: boolean = false;
 
-  public addProjectile(p: Projectile) {
-    this.projectiles.push(p);
-  }
-  public triggerImpact(pos: p5.Vector) {
-    this.impacts.push({
-      pos: pos.copy(),
-      life: 200,
-    });
-  }
-  public spawnDamageNumber(pos: p5.Vector, value: number) {
-    this.damageNumbers.push({
-      pos: pos.copy(),
-      value: value,
-      life: 800,
-    });
-  }
-
-  constructor(game: Game) {
+  constructor(game: Game, player: Player) {
     this.game = game;
 
     this.entities = [];
@@ -56,14 +38,22 @@ class Level implements IScreen {
         createVector(this.worldWidth, 10),
       ),
     );
+    if (player) {
+      this.player = player;
 
-    this.player = new Player(
-      createVector(this.worldWidth / 2, height / 2),
+      this.player.setPLayerPosition(
+        createVector(this.worldWidth / 2, height / 2)
+      )
+    } else {
+      this.player = new Player(
+        createVector(this.worldWidth / 2, height / 2),
 
-      createVector(0, 0),
-      createVector(50, 100),
-      100,
-    );
+        createVector(0, 0),
+        createVector(50, 100),
+        100,
+      );
+    }
+
     this.entities.push(this.player);
 
     this.enemy = new enemy(
@@ -79,6 +69,25 @@ class Level implements IScreen {
     this.player.setEnimies(this.entities);
   }
 
+  public addProjectile(p: Projectile) {
+    this.projectiles.push(p);
+  }
+
+  public triggerImpact(pos: p5.Vector) {
+    this.impacts.push({
+      pos: pos.copy(),
+      life: 200,
+    });
+  }
+
+  public spawnDamageNumber(pos: p5.Vector, value: number) {
+    this.damageNumbers.push({
+      pos: pos.copy(),
+      value: value,
+      life: 800,
+    });
+  }
+
   private spawnExplosion(pos: p5.Vector): void {
     for (let i = 0; i < 18; i++) {
       this.particles.push(new ExplosionParticle(pos));
@@ -90,6 +99,17 @@ class Level implements IScreen {
     for (let i = 0; i < amount; i++) {
       this.coins.push(new CoinDrop(pos));
     }
+  }
+  public getCoins(): number {
+    return this.game.coinCount;
+  }
+  public buyItems(itemCost: number): boolean {
+    if (this.game.coinCount >= itemCost) {
+      this.game.coinCount -= itemCost;
+      return true;
+    }
+    return false;
+
   }
   private drawCoinUI(): void {
     // UI
@@ -109,7 +129,7 @@ class Level implements IScreen {
     fill(255);
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(`Coins: ${this.coinCount}`, 65, 47);
+    text(`Coins: ${this.game.coinCount}`, 65, 47);
 
     pop();
   }
@@ -168,7 +188,7 @@ class Level implements IScreen {
       c.update(this.gravity, groundY);
 
       if (c.tryCollect(playerCenter)) {
-        this.coinCount += 1;
+        this.game.coinCount += 1;
         sounds.coin.play();
       }
     });
@@ -179,7 +199,7 @@ class Level implements IScreen {
     // =========================
     if (!this.gameOverTriggered && !this.player.alive) {
       this.gameOverTriggered = true;
-      this.game.changeScreen(new GameOverScreen(this.game, false));
+      this.game.changeScreen(new GameOverScreen(this.game, false, this.player));
       return;
     }
 
@@ -225,7 +245,7 @@ class Level implements IScreen {
     this.entities = this.entities.filter(isDead => !isDead.isItDead());
 
     if (this.player.lifeStatus === false) {
-      this.game.changeScreen(new StartScreen(this.game));
+      this.game.changeScreen(new StartScreen(this.game, this.player));
     }
   }
   //
@@ -414,13 +434,13 @@ class Level implements IScreen {
   public keyPressed(code: number): void {
     // R = restart
     if (code === 82) {
-      this.game.changeScreen(new Level(this.game));
+      this.game.changeScreen(new Level(this.game, this.player));
       return;
     }
     //press ESC to go back to start menu
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new PauseScreen(this.game));
+      this.game.changeScreen(new PauseScreen(this.game, this.player));
     }
     if (code === 74) {
       // J key
@@ -438,7 +458,7 @@ class Level implements IScreen {
     }
     if (code === 66) {
       // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new ShopScreen(this.game));
+      this.game.changeScreen(new ShopScreen(this.game, this.player, this));
     }
   }
 
