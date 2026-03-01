@@ -64,6 +64,18 @@ class Player extends entity {
     this.speed = this.baseSpeed;
   }
 
+  public updateEffect(deltaTime: number){
+      if (this.effectTimer > 0){
+        this.effectTimer -= deltaTime;
+        console.log("effect timer ",this.effectTimer);
+        if (this.effectTimer <= 0){
+          this.clearEffect();
+        } else {
+          this.proccessEffect();
+        }
+      }
+  }
+
   public canShoot(): boolean {
     return this.shootCooldown <= 0;
   }
@@ -127,7 +139,7 @@ class Player extends entity {
     super.update(gravity, worldWidth);
     this.updatePosition(worldWidth);
     this.updateAttackHitBox();
-
+    this.updateEffect(deltaTime);
 
   }
   draw() {
@@ -180,7 +192,7 @@ class Player extends entity {
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
         if (e instanceof enemy) {
-          console.log("test1");
+          //console.log("test1");
 
           const enemyX = e.getPosition().x;
           const enemyY = e.getPosition().y;
@@ -192,8 +204,8 @@ class Player extends entity {
           const attackWidth = this.attackHitBox.width;
           const attackHight = this.attackHitBox.hight;
 
-          console.log("Attack:", attackX, attackY, attackWidth, attackHight);
-          console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
+          //console.log("Attack:", attackX, attackY, attackWidth, attackHight);
+          //console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
 
           const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
@@ -232,6 +244,8 @@ class Player extends entity {
     if (keyIsDown(69)) { // E
       console.log("pressed e");
       this.swordAttack(this.enimies);
+      this.applyEffect("slow", 10000);
+      console.log("effect timer ",this.effectTimer);
     }
     if (keyIsDown(49)) { // E
       this.equipItem(0);

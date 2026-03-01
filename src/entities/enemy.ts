@@ -194,7 +194,7 @@ class enemy extends entity {
     if (this.dashTimer <= 0) {
       this.dashTimer = this.dashTimerValue;
     }
-    this.movementChoise();
+    //this.movementChoise();
     //this.hover();
 
     this.position.add(this.knockbackForce);
@@ -202,9 +202,9 @@ class enemy extends entity {
     super.update(gravity, wordWidth);
 
     this.previousPositionX.x = this.position.x;
-    console.log("Delay: ", this.dashTimer);
-    console.log("Amount: ", this.dashAmount);
-    console.log("Coldown: ", this.dashColdownTimer);
+    //console.log("Delay: ", this.dashTimer);
+    //console.log("Amount: ", this.dashAmount);
+    //console.log("Coldown: ", this.dashColdownTimer);
   };
 
   public draw() {
