@@ -6,7 +6,7 @@ abstract class entity {
   protected isGravity: boolean;
 
   protected health: number;
-  private isAlive: boolean = true;
+  protected isAlive: boolean = true;
   private notPlayedSound: boolean = true;
   private timer: number = 1000;
   protected maxHealth: number;
