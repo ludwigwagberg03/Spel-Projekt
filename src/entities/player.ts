@@ -48,9 +48,21 @@ class Player extends entity {
         this.speed = this.baseSpeed / 2;
         break;
     }
+    // add more effect like firedamage
   }
 
-  
+  private proccessEffect(){
+    switch(this.effectType){
+      //logic for effects like firedamage
+    }
+  }
+
+  private clearEffect(){
+    this.effectTimer = 0;
+    this.effectType = "";
+
+    this.speed = this.baseSpeed;
+  }
 
   public canShoot(): boolean {
     return this.shootCooldown <= 0;
