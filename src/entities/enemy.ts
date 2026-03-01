@@ -83,8 +83,8 @@ class enemy extends entity {
             playerX = random(minX,maxX);
 
             if(this.positionA === 0){
-                this.positionA = playerX
-                this.positionB = minX
+                this.positionA = random(minX,maxX);
+                this.positionB = random(minX,maxX);
             }
 
             this.positionA = constrain(this.positionA, minX, maxX);
