@@ -44,6 +44,8 @@ class Level implements IScreen {
     });
   }
 
+  private isFiring: boolean = false;
+
   constructor(game: Game) {
     this.game = game;
 
@@ -79,16 +81,11 @@ class Level implements IScreen {
 
   }
 
-  public mousePressed(){
-    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-    const bullet = this.player.tryShoot(worldMouse);
-
-    console.log("mouse world",worldMouse.x, worldMouse.y);
-
-    if(bullet){
-      this.addProjectile(bullet);
-      sounds.shoot.play();
-    }
+  public mousePressed() {
+    this.isFiring = true;
+  }
+  public mouseReleased() {
+    this.isFiring = false;
   }
 
   private spawnExplosion(pos: p5.Vector): void {
@@ -127,6 +124,18 @@ class Level implements IScreen {
   }
   update(): void {
     
+    if (this.isFiring) {
+    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+    const bullet = this.player.tryShoot(worldMouse);
+
+    console.log("mouse world",worldMouse.x, worldMouse.y);
+
+    if(bullet){
+      this.addProjectile(bullet);
+      sounds.shoot.play();
+    }
+  }
+
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
