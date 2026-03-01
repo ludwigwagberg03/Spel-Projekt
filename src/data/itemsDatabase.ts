@@ -7,7 +7,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 500,
             hitboxWidth: 100,
             hitboxHeight: 50,
-            price: 50
+            price: 0
         },
         {
             id: "shortSword",
@@ -16,16 +16,16 @@ const Items:  {swords: Item[] } = {
             cooldown: 200,
             hitboxWidth: 80,
             hitboxHeight: 40,
-            price: 1
+            price: 0
         },
         {
             id: "heavySword",
             name: "HeavySword",
-            damage: 30,
+            damage: 100,
             cooldown: 1000,
             hitboxWidth: 120,
             hitboxHeight: 60,
-            price: 120
+            price: 0
         },
         {
             id: "LongSword",
@@ -34,7 +34,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 600,
             hitboxWidth: 160,
             hitboxHeight: 50,
-            price: 500
+            price: 0
         }
     ]
 };

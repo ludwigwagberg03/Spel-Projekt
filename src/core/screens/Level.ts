@@ -429,6 +429,44 @@ class Level implements IScreen {
 
     // textSize(18);
     // text("Press ESC to pause", width / 2, height / 4 + 60);
+
+    // draw a simple inventory
+    push();
+    textAlign(LEFT, TOP);
+    textSize(10);
+
+    const items = this.player.inventory.getItems();
+
+    const left = 200;
+    const top = 40;
+    const spacingBetweenItems = 80;
+
+    const slotWidth = 70;
+    const slotHeight = 20;
+
+    for (let i = 0; i < items.length; i++) {
+      const x = left + i * spacingBetweenItems;
+      const y = top;
+
+      stroke(255);
+      strokeWeight(2);
+
+      if (i === this.player.getCurrentIndex()) {
+        let glow = 180 + sin(frameCount * 0.08) * 70;
+        stroke(255, 220, 120, glow);
+      }
+
+      noFill();
+      rect(x, y, slotWidth, slotHeight);
+
+      noStroke();
+      fill(255);
+      text(items[i].name, x + 5, y + 5);
+
+
+
+    }
+    pop();
   }
 
   public keyPressed(code: number): void {

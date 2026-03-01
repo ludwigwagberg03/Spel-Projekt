@@ -55,7 +55,7 @@ class Player extends entity {
   }
 
   private equipItem(index: number) {
-    
+
     console.log("onwed", this.inventory.getItems());
     const items = this.inventory.getItems();
     if (index >= 0 && index < items.length) {
@@ -69,6 +69,9 @@ class Player extends entity {
 
       console.log("Equipped:", this.currentItem.name);
     }
+  }
+  public getCurrentIndex() {
+    return this.currentItemIndex;
   }
 
   public onCollision(other: entity): void {
@@ -115,6 +118,7 @@ class Player extends entity {
   }
   draw() {
     super.draw();
+
     rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
   }
 
@@ -216,16 +220,16 @@ class Player extends entity {
       // console.log("pressed e");
       this.swordAttack(this.enimies);
     }
-    if (keyIsDown(49)) { // E
+    if (keyIsDown(49)) { // 1
       this.equipItem(0);
     }
-    if (keyIsDown(50)) { // E
+    if (keyIsDown(50)) { // 2
       this.equipItem(1);
     }
-    if (keyIsDown(51)) { // E
+    if (keyIsDown(51)) { // 3
       this.equipItem(2);
     }
-    if (keyIsDown(52)) { // E
+    if (keyIsDown(52)) { // 4
       this.equipItem(3);
     }
   }
