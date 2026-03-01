@@ -4,10 +4,10 @@
 
 class Projectile extends entity {
   private speed: number = 12;
-
+  private owner?: entity;
   private damage: number = 1;
 
-  constructor(pos: p5.Vector, target: p5.Vector, damage: number) {
+  constructor(pos: p5.Vector, target: p5.Vector, damage: number, owner?: entity) {
     const speed = 12; // local constant
     
 
@@ -17,7 +17,7 @@ class Projectile extends entity {
 
     super(pos.copy(), direction, createVector(12, 12), 1);
     this.damage = damage;
-
+    this.owner = owner;
     this.isGravity = false;
   }
 
@@ -43,6 +43,7 @@ class Projectile extends entity {
   
 
   onCollision(other: entity) {
+    if(other === this.owner) return;
     if (other instanceof enemy) {
       (other as enemy).entityDamage(this.damage, this.position.copy());
 

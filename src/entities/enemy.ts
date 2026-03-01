@@ -49,7 +49,11 @@ class enemy extends entity {
 
   public iceShooter(target: p5.Vector, level: Level){
     let startPositon = this.getCenter();
-    let ice = new IceBoulder(startPositon.copy(), target.copy(), 5);
+
+    let offsetX = this.isFacingRight ? this.size.x / 2 : -this.size.x / 2;
+    startPositon.x += offsetX;
+
+    let ice = new IceBoulder(startPositon.copy(), target.copy(), 5, this);
 
     level.addProjectile(ice);
   }
@@ -223,7 +227,7 @@ class enemy extends entity {
     this.knockbackForce.mult(0.85);
     
     if(level){
-      this.tryIceGun(this.deathTimer, level)
+      this.tryIceGun(deltaTime, level)
     }
 
     this.previousPositionX.x = this.position.x;
