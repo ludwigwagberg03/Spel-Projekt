@@ -10,6 +10,9 @@ class enemy extends entity {
     dashTimerValue: number;
     dashAmount: number;
     dashColdownTimer: number = 10000;
+    protected positionA: number;
+    protected positionB: number;
+    private goingToA: boolean = true;
 
     constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
         super(p, v, s, h);
@@ -20,6 +23,8 @@ class enemy extends entity {
         this.player = player;
         this.dashTimerValue = this.dashTimer
         this.dashAmount = 0;
+        this.positionA = 0;
+        this.positionB = 0;
     }
 
     private followPlayer() {
@@ -69,19 +74,37 @@ class enemy extends entity {
     private hover() {
             let hoverDistance = this.player.getPosition().y;
             hoverDistance = hoverDistance - 250;
-            let targetX = this.player.getPosition().x;
+            let playerX = this.player.getPosition().x;
 
             let hoverRange = 200;
-            let minX = targetX - hoverRange;
-            let maxX = targetX + hoverRange;
+            let minX = playerX - hoverRange;
+            let maxX = playerX + hoverRange;
 
-            targetX = random(minX,maxX);
-            
+            playerX = random(minX,maxX);
+
+            if(this.positionA === 0){
+                this.positionA = playerX
+                this.positionB = minX
+            }
+
+            this.positionA = constrain(this.positionA, minX, maxX);
+            this.positionB = constrain(this.positionB, minX, maxX);
+
+            let targetX = this.goingToA ? this.positionA : this.positionB;
+
+            if(abs(this.position.x - targetX) < 10){
+                this.goingToA = !this.goingToA;
+
+                if(this.goingToA === true){
+                    this.positionA = 0;
+                    this.positionB = 0;
+                }
+            }
+
             let target = createVector(targetX, hoverDistance);
 
             let direction = p5.Vector.sub(target, this.position);
-            direction.normalize();
-            direction.mult(this.speed);
+            direction.setMag(this.speed);
             this.velocity = direction;
     }
 
