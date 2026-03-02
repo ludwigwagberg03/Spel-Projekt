@@ -1,9 +1,11 @@
 class Game {
   private currentScreen: IScreen;
-  
+  private player: Player;
+  public coinCount: number = 0;
 
-  constructor() {
-    this.currentScreen = new StartScreen(this);
+  constructor(player: Player) {
+    this.player = player;
+    this.currentScreen = new StartScreen(this, this.player);
     this.currentScreen.onEnter?.();
   }
 

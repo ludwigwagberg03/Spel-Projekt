@@ -73,7 +73,7 @@ function windowResized() {
 
 //---- INPUT HANDLERS (keyCode) ----//
 function keyPressed() {
-  console.log("GLOBAL KEY:", keyCode);
+  // console.log("GLOBAL KEY:", keyCode);
   game.keyPressed(keyCode);
 }
 

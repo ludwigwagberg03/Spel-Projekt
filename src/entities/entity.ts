@@ -26,7 +26,6 @@ abstract class entity {
 
   public drawHealthBar(x: number, y: number, w: number, h: number) {
     const healthProcent = this.health / this.maxHealth;
-
     push();
     fill(120); // red
     rect(x, y, w, h)
@@ -35,7 +34,6 @@ abstract class entity {
     rect(x, y, w * healthProcent, h)
     pop();
   }
-
   public getCenter(): p5.Vector {
     return createVector(
       this.position.x + this.size.x / 2,

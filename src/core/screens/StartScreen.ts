@@ -61,6 +61,7 @@ class StartScreen implements IScreen {
   private time = 0;
   private inputLocked: boolean = true;
   private stars: { x: number; y: number; size: number; speed: number }[] = [];
+  private player: Player;
 
   // Menu
   private options = ["Nytt spel", "Ladda spel", "Inställningar", "Avsluta"];
@@ -68,8 +69,9 @@ class StartScreen implements IScreen {
   private selected = 0;
   private lastSelected = 0;
 
-  constructor(game: Game) {
+  constructor(game: Game, player: Player) {
     this.game = game;
+    this.player = player;
 
     // create stars (random positions, sizes and speeds)
     for (let i = 0; i < 80; i++) {
@@ -175,7 +177,7 @@ class StartScreen implements IScreen {
 
   // ================= INPUT =================
   keyPressed(code: number): void {
-    console.log("StartScreen key:", code);
+    // console.log("StartScreen key:", code);
     // remember old selection
     this.lastSelected = this.selected;
     if(this.inputLocked) return;
@@ -199,7 +201,7 @@ class StartScreen implements IScreen {
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {
-        this.game.changeScreen(new Level(this.game));
+        this.game.changeScreen(new Level(this.game, this.player));
       }
 
       if (choice === "Avsluta") {
