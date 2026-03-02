@@ -36,4 +36,7 @@ class Game {
   mousePressed(): void {
     this.currentScreen.mousePressed?.();
   }
+  mouseReleased(): void {
+    this.currentScreen.mouseReleased?.();
+  }
 }

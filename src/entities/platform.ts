@@ -5,4 +5,11 @@ class Platform extends entity {
         super(p, v, s);
     }
     onCollision(other: entity): void {}
+
+    draw(){
+        push();
+        fill(255, 50, 50);
+        rect(5760, 10, 5760);
+        pop();
+    }
 }
