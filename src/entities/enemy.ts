@@ -1,5 +1,5 @@
 /// <reference path="entity.ts" />
-enum activeState {chase, dash, hover};
+enum activeState { chase, dash, hover };
 class enemy extends entity {
   private player: Player;
   private speed: number = 4;
@@ -32,6 +32,7 @@ class enemy extends entity {
   private isDashing: boolean = false;
   private dashTimeLeft: number = 0;
   private dashDuratin: number = 0;
+  private debugHitbox: boolean = true;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
@@ -47,10 +48,14 @@ class enemy extends entity {
     this.currentImage = images.iceBoss;
   }
 
-  private enterState(newState: activeState){
+  public getRadius() {
+    return (this.size.x / 2)*0.75;
+  }
+
+  private enterState(newState: activeState) {
     this.state = newState;
 
-    switch(newState) {
+    switch (newState) {
       case activeState.chase:
         break;
 
@@ -67,32 +72,32 @@ class enemy extends entity {
     }
   }
 
-  private updateAnimation(){
+  private updateAnimation() {
     this.totalFrames = 4;
     this.frameDelay = 172;
     this.frameTimer += deltaTime;
-    if(this.frameTimer >= this.frameDelay){
+    if (this.frameTimer >= this.frameDelay) {
       this.frameIndex++
       this.frameTimer = 0;
-      if (this.frameIndex >= this.totalFrames){
+      if (this.frameIndex >= this.totalFrames) {
         this.frameIndex = 0;
       }
     }
   }
 
-  private tryIceGun(deltaTime: number, level: Level){
+  private tryIceGun(deltaTime: number, level: Level) {
     this.timeSinceLastShot += deltaTime;
     //console.log("gun coldown",this.timeSinceLastShot);
     let target = this.player.getCenter();
     let distance = p5.Vector.dist(this.position, target);
 
-    if(distance < 600 && this.timeSinceLastShot >= this.shootTimer){
+    if (distance < 600 && this.timeSinceLastShot >= this.shootTimer) {
       this.iceShooter(target, level);
       this.timeSinceLastShot = 0;
     }
   }
 
-  public iceShooter(target: p5.Vector, level: Level){
+  public iceShooter(target: p5.Vector, level: Level) {
     let startPositon = this.getCenter();
     let distance = p5.Vector.sub(target, startPositon);
     distance.normalize();
@@ -111,8 +116,8 @@ class enemy extends entity {
 
 
   private dash() {
-    if(this.isDashing) return;
-    
+    if (this.isDashing) return;
+
     this.isDashing = true;
     this.dashTimeLeft = this.dashDuratin;
 
@@ -179,50 +184,50 @@ class enemy extends entity {
     this.followPlayer();
     let distance = p5.Vector.dist(this.position, this.player.getPosition());
     console.log("distance", distance);
-    if(distance < 400){
+    if (distance < 400) {
       this.enterState(activeState.dash);
     }
   }
 
   private handelHover(level?: Level) {
     this.hover();
-    if(level){
+    if (level) {
       this.tryIceGun(deltaTime, level);
     }
     this.dashColdownTimer -= deltaTime;
 
     //console.log("Hover Time",this.dashColdownTimer);
-    if(this.dashColdownTimer <= 0){
+    if (this.dashColdownTimer <= 0) {
       this.enterState(activeState.chase);
     }
   }
 
-  private handelDash(){
+  private handelDash() {
     this.dashTimer += deltaTime;
-    
 
-    if(this.dashTimer >= 600 && !this.isDashing){
+
+    if (this.dashTimer >= 600 && !this.isDashing) {
       this.dash();
       this.dashTimer = 0;
       this.dashAmount++;
       console.log("dash amount", this.dashAmount);
     }
 
-    if(this.isDashing){
+    if (this.isDashing) {
       this.dashTimeLeft -= deltaTime;
 
-      if(this.dashTimeLeft <= 0){
+      if (this.dashTimeLeft <= 0) {
         this.isDashing = false;
       }
     }
 
-    if(this.dashAmount > 3 && !this.isDashing){
+    if (this.dashAmount > 3 && !this.isDashing) {
       this.enterState(activeState.hover);
     }
   }
 
-  private movementChoise(state: activeState, level? : Level) {
-    switch(state) {
+  private movementChoise(state: activeState, level?: Level) {
+    switch (state) {
 
       case activeState.chase:
         this.handelFollowPlayer();
@@ -305,17 +310,17 @@ class enemy extends entity {
       return;
     }
     console.log("state: ", activeState[this.state]);
-    this.movementChoise(this.state, level);
+    //this.movementChoise(this.state, level);
     this.position.add(this.knockbackForce);
     this.knockbackForce.mult(0.85);
-    
+
 
     this.previousPositionX.x = this.position.x;
 
     this.updateAnimation();
 
     let groundLevel = height - this.size.y;
-    if(this.position.y > groundLevel){
+    if (this.position.y > groundLevel) {
       this.position.y = groundLevel;
       this.velocity.y = 0;
     }
@@ -339,7 +344,7 @@ class enemy extends entity {
       this.frameWidth,
       this.frameHeight
     );
-    
+
     //  Health Bar
     let healthPercent = this.health / this.maxHealth;
 
@@ -351,5 +356,14 @@ class enemy extends entity {
     fill(0, 255, 0);
     rect(this.position.x, this.position.y - 15, this.size.x * healthPercent, 6);
     pop();
+
+    if (this.debugHitbox) {
+      push();
+    noFill();
+    stroke(255, 0, 0);
+    strokeWeight(2);
+    rect(this.position.x, this.position.y, this.size.x, this.size.y);
+    pop();
+    }
   }
 }

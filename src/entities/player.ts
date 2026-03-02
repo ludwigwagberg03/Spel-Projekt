@@ -52,8 +52,8 @@ class Player extends entity {
 
   }
 
-  public tryShoot(mouseWorldPos: p5.Vector): Projectile | null{
-    if(!this.canShoot()) return null;
+  public tryShoot(mouseWorldPos: p5.Vector): Projectile | null {
+    if (!this.canShoot()) return null;
 
     return this.shoot(mouseWorldPos);
   }
@@ -178,7 +178,7 @@ class Player extends entity {
       this.handlePlatformLanding(other);
     }
     if (other instanceof enemy) {
-      this.entityDamage(10);
+      this.entityDamage(1);
     }
   }
   private handlePlatformLanding(other: entity) {
@@ -216,7 +216,7 @@ class Player extends entity {
     this.updateAnimation();
 
   }
-  
+
 
   private updatePosition(worldWidth: number) {
     // player is on the ground 
@@ -382,7 +382,7 @@ class Player extends entity {
 
     const mouseWorld = createVector(mouseX + cameraX, mouseY)
 
-    if(mouseWorld){
+    if (mouseWorld) {
       //console.log("drawing");
       //console.log(images.smgAim);
       const dx = mouseWorld.x - (this.position.x + this.size.x / 2);
@@ -393,20 +393,20 @@ class Player extends entity {
       const frameHeight = images.smgAim.height;
 
       let weaponAim = 0;
-      if (angel < -PI / 6){
+      if (angel < -PI / 6) {
         weaponAim = frameWidth * 1;
-      } else if( angel > PI / 6){
+      } else if (angel > PI / 6) {
         weaponAim = frameWidth * 2;
       }
       const weaponScale = 1;
       image(
         images.smgAim,
         this.position.x,
-        this.position.y + this.size.y/2 - frameHeight/weaponScale/2,
+        this.position.y + this.size.y / 2 - frameHeight / weaponScale / 2,
         this.size.x * weaponScale,
         this.size.y * weaponScale,
-        weaponAim, 
-        0, 
+        weaponAim,
+        0,
         frameWidth, frameHeight
       );
     }
@@ -422,7 +422,12 @@ class Player extends entity {
       this.frameWidth,
       this.frameHeight
     );
-
+    push();
+    noFill();
+    stroke(0, 255, 0);
+    strokeWeight(2);
+    rect(this.position.x, this.position.y, this.size.x, this.size.y);
+    pop();
     //rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
   }
 }

@@ -37,7 +37,7 @@ abstract class entity {
   public getCenter(): p5.Vector {
     return createVector(
       this.position.x + this.size.x / 2,
-      this.position.y + this.size.y / 2,
+      this.position.y + this.size.y / 2 + 400,
     );
   }
 
@@ -109,12 +109,19 @@ abstract class entity {
   }
 
   public overlaps(other: entity) {
-    return (
-      this.position.x < other.position.x + other.size.x &&
-      this.position.x + this.size.x > other.position.x &&
-      this.position.y < other.position.y + other.size.y &&
-      this.position.y + this.size.y > other.position.y
-    );
+    if (this instanceof enemy) {
+      const d = p5.Vector.dist(this.getCenter(), other.getCenter());
+      const radius = this.getRadius();
+      let otherRadius = other instanceof enemy ? other.getRadius() : max(other.size.x, other.size.y) / 2;
+      return d < (radius + otherRadius);
+    } else {
+      return (
+        this.position.x < other.position.x + other.size.x &&
+        this.position.x + this.size.x > other.position.x &&
+        this.position.y < other.position.y + other.size.y &&
+        this.position.y + this.size.y > other.position.y
+      );
+    }
   }
   public getIsAlive(): boolean {
     return this.isAlive;
@@ -123,7 +130,7 @@ abstract class entity {
   abstract onCollision(other: entity): void;
 
   public draw(cameraX: number) {
-     // rita ut bild här för att återanvända kod
+    // rita ut bild här för att återanvända kod
   }
 
 }
