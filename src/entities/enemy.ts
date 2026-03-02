@@ -240,7 +240,7 @@ class enemy extends entity {
     if (this.dashTimer <= 0) {
       this.dashTimer = this.dashTimerValue;
     }
-    //this.movementChoise();
+    this.movementChoise();
     //this.hover();
 
     this.position.add(this.knockbackForce);
@@ -255,6 +255,15 @@ class enemy extends entity {
     //console.log("Delay: ", this.dashTimer);
     //console.log("Amount: ", this.dashAmount);
     //console.log("Coldown: ", this.dashColdownTimer);
+
+    let groundLevel = height - this.size.y;
+
+    if(this.position.y > groundLevel){
+      this.position.y = groundLevel;
+      this.velocity.y = 0;
+    }
+
+
   };
 
   public draw() {
