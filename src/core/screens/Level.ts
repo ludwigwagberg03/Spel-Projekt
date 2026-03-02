@@ -377,7 +377,7 @@ class Level implements IScreen {
     pop();
 
     this.player.drawHealthBar(width - 400, 20, 350, 50);
-
+    this.player.draw(createVector(mouseX + this.cameraX, mouseY));
     // demo text
     fill(255, 55, 99);
     textAlign(CENTER, CENTER);

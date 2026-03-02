@@ -203,6 +203,7 @@ class Player extends entity {
     this.updateAttackHitBox();
     this.updateEffect(deltaTime);
     this.updateAnimation();
+
   }
   
 
@@ -361,12 +362,43 @@ class Player extends entity {
 
   //   return new Projectile(spawnPos, this.facing);
   // }
-  draw() {
+  draw(mouseWorld?: p5.Vector) {
     super.draw();
     noSmooth();
 
     const sx = this.frameIndex * this.frameWidth;
     const sy = 0;
+
+    
+
+    if(mouseWorld){
+      //console.log("drawing");
+      //console.log(images.smgAim);
+      const dx = mouseWorld.x - (this.position.x + this.size.x / 2);
+      const dy = mouseWorld.y - (this.position.y + this.size.y / 2);
+      const angel = atan2(dy, dx);
+
+      const frameWidth = images.smgAim.width / 3;
+      const frameHeight = images.smgAim.height;
+
+      let weaponAim = 0;
+      if (angel < -PI / 6){
+        weaponAim = frameWidth * 1;
+      } else if( angel > PI / 6){
+        weaponAim = frameWidth * 2;
+      }
+      const weaponScale = 2;
+      image(
+        images.smgAim,
+        this.position.x,
+        this.position.y + this.size.y/2 - frameHeight/weaponScale/2,
+        this.size.x * weaponScale,
+        this.size.y * weaponScale,
+        weaponAim, 
+        0, 
+        frameWidth, frameHeight
+      );
+    }
 
     image(
       this.currentImage,
@@ -379,6 +411,7 @@ class Player extends entity {
       this.frameWidth,
       this.frameHeight
     );
-    rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
+
+    //rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
   }
 }

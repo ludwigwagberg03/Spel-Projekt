@@ -241,7 +241,7 @@ class enemy extends entity {
     if (this.dashTimer <= 0) {
       this.dashTimer = this.dashTimerValue;
     }
-    this.movementChoise();
+    //this.movementChoise();
     //this.hover();
 
     this.position.add(this.knockbackForce);
