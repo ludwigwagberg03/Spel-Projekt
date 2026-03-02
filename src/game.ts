@@ -1,19 +1,15 @@
 class Game {
   // Currently active screen
   private currentScreen: IScreen;
-  
 
   constructor() {
     // Start the game at the main menu
     this.currentScreen = new StartScreen(this);
   }
 
-  // --- Win Game ---
-  
+  // Called every frame (logic update)
   update(): void {
     this.currentScreen.update();
-    // --- Remove Dead Enemies ---
-    
   }
 
   // Called every frame (render)
@@ -36,8 +32,5 @@ class Game {
   // Forward mouse input to active screen
   mousePressed(): void {
     this.currentScreen.mousePressed?.();
-  }
-  mouseReleased(): void {
-    this.currentScreen.mouseReleased?.();
   }
 }

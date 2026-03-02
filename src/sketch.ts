@@ -14,15 +14,9 @@ let images: {
   menu: p5.Image;
   background: p5.Image;
   testStage: p5.Image;
-
-  playerIdle: p5.Image;
-  playerWalk: p5.Image;
-  playerJump: p5.Image;
-  playerAir: p5.Image;
-  iceBoss: p5.Image;
-  smgAim: p5.Image;
+  player: p5.Image; 
+  enemy: p5.Image;
 };
-// let itemData: any;
 
 /**
  * Built in preload function in P5
@@ -43,19 +37,14 @@ function preload() {
     menu: loadImage("/assets/images/menu_bg.png"),
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     background: loadImage("/assets/images/Terr-style-bg1.png"),
-    playerIdle: loadImage("/assets/images/playerIdle.png"),
-    playerWalk: loadImage("/assets/images/playerWalk.png"),
-    playerJump: loadImage("/assets/images/playerJump.png"),
-    playerAir: loadImage("/assets/images/playerAir.png"),
-    iceBoss: loadImage("/assets/images/IceBossWings.png"),
-    smgAim: loadImage("/assets/images/smgAim.png"),
+    player: loadImage("/assets/images/player1.png"),
+    enemy: loadImage("/assets/images/enemy2.svg"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  pixelDensity(1);
   frameRate(60);
   music.mystery.setVolume(0.8);
 
@@ -73,14 +62,10 @@ function windowResized() {
 
 //---- INPUT HANDLERS (keyCode) ----//
 function keyPressed() {
-  console.log("GLOBAL KEY:", keyCode);
   game.keyPressed(keyCode);
 }
 
 function mousePressed() {
   userStartAudio();
   game.mousePressed();
-}
-function mouseReleased() {
-  game.mouseReleased();
 }
