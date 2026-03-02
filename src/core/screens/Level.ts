@@ -26,23 +26,6 @@ class Level implements IScreen {
   // ===== lose lock =====
   private gameOverTriggered: boolean = false;
 
-  public addProjectile(p: Projectile) {
-    this.projectiles.push(p);
-  }
-  public triggerImpact(pos: p5.Vector) {
-    this.impacts.push({
-      pos: pos.copy(),
-      life: 200,
-    });
-  }
-  public spawnDamageNumber(pos: p5.Vector, value: number) {
-    this.damageNumbers.push({
-      pos: pos.copy(),
-      value: value,
-      life: 800,
-    });
-  }
-
   private isFiring: boolean = false;
 
   constructor(game: Game, player: Player) {
@@ -353,17 +336,17 @@ class Level implements IScreen {
   public keyPressed(code: number): void {
     // R = restart
     if (code === 82) {
-      this.game.changeScreen(new Level(this.game));
+      this.game.changeScreen(new Level(this.game, this.player));
       return;
     }
     //press ESC to go back to start menu
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new PauseScreen(this.game));
+      this.game.changeScreen(new PauseScreen(this.game, this.player));
     }
     if (code === 66) {
       // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new ShopScreen(this.game));
+      this.game.changeScreen(new ShopScreen(this.game, this.player, this));
     }
   }
 
@@ -398,7 +381,7 @@ class Level implements IScreen {
 
     // Draw entities
     this.entities.forEach((entity) => {
-      entity.draw();
+      entity.draw(this.cameraX);
     });
 
     // Draw projectiles
@@ -410,7 +393,7 @@ class Level implements IScreen {
     pop();
 
     this.player.drawHealthBar(width - 400, 20, 350, 50);
-    this.player.draw(createVector(mouseX + this.cameraX, mouseY));
+    //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
     // demo text
     fill(255, 55, 99);
     textAlign(CENTER, CENTER);

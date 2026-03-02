@@ -373,14 +373,14 @@ class Player extends entity {
 
   //   return new Projectile(spawnPos, this.facing);
   // }
-  draw(mouseWorld?: p5.Vector) {
-    super.draw();
+  draw(cameraX: number) {
+    super.draw(cameraX);
     noSmooth();
 
     const sx = this.frameIndex * this.frameWidth;
     const sy = 0;
 
-    
+    const mouseWorld = createVector(mouseX + cameraX, mouseY)
 
     if(mouseWorld){
       //console.log("drawing");

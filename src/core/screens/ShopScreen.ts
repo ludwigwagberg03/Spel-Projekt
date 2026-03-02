@@ -1,23 +1,20 @@
 class ShopScreen implements IScreen {
-    private game: Game;
+    private game: IChangableScreen;
     private player: Player;
     private level: Level;
 
-    private items = Items.swords
+    private items = Items.swords;
 
-    private lastSelected = 0
+    private lastSelected = 0;
     private selected = 0;
 
-    constructor(game: Game, player: Player, level: Level) {
+    constructor(game: IChangableScreen, player: Player, level: Level) {
         this.game = game;
         this.player = player;
         this.level = level;
-
         console.log("onwed", this.player.inventory.getItems());
     }
-    update() {
-
-    };
+    update() {};
     draw() {
         background(0);
 

@@ -122,8 +122,8 @@ abstract class entity {
 
   abstract onCollision(other: entity): void;
 
-  public draw() {
-  
+  public draw(cameraX: number) {
+     // rita ut bild här för att återanvända kod
   }
 
 }

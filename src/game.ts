@@ -1,4 +1,8 @@
-class Game {
+interface IChangableScreen {
+  changeScreen(newScreen: IScreen): void;
+}
+
+class Game implements IChangableScreen {
   private currentScreen: IScreen;
   private player: Player;
   public coinCount: number = 0;
