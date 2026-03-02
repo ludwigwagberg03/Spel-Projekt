@@ -398,7 +398,7 @@ class Player extends entity {
       } else if( angel > PI / 6){
         weaponAim = frameWidth * 2;
       }
-      const weaponScale = 2;
+      const weaponScale = 1;
       image(
         images.smgAim,
         this.position.x,
