@@ -99,6 +99,15 @@ class enemy extends entity {
     direction.normalize();
 
     let dashToLocation = p5.Vector.add(target, direction.mult(300));
+
+    let minX = 0;
+    let maxX = width - this.size.x;
+
+    dashToLocation.x = constrain(dashToLocation.x, minX, maxX);
+
+    let groundLevel = height - this.size.y;
+    dashToLocation.y = constrain(dashToLocation.y, 0, groundLevel);
+
     let dashDirection = p5.Vector.sub(dashToLocation, this.position);
 
     dashDirection.setMag(this.speed * 4.2);
@@ -288,7 +297,13 @@ class enemy extends entity {
     //console.log("Amount: ", this.dashAmount);
     //console.log("Coldown: ", this.dashColdownTimer);
 
-   
+    let groundLevel = height - this.size.y;
+
+    if(this.position.y > groundLevel){
+      this.position.y = groundLevel;
+      this.velocity.y = 0;
+    }
+
 
   };
 
