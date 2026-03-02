@@ -6,22 +6,28 @@ class Player extends entity {
   private isFalling: boolean = false;
   public facing: number = 1;
   private shootCooldown: number = 0;
-
-  private attackHitBox: {
-    position: p5.Vector;
-    width: number;
-    hight: number;
-  };
-
+  private attackHitBox: { position: p5.Vector; width: number; hight: number; };
   private isPlayerFacingRight: boolean = true;
   private enimies: entity[] = [];
   private swordSwipeTimer: number = 500;
   private currentItem!: Item;
   public inventory: Inventory;
   private currentItemIndex: number = 0;
+  private effectType: string = "";
+  private effectTimer: number = 0;
+  private baseSpeed: number = 1;
+  private speed: number = 1;
+  private currentImage: p5.Image;
+  private frameIndex: number = 0;
+  private frameTimer: number = 0;
+  private frameDelay: number = 2500;
+  private totalFrames: number = 6; // default idle
+  private frameWidth: number = 16;
+  private frameHeight: number = 32;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
     super(p, v, s, h, true);
+    this.currentImage = images.playerIdle;
     this.attackHitBox = {
       position: p.copy(),
       width: 100,
@@ -38,7 +44,100 @@ class Player extends entity {
         price: 50
       }
     ]);
+
+
   }
+
+  public tryShoot(mouseWorldPos: p5.Vector): Projectile | null{
+    if(!this.canShoot()) return null;
+
+    return this.shoot(mouseWorldPos);
+  }
+
+  private updateAnimation() {
+
+    let newImage = this.currentImage;
+    let newTotalFrames = this.totalFrames;
+
+    if (!this.onGround) {
+      if (this.velocity.y < 0) {
+        newImage = images.playerJump;
+        newTotalFrames = 14;
+        this.frameDelay = 1000;
+      } else {
+        newImage = images.playerAir;
+        newTotalFrames = 10;
+      }
+    }
+    else if (this.velocity.x !== 0) {
+      //console.log("walking");
+      newImage = images.playerWalk;
+      newTotalFrames = 4;
+      this.frameDelay = 8000;
+    }
+    else {
+      newImage = images.playerIdle;
+      newTotalFrames = 5;
+      this.frameDelay = 2000;
+    }
+
+    if (newImage !== this.currentImage) {
+      this.frameIndex = 0;
+      this.frameTimer = 0;
+    }
+
+    this.currentImage = newImage;
+    this.totalFrames = newTotalFrames;
+
+    this.frameTimer += deltaTime;
+
+    if (this.frameTimer > this.frameDelay) {
+      this.frameIndex++;
+      this.frameTimer = 0;
+
+      if (this.frameIndex >= this.totalFrames) {
+        this.frameIndex = 0;
+      }
+    }
+  }
+
+  public applyEffect(type: string, duration: number) {
+    this.effectType = type;
+    this.effectTimer = duration;
+
+    switch (type) {
+      case "slow":
+        this.speed = this.baseSpeed / 2;
+        break;
+    }
+    // add more effect like firedamage
+  }
+
+  private proccessEffect() {
+    switch (this.effectType) {
+      //logic for effects like firedamage
+    }
+  }
+
+  private clearEffect() {
+    this.effectTimer = 0;
+    this.effectType = "";
+
+    this.speed = this.baseSpeed;
+  }
+
+  public updateEffect(deltaTime: number) {
+    if (this.effectTimer > 0) {
+      this.effectTimer -= deltaTime;
+      console.log("effect timer ", this.effectTimer);
+      if (this.effectTimer <= 0) {
+        this.clearEffect();
+      } else {
+        this.proccessEffect();
+      }
+    }
+  }
+
   public canShoot(): boolean {
     return this.shootCooldown <= 0;
   }
@@ -102,13 +201,11 @@ class Player extends entity {
     super.update(gravity, worldWidth);
     this.updatePosition(worldWidth);
     this.updateAttackHitBox();
-
+    this.updateEffect(deltaTime);
+    this.updateAnimation();
 
   }
-  draw() {
-    super.draw();
-    rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
-  }
+  
 
   private updatePosition(worldWidth: number) {
     // player is on the ground 
@@ -155,7 +252,7 @@ class Player extends entity {
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
         if (e instanceof enemy) {
-          console.log("test1");
+          //console.log("test1");
 
           const enemyX = e.getPosition().x;
           const enemyY = e.getPosition().y;
@@ -167,8 +264,8 @@ class Player extends entity {
           const attackWidth = this.attackHitBox.width;
           const attackHight = this.attackHitBox.hight;
 
-          console.log("Attack:", attackX, attackY, attackWidth, attackHight);
-          console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
+          //console.log("Attack:", attackX, attackY, attackWidth, attackHight);
+          //console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
 
           const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
@@ -186,17 +283,17 @@ class Player extends entity {
     this.velocity.x = 0;
 
     if (keyIsDown(65)) { // a
-      this.velocity.x = -5;
+      this.velocity.x = -5 * this.speed;
       this.facing = -1;
       this.isPlayerFacingRight = false;
     }
     if (keyIsDown(68)) { // d
-      this.velocity.x = 5;
+      this.velocity.x = 5 * this.speed;
       this.facing = 1;
       this.isPlayerFacingRight = true;
     }
     if (keyIsDown(83) && this.onPlatform) { // s
-      this.velocity.y = 0.8;
+      this.velocity.y = 0.8 * this.speed;
       this.onGround = false;
       this.onPlatform = false;
       this.isFalling = true;
@@ -207,6 +304,8 @@ class Player extends entity {
     if (keyIsDown(69)) { // E
       console.log("pressed e");
       this.swordAttack(this.enimies);
+      this.applyEffect("slow", 10000);
+      console.log("effect timer ", this.effectTimer);
     }
     if (keyIsDown(49)) { // E
       this.equipItem(0);
@@ -223,7 +322,7 @@ class Player extends entity {
   }
   private jump() {
     if (this.onGround) {
-      this.velocity.y = -30;
+      this.velocity.y = -30 * this.speed;
       this.onGround = false;
       this.onPlatform = false;
     }
@@ -247,7 +346,7 @@ class Player extends entity {
     // Random damage (1–3)
     let damageValue = floor(random(1, 4));
 
-    return new Projectile(spawnPos, target, damageValue);
+    return new Projectile(spawnPos, direction, damageValue);
   }
 
   // public shoot(): Projectile {
@@ -263,4 +362,56 @@ class Player extends entity {
 
   //   return new Projectile(spawnPos, this.facing);
   // }
+  draw(mouseWorld?: p5.Vector) {
+    super.draw();
+    noSmooth();
+
+    const sx = this.frameIndex * this.frameWidth;
+    const sy = 0;
+
+    
+
+    if(mouseWorld){
+      //console.log("drawing");
+      //console.log(images.smgAim);
+      const dx = mouseWorld.x - (this.position.x + this.size.x / 2);
+      const dy = mouseWorld.y - (this.position.y + this.size.y / 2);
+      const angel = atan2(dy, dx);
+
+      const frameWidth = images.smgAim.width / 3;
+      const frameHeight = images.smgAim.height;
+
+      let weaponAim = 0;
+      if (angel < -PI / 6){
+        weaponAim = frameWidth * 1;
+      } else if( angel > PI / 6){
+        weaponAim = frameWidth * 2;
+      }
+      const weaponScale = 2;
+      image(
+        images.smgAim,
+        this.position.x,
+        this.position.y + this.size.y/2 - frameHeight/weaponScale/2,
+        this.size.x * weaponScale,
+        this.size.y * weaponScale,
+        weaponAim, 
+        0, 
+        frameWidth, frameHeight
+      );
+    }
+
+    image(
+      this.currentImage,
+      this.position.x,
+      this.position.y,
+      this.size.x,
+      this.size.y,
+      sx,
+      sy,
+      this.frameWidth,
+      this.frameHeight
+    );
+
+    //rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
+  }
 }

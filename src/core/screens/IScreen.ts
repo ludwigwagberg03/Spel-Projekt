@@ -7,4 +7,5 @@ interface IScreen {
 
     keyPressed?(code: number): void;
     mousePressed?(): void;
+    mouseReleased?(): void;
 }
