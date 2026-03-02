@@ -215,11 +215,6 @@ class Level implements IScreen {
       this.victoryTimer = 0;
     }
 
-    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround) {
-      this.victoryActive = true;
-      this.victoryTimer = 0;
-    }
-
     if (this.victoryActive) {
       this.victoryTimer += deltaTime;
 
