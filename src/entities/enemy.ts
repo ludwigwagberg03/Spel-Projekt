@@ -29,6 +29,9 @@ class enemy extends entity {
   private frameWidth: number = 64;
   private frameHeight: number = 80;
   private state: activeState = activeState.hover;
+  private isDashing: boolean = false;
+  private dashTimeLeft: number = 0;
+  private dashDuratin: number = 0;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
@@ -42,6 +45,26 @@ class enemy extends entity {
     this.positionA = 0;
     this.positionB = 0;
     this.currentImage = images.iceBoss;
+  }
+
+  private enterState(newState: activeState){
+    this.state = newState;
+
+    switch(newState) {
+      case activeState.chase:
+        break;
+
+      case activeState.dash:
+        this.dashTimer = 0;
+        this.dashAmount = 0;
+        break;
+
+      case activeState.hover:
+        this.dashColdownTimer = 3000;
+        this.positionA = 0;
+        this.positionB = 0;
+        break;
+    }
   }
 
   private updateAnimation(){
@@ -88,30 +111,31 @@ class enemy extends entity {
 
 
   private dash() {
-    let target = this.player.getPosition();
-    let distance = p5.Vector.dist(this.position, target);
+    if(this.isDashing) return;
+    
+    this.isDashing = true;
+    this.dashTimeLeft = this.dashDuratin;
+
+    let distance = p5.Vector.dist(this.position, this.player.getPosition());
 
     if (distance < 10) {
       return;
     }
 
-    let direction = p5.Vector.sub(target, this.position);
+    let direction = p5.Vector.sub(this.player.getPosition(), this.position);
     direction.normalize();
+    direction.mult(this.speed * 6);
+    this.velocity = direction;
 
-    let dashToLocation = p5.Vector.add(target, direction.mult(300));
+    /*let dashToLocation = p5.Vector.add(this.position, direction.copy().mult(300));
 
-    let minX = 0;
-    let maxX = width - this.size.x;
-
-    dashToLocation.x = constrain(dashToLocation.x, minX, maxX);
-
-    let groundLevel = height - this.size.y;
-    dashToLocation.y = constrain(dashToLocation.y, 0, groundLevel);
+    dashToLocation.x = constrain(dashToLocation.x, 0, width - this.size.x);
+    dashToLocation.y = constrain(dashToLocation.y, 0, height - this.size.y);
 
     let dashDirection = p5.Vector.sub(dashToLocation, this.position);
 
     dashDirection.setMag(this.speed * 4.2);
-    this.velocity = dashDirection;
+    this.velocity = dashDirection;*/
   }
 
   private hover() {
@@ -156,44 +180,58 @@ class enemy extends entity {
     let distance = p5.Vector.dist(this.position, this.player.getPosition());
     console.log("distance", distance);
     if(distance < 400){
-      this.state = activeState.dash;
-      this.dashTimer = 0;
-      this.dashAmount = 0;
+      this.enterState(activeState.dash);
     }
   }
 
-  private handelHover() {
+  private handelHover(level?: Level) {
     this.hover();
-
+    if(level){
+      this.tryIceGun(deltaTime, level);
+    }
     this.dashColdownTimer -= deltaTime;
-    console.log("Hover Time",this.dashColdownTimer);
+
+    //console.log("Hover Time",this.dashColdownTimer);
     if(this.dashColdownTimer <= 0){
-      this.state = activeState.chase;
+      this.enterState(activeState.chase);
     }
   }
 
   private handelDash(){
-    this.dashTimer -= deltaTime;
-    if(this.dashTimer <= 0){
+    this.dashTimer += deltaTime;
+    
+
+    if(this.dashTimer >= 600 && !this.isDashing){
       this.dash();
-      this.dashTimer = 600;
+      this.dashTimer = 0;
       this.dashAmount++;
       console.log("dash amount", this.dashAmount);
     }
-    if(this.dashAmount > 3){
-      this.state = activeState.hover;
-      this.dashColdownTimer = 3000;
+
+    if(this.isDashing){
+      this.dashTimeLeft -= deltaTime;
+
+      if(this.dashTimeLeft <= 0){
+        this.isDashing = false;
+      }
+    }
+
+    if(this.dashAmount > 3 && !this.isDashing){
+      this.enterState(activeState.hover);
     }
   }
 
-  private movementChoise(state: activeState) {
+  private movementChoise(state: activeState, level? : Level) {
     switch(state) {
+
       case activeState.chase:
         this.handelFollowPlayer();
         break;
+
       case activeState.hover:
-        this.handelHover();
+        this.handelHover(level);
         break;
+
       case activeState.dash:
         this.handelDash();
         break;
@@ -266,45 +304,21 @@ class enemy extends entity {
       this.handleDeath();
       return;
     }
-
-    if (this.dashAmount > 3) {
-      this.dashColdownTimer -= deltaTime;
-    }
-    if (this.dashColdownTimer <= 0) {
-      this.dashAmount = 0;
-      this.dashColdownTimer = 10000;
-    }
-    if (this.dashTimer < this.dashTimerValue) {
-      this.dashTimer -= deltaTime;
-    }
-    if (this.dashTimer <= 0) {
-      this.dashTimer = this.dashTimerValue;
-    }
     console.log("state: ", activeState[this.state]);
-    this.movementChoise(this.state);
-    //this.hover();
-
+    this.movementChoise(this.state, level);
     this.position.add(this.knockbackForce);
     this.knockbackForce.mult(0.85);
     
-    if(level){
-      //this.tryIceGun(deltaTime, level)
-    }
 
     this.previousPositionX.x = this.position.x;
+
     this.updateAnimation();
-    //console.log("Delay: ", this.dashTimer);
-    //console.log("Amount: ", this.dashAmount);
-    //console.log("Coldown: ", this.dashColdownTimer);
 
     let groundLevel = height - this.size.y;
-
     if(this.position.y > groundLevel){
       this.position.y = groundLevel;
       this.velocity.y = 0;
     }
-
-
   };
 
   public draw(cameraX: number) {
