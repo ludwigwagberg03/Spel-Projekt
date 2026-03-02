@@ -101,27 +101,34 @@ class Level implements IScreen {
     }
   }
   private drawCoinUI(): void {
-    // UI
     push();
     textFont(gameFont);
 
-    // panel
+    // ===== Panel Background =====
     noStroke();
     fill(0, 0, 0, 120);
-    rect(20, 20, 180, 55, 12);
+    rect(20, 20, 360, 60, 12);
 
-    // coin icon
+    // ===== Coin Icon =====
     fill(255, 205, 60);
-    ellipse(45, 47, 22);
+    ellipse(45, 50, 22);
 
-    // text
+    // ===== Coin Text =====
     fill(255);
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(`Coins: ${this.coinCount}`, 65, 47);
+    text(`Coins: ${this.coinCount}`, 65, 50);
+
+    // ===== HP Label =====
+    text(`HP: ${this.player.getHp()}`, 200, 35);
+
+    // ===== HP Bar =====
+    fill(200, 0, 0);
+    rect(200, 50, this.player.getHp() * 1.2, 15, 4);
 
     pop();
   }
+
   update(): void {
     
     if (this.isFiring) {
@@ -162,6 +169,7 @@ class Level implements IScreen {
 
     // Check collisions between objects
     this.checkCollision();
+
     // =========================
     // ENEMY DEATH EVENTS + REMOVE DEAD
     // =========================
@@ -180,6 +188,15 @@ class Level implements IScreen {
         // If fully finished dying -> remove from entities
         if (e.isDead) {
           this.entities.splice(i, 1);
+        }
+      }
+    }
+
+    //  Player takes damage when touching enemy
+    for (let e of this.entities) {
+      if (e instanceof enemy && e.alive) {
+        if (this.player.overlaps(e)) {
+          this.player.takeDamage(10);
         }
       }
     }
@@ -209,7 +226,7 @@ class Level implements IScreen {
     // =========================
     // LOSE CONDITION -> GameOverScreen
     // =========================
-    if (!this.gameOverTriggered && !this.player.alive) {
+    if (!this.gameOverTriggered && this.player.getHp() <= 0) {
       this.gameOverTriggered = true;
       this.game.changeScreen(new GameOverScreen(this.game, false));
       return;
@@ -260,7 +277,7 @@ class Level implements IScreen {
       this.game.changeScreen(new StartScreen(this.game));
     }
   }
-  //
+  // Finds the closest alive enemy to the player and returns its position
   private findClosestEnemy(): p5.Vector | null {
     let closest: enemy | null = null;
     let minDist = Infinity;
@@ -429,8 +446,7 @@ class Level implements IScreen {
     // UI (screen space)
     // =========================
     this.drawCoinUI();
-
-    // Victory overlay
+       // Victory overlay
     if (this.victoryActive) {
       push();
       textFont(gameFont);
@@ -441,22 +457,14 @@ class Level implements IScreen {
 
       fill(255);
       textSize(34);
-      text("VICTORY!", width / 2, height / 2 - 40);
+      text("VICTORY!", width / 2, height / 2 - 50);
 
       textSize(18);
-      text("Press R to restart", width / 2, height / 2 + 25);
+      text("R - Restart", width / 2, height / 2 + 20);
+      text("M - Main Menu", width / 2, height / 2 + 50);
 
       pop();
     }
-
-    // // UI text (screen space)
-    // fill(255, 55, 99);
-    // textAlign(CENTER, CENTER);
-    // textSize(48);
-    // text("PLAYING", width / 2, height / 4);
-
-    // textSize(18);
-    // text("Press ESC to pause", width / 2, height / 4 + 60);
   }
 
   onEnter(): void {

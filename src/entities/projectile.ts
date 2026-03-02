@@ -6,6 +6,10 @@ class Projectile extends entity {
   private speed: number = 12;
   private owner?: entity;
   private damage: number = 1;
+  constructor(pos: p5.Vector, direction: p5.Vector, damage: number) {
+    super(pos, direction.copy().mult(12), createVector(10, 10), 0);
+    this.damage = damage;
+  }
 
   constructor(pos: p5.Vector, direction: p5.Vector, damage: number, owner?: entity) {
     const speed = 12; // local constant
@@ -31,7 +35,7 @@ class Projectile extends entity {
 
   draw() {
     push();
-        
+
     fill(255, 220, 100);
     noStroke();
     ellipse(this.position.x, this.position.y, 12);
@@ -40,7 +44,6 @@ class Projectile extends entity {
     ellipse(this.position.x, this.position.y, 6);
     pop();
   }
-  
 
   onCollision(other: entity) {
     if(other === this.owner) return;
