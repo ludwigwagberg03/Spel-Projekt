@@ -4,7 +4,6 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
-  private enemy: enemy;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
@@ -44,8 +43,6 @@ class Level implements IScreen {
     });
   }
 
-  private isFiring: boolean = false;
-
   constructor(game: Game) {
     this.game = game;
 
@@ -61,31 +58,23 @@ class Level implements IScreen {
 
     this.player = new Player(
       createVector(this.worldWidth / 2, height / 2),
+
       createVector(0, 0),
-      createVector(64, 64),
-      100
+      createVector(90, 170), //width & height 
+      100,
     );
+
     this.entities.push(this.player);
 
-    this.enemy = new enemy(
-      createVector(this.worldWidth / 2 - 30
-        , height / 2 - 100),
-      createVector(0, 0),
-      createVector(256, 256),
-      100,
-      this.player
+    this.entities.push(
+      new enemy(
+        createVector(this.worldWidth / 2 - 30, height / 2),
+        createVector(0, 0),
+        createVector(90, 170), //width & height 
+        20, //health
+        this.player,
+      ),
     );
-
-    this.entities.push(this.enemy);
-    this.player.setEnimies(this.entities);
-
-  }
-
-  public mousePressed() {
-    this.isFiring = true;
-  }
-  public mouseReleased() {
-    this.isFiring = false;
   }
 
   private spawnExplosion(pos: p5.Vector): void {
@@ -100,6 +89,7 @@ class Level implements IScreen {
       this.coins.push(new CoinDrop(pos));
     }
   }
+
   private drawCoinUI(): void {
     push();
     textFont(gameFont);
@@ -130,37 +120,14 @@ class Level implements IScreen {
   }
 
   update(): void {
-    
-    if (this.isFiring) {
-    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-    const bullet = this.player.tryShoot(worldMouse);
-
-    console.log("mouse world",worldMouse.x, worldMouse.y);
-
-    if(bullet){
-      this.addProjectile(bullet);
-      sounds.shoot.play();
-    }
-  }
-
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
 
     // Update all entities (player, enemies, platforms)
     this.entities.forEach((entity) => {
-      if (entity instanceof enemy) {
-        entity.update(this.gravity, this.worldWidth, this);
-      } else {
-        entity.update(this.gravity, this.worldWidth);
-      }
+      entity.update(this.gravity, this.worldWidth);
     });
-
-    for (let projectile of this.projectiles) {
-      if (projectile.overlaps(this.player)) {
-        console.log("Player kolliderar med testprojektil!");
-      }
-    }
 
     // Update all active projectiles
     this.projectiles.forEach((projectile) => {
@@ -182,7 +149,6 @@ class Level implements IScreen {
           const center = e.getCenter();
           this.spawnExplosion(center);
           this.spawnCoins(center);
-
         }
 
         // If fully finished dying -> remove from entities
@@ -270,12 +236,6 @@ class Level implements IScreen {
     });
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
-
-    this.entities = this.entities.filter(isDead => !isDead.isItDead());
-
-    if (this.player.lifeStatus === false) {
-      this.game.changeScreen(new StartScreen(this.game));
-    }
   }
   // Finds the closest alive enemy to the player and returns its position
   private findClosestEnemy(): p5.Vector | null {
@@ -309,7 +269,7 @@ class Level implements IScreen {
     // PROJECTILE vs ENTITY
     for (let projectile of this.projectiles) {
       for (let entity of this.entities) {
-        if (projectile.overlaps(entity)) {
+        if (entity !== this.player && projectile.overlaps(entity)) {
           projectile.onCollision(entity);
           entity.onCollision(projectile);
 
@@ -331,23 +291,6 @@ class Level implements IScreen {
           }
         }
       }
-    }
-  }
-
-  public keyPressed(code: number): void {
-    // R = restart
-    if (code === 82) {
-      this.game.changeScreen(new Level(this.game));
-      return;
-    }
-    //press ESC to go back to start menu
-    if (code === ESCAPE) {
-      // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new PauseScreen(this.game));
-    }
-    if (code === 66) {
-      // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new ShopScreen(this.game));
     }
   }
 
@@ -391,15 +334,6 @@ class Level implements IScreen {
     });
     // Draw explosion particles
     this.particles.forEach((p) => p.draw());
-    pop();
-
-    this.player.drawHealthBar(width - 400, 20, 350, 50);
-    this.player.draw(createVector(mouseX + this.cameraX, mouseY));
-    // demo text
-    fill(255, 55, 99);
-    textAlign(CENTER, CENTER);
-    textSize(48);
-    text("PLAYING", width / 2, height / 4);
 
     // Draw coins
     this.coins.forEach((c) => c.draw());
@@ -440,7 +374,7 @@ class Level implements IScreen {
 
       pop();
     });
-    // end camera
+    pop(); // end camera
 
     // =========================
     // UI (screen space)
@@ -467,8 +401,41 @@ class Level implements IScreen {
     }
   }
 
-  onEnter(): void {
-    console.log("level screen entered");
-  }
+  public keyPressed(code: number): void {
+    // ===== Victory Controls =====
+    if (this.victoryActive) {
+      // R = Restart
+      if (code === 82) {
+        this.game.changeScreen(new Level(this.game));
+        return;
+      }
 
+      // M = Main Menu
+      if (code === 77) {
+        this.game.changeScreen(new StartScreen(this.game));
+        return;
+      }
+    }
+
+    // =====  Gameplay Controls =====
+
+    // ESC → Pause
+    if (code === ESCAPE) {
+      this.game.changeScreen(new PauseScreen(this.game));
+      return;
+    }
+
+    // J → Shoot
+    if (code === 74) {
+      if (!this.player.canShoot()) return;
+
+      let enemyTarget = this.findClosestEnemy();
+      if (!enemyTarget) return;
+
+      const bullet = this.player.shoot(enemyTarget);
+      this.addProjectile(bullet);
+
+      sounds.shoot.play();
+    }
+  }
 }

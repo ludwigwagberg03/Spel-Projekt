@@ -1,41 +1,30 @@
 abstract class entity {
-  protected hitFlash: number = 0;
   protected position: p5.Vector;
   protected velocity: p5.Vector;
   protected size: p5.Vector;
   protected isGravity: boolean;
+  protected hitFlash: number = 0;
 
   protected health: number;
   protected isAlive: boolean = true;
-  private notPlayedSound: boolean = true;
-  private timer: number = 1000;
-  protected maxHealth: number;
-
+  // private notPlayedSound: boolean = true;
+  protected timer: number = 1000;
   protected scaleEffect: number = 1;
   public isDead: boolean = false;
 
-  constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number = 0, g = false) {
+  constructor(
+    p: p5.Vector,
+    v: p5.Vector,
+    s: p5.Vector,
+    h: number = 0,
+    g = false,
+  ) {
     this.position = p;
     this.velocity = v;
     this.size = s;
     this.health = h;
-    this.maxHealth = h;
     this.isGravity = g;
-    this.isAlive = true;
   }
-
-  public drawHealthBar(x: number, y: number, w: number, h: number) {
-    const healthProcent = this.health / this.maxHealth;
-
-    push();
-    fill(120); // red
-    rect(x, y, w, h)
-
-    fill(0, 250, 0) // green
-    rect(x, y, w * healthProcent, h)
-    pop();
-  }
-
   public getCenter(): p5.Vector {
     return createVector(
       this.position.x + this.size.x / 2,
@@ -78,28 +67,26 @@ abstract class entity {
   public getPosition() {
     return this.position.copy();
   }
-  public getSize() {
-    return this.size.copy();
-  }
-  public isItDead() {
-    return !this.isAlive;
-  }
 
   public update(gravity: number, worldWidth: number) {
     // Smooth scale return
     if (this.scaleEffect > 1) {
       this.scaleEffect -= 0.02;
     }
+
     // Flash timer
     if (this.hitFlash > 0) {
       this.hitFlash -= deltaTime;
-      // CLEAN DAMAGE COOLDOWN TIMER
     }
+
+    // CLEAN DAMAGE COOLDOWN TIMER
     if (this.timer > 0) {
       this.timer -= deltaTime;
     }
+
     // Movement
     this.position.add(this.velocity);
+
     // Gravity
     this.applyGravity(gravity);
   }
@@ -108,6 +95,30 @@ abstract class entity {
     if (this.isGravity) {
       this.velocity.y += gravity;
     }
+  }
+
+  public draw() {
+    push();
+
+    translate(
+      this.position.x + this.size.x / 2,
+      this.position.y + this.size.y / 2,
+    );
+
+    scale(this.scaleEffect);
+
+    if (this.hitFlash > 0) {
+      fill(255, 50, 50);
+      stroke(255);
+      strokeWeight(3);
+    } else {
+      fill(63);
+      noStroke();
+    }
+
+    rect(-this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
+
+    pop();
   }
 
   public overlaps(other: entity) {
@@ -123,9 +134,4 @@ abstract class entity {
   }
 
   abstract onCollision(other: entity): void;
-
-  public draw() {
-  
-  }
-
 }
