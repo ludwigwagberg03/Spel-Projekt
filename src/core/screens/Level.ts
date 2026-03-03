@@ -441,10 +441,15 @@ class Level implements IScreen {
     this.player.drawHealthBar(width - 400, 20, 350, 50);
     //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
     // demo text
-    fill(255, 55, 99);
-    textAlign(CENTER, CENTER);
-    textSize(48);
-    text("PLAYING", width / 2, height / 4);
+    if(!this.bossActive){
+      const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
+
+      fill(255);
+      textAlign(CENTER,CENTER);
+      textSize(32);
+
+      text("Boss spawns in" + timeLeft, width / 2, 100);
+    }
 
     // Draw coins
     this.coins.forEach((c) => c.draw());
