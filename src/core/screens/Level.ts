@@ -289,7 +289,7 @@ class Level implements IScreen {
 
     const coinsStillOnGround = this.coins.length > 0;
 
-    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround) {
+    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround && this.currentBoss === null && this.diffieculty > 1) {
       this.victoryActive = true;
       this.victoryTimer = 0;
     }

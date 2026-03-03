@@ -314,9 +314,9 @@ class enemy extends entity {
       return;
     }
     console.log("state: ", activeState[this.state]);
-    //this.movementChoise(this.state, level);
-    this.position.add(this.knockbackForce);
-    this.knockbackForce.mult(0.85);
+    this.movementChoise(this.state, level);
+    
+    
 
 
     this.previousPositionX.x = this.position.x;
