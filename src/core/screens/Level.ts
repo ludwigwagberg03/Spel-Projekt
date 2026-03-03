@@ -79,6 +79,25 @@ class Level implements IScreen {
 
   }
 
+  private BossSystem() {
+    if (!this.bossActive) {
+      this.bossSpawnTimer += deltaTime;
+
+      if (this.bossSpawnTimer >= this.bossSpawnDelay) {
+        this.bossSpawn();
+        this.bossSpawnTimer = 0;
+      }
+    }
+
+    if (this.bossActive && this.currentBoss) {
+      if (!this.currentBoss.alive) {
+        this.diffieculty++;
+        this.bossActive = false;
+        this.currentBoss = null;
+      }
+    }
+  }
+
   private bossSpawn() {
     const scaledHealth = this.baseBossHealth * this.diffieculty;
     const scaledSpeed = this.baseBossSpeed * this.diffieculty;
@@ -171,18 +190,18 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
-    
+    this.BossSystem();
     if (this.isFiring) {
-    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-    const bullet = this.player.tryShoot(worldMouse);
+      let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+      const bullet = this.player.tryShoot(worldMouse);
 
-    console.log("mouse world",worldMouse.x, worldMouse.y);
+      console.log("mouse world", worldMouse.x, worldMouse.y);
 
-    if(bullet){
-      this.addProjectile(bullet);
-      sounds.shoot.play();
+      if (bullet) {
+        this.addProjectile(bullet);
+        sounds.shoot.play();
+      }
     }
-  }
 
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
