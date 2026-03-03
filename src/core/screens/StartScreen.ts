@@ -1,4 +1,3 @@
-
 // ===== STONE BUTTON DRAWER =====
 function drawStoneButton(
   x: number,
@@ -12,7 +11,6 @@ function drawStoneButton(
   fill(0, 0, 0, 120);
   rect(x + 6, y + 6, w, h, 8);
 
-  
   // bottom shadow (thickness)
   fill(40, 35, 30);
   rect(x, y + 6, w, h, 10);
@@ -55,13 +53,11 @@ function drawStoneButton(
   text(label, x + w / 2, y + h / 2);
 }
 
-
 class StartScreen implements IScreen {
   private game: Game;
   private time = 0;
-  private inputLocked: boolean = true;
+
   private stars: { x: number; y: number; size: number; speed: number }[] = [];
-  private player: Player;
 
   // Menu
   private options = ["Nytt spel", "Ladda spel", "Inställningar", "Avsluta"];
@@ -69,9 +65,8 @@ class StartScreen implements IScreen {
   private selected = 0;
   private lastSelected = 0;
 
-  constructor(game: Game, player: Player) {
+  constructor(game: Game) {
     this.game = game;
-    this.player = player;
 
     // create stars (random positions, sizes and speeds)
     for (let i = 0; i < 80; i++) {
@@ -177,10 +172,9 @@ class StartScreen implements IScreen {
 
   // ================= INPUT =================
   keyPressed(code: number): void {
-    // console.log("StartScreen key:", code);
     // remember old selection
     this.lastSelected = this.selected;
-    if(this.inputLocked) return;
+
     // move selection
     if (code === UP_ARROW) this.selected--;
     if (code === DOWN_ARROW) this.selected++;
@@ -201,7 +195,7 @@ class StartScreen implements IScreen {
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {
-        this.game.changeScreen(new Level(this.game, this.player));
+        this.game.changeScreen(new Level(this.game, this.game.getPlayer()));
       }
 
       if (choice === "Avsluta") {
@@ -212,7 +206,5 @@ class StartScreen implements IScreen {
 
   onEnter(): void {
     console.log("Start screen entered");
-
-    setTimeout(()=>{this.inputLocked = false;}, 200);
   }
 }

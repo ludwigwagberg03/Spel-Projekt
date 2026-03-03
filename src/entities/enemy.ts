@@ -29,46 +29,52 @@ class enemy extends entity {
   private frameWidth: number = 64;
   private frameHeight: number = 80;
 
-  constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
+  constructor(
+    p: p5.Vector,
+    v: p5.Vector,
+    s: p5.Vector,
+    h: number,
+    player: Player,
+  ) {
     super(p, v, s, h);
     this.isGravity = false;
     console.log("enemy");
     this.previousPositionX = this.position;
     this.isFacingRight = true;
     this.player = player;
-    this.dashTimerValue = this.dashTimer
+    this.dashTimerValue = this.dashTimer;
     this.dashAmount = 0;
     this.positionA = 0;
     this.positionB = 0;
     this.currentImage = images.iceBoss;
   }
 
-  private updateAnimation(){
+  private updateAnimation() {
     this.totalFrames = 4;
     this.frameDelay = 172;
     this.frameTimer += deltaTime;
-    if(this.frameTimer >= this.frameDelay){
-      this.frameIndex++
+    if (this.frameTimer >= this.frameDelay) {
+      this.frameIndex++;
       this.frameTimer = 0;
-      if (this.frameIndex >= this.totalFrames){
+      if (this.frameIndex >= this.totalFrames) {
         this.frameIndex = 0;
       }
     }
   }
 
-  private tryIceGun(deltaTime: number, level: Level){
+  private tryIceGun(deltaTime: number, level: Level) {
     this.timeSinceLastShot += deltaTime;
-    console.log("gun coldown",this.timeSinceLastShot);
+    console.log("gun coldown", this.timeSinceLastShot);
     let target = this.player.getCenter();
     let distance = p5.Vector.dist(this.position, target);
 
-    if(distance < 600 && this.timeSinceLastShot >= this.shootTimer){
+    if (distance < 600 && this.timeSinceLastShot >= this.shootTimer) {
       this.iceShooter(target, level);
       this.timeSinceLastShot = 0;
     }
   }
 
-  public iceShooter(target: p5.Vector, level: Level){
+  public iceShooter(target: p5.Vector, level: Level) {
     let startPositon = this.getCenter();
     let distance = p5.Vector.sub(target, startPositon);
     distance.normalize();
@@ -79,12 +85,11 @@ class enemy extends entity {
   }
 
   private followPlayer() {
-    let direction = p5.Vector.sub(this.player.getPosition(), this.position)
+    let direction = p5.Vector.sub(this.player.getPosition(), this.position);
     direction.normalize();
     direction.mult(this.speed);
     this.velocity = direction;
   }
-
 
   private dash() {
     let target = this.player.getPosition();
@@ -97,7 +102,7 @@ class enemy extends entity {
     let direction = p5.Vector.sub(target, this.position);
     direction.normalize();
 
-    let dashToLocation = p5.Vector.add(target, direction.mult(500))
+    let dashToLocation = p5.Vector.add(target, direction.mult(500));
     let dashDirection = p5.Vector.sub(dashToLocation, this.position);
 
     dashDirection.setMag(this.speed * 4.2);
@@ -148,7 +153,8 @@ class enemy extends entity {
       if (this.dashTimer === this.dashTimerValue && this.dashAmount <= 3) {
         this.dash();
         this.dashAmount++;
-      } if (this.dashAmount > 3) {
+      }
+      if (this.dashAmount > 3) {
         //console.log("else follows player?");
         setTimeout(() => this.followPlayer(), 200);
         this.hover();
@@ -156,7 +162,7 @@ class enemy extends entity {
       this.dashTimer -= deltaTime;
     } else {
       //console.log("follows player");
-      this.followPlayer()
+      this.followPlayer();
     }
   }
 
@@ -245,9 +251,9 @@ class enemy extends entity {
 
     this.position.add(this.knockbackForce);
     this.knockbackForce.mult(0.85);
-    
-    if(level){
-      this.tryIceGun(deltaTime, level)
+
+    if (level) {
+      this.tryIceGun(deltaTime, level);
     }
 
     this.previousPositionX.x = this.position.x;
@@ -258,16 +264,14 @@ class enemy extends entity {
 
     let groundLevel = height - this.size.y;
 
-    if(this.position.y > groundLevel){
+    if (this.position.y > groundLevel) {
       this.position.y = groundLevel;
       this.velocity.y = 0;
     }
+  }
 
-
-  };
-
-  public draw() {
-    super.draw();
+  public draw(cameraX: number) {
+    super.draw(cameraX);
     noSmooth();
 
     const sx = this.frameIndex * this.frameWidth;
@@ -282,9 +286,9 @@ class enemy extends entity {
       sx,
       sy,
       this.frameWidth,
-      this.frameHeight
+      this.frameHeight,
     );
-    
+
     //  Health Bar
     let healthPercent = this.health / this.maxHealth;
 

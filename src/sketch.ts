@@ -59,9 +59,17 @@ function setup() {
   frameRate(60);
   music.mystery.setVolume(0.8);
 
-  game = new Game();
-}
+  // Create Player first
+  const player = new Player(
+    createVector(width / 2, height / 2),
+    createVector(0, 0),
+    createVector(64, 64),
+    100,
+  );
 
+  // Pass player into Game
+  game = new Game(player);
+}
 function draw() {
   game.update();
   game.draw();
