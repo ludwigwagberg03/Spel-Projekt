@@ -1,6 +1,6 @@
 let game: Game;
 let gameFont: p5.Font;
-
+let player: Player
 let music: {
   mystery: p5.SoundFile;
 };
@@ -11,6 +11,10 @@ let sounds: {
   shoot: p5.SoundFile;
 };
 let images: {
+  firstBackgournd: p5.Image,
+  secondBackgroudn: p5.Image,
+  thirdBackground: p5.Image,
+  
   menu: p5.Image;
   background: p5.Image;
   testStage: p5.Image;
@@ -40,6 +44,9 @@ function preload() {
     shoot: loadSound("/assets/sounds/gun-shot.mp3"),
   };
   images = {
+    firstBackgournd: loadImage("/assets/images/firstBackgroudn.webp"),
+    secondBackgroudn: loadImage("/assets/images/secondBackground.webp"),
+    thirdBackground: loadImage("/assets/images/thirdBackground.webp"),
     menu: loadImage("/assets/images/menu_bg.png"),
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     background: loadImage("/assets/images/Terr-style-bg1.png"),
@@ -59,7 +66,7 @@ function setup() {
   frameRate(60);
   music.mystery.setVolume(0.8);
 
-  game = new Game();
+  game = new Game(player);
 }
 
 function draw() {

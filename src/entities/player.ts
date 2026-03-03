@@ -133,7 +133,7 @@ class Player extends entity {
   public updateEffect(deltaTime: number) {
     if (this.effectTimer > 0) {
       this.effectTimer -= deltaTime;
-      console.log("effect timer ", this.effectTimer);
+      // console.log("effect timer ", this.effectTimer);
       if (this.effectTimer <= 0) {
         this.clearEffect();
       } else {

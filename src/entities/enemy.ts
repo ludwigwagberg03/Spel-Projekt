@@ -32,7 +32,7 @@ class enemy extends entity {
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
     this.isGravity = false;
-    console.log("enemy");
+    // console.log("enemy");
     this.previousPositionX = this.position;
     this.isFacingRight = true;
     this.player = player;
@@ -58,7 +58,7 @@ class enemy extends entity {
 
   private tryIceGun(deltaTime: number, level: Level){
     this.timeSinceLastShot += deltaTime;
-    console.log("gun coldown",this.timeSinceLastShot);
+    // console.log("gun coldown",this.timeSinceLastShot);
     let target = this.player.getCenter();
     let distance = p5.Vector.dist(this.position, target);
 

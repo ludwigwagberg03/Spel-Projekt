@@ -5,6 +5,7 @@ class Level implements IScreen {
   private gravity = 0.8;
   private player: Player;
   private enemy: enemy;
+  private world: World;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
@@ -70,6 +71,11 @@ class Level implements IScreen {
     this.entities.push(this.enemy);
     this.player.setEnimies(this.entities);
 
+    this.world = new World(
+      images.firstBackgournd,
+      images.secondBackgroudn,
+      images.thirdBackground
+    );
   }
 
   public mousePressed() {
@@ -144,18 +150,18 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
-    
+
     if (this.isFiring) {
-    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-    const bullet = this.player.tryShoot(worldMouse);
+      let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+      const bullet = this.player.tryShoot(worldMouse);
 
-    console.log("mouse world",worldMouse.x, worldMouse.y);
+      // console.log("mouse world", worldMouse.x, worldMouse.y);
 
-    if(bullet){
-      this.addProjectile(bullet);
-      sounds.shoot.play();
+      if (bullet) {
+        this.addProjectile(bullet);
+        sounds.shoot.play();
+      }
     }
-  }
 
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
@@ -172,7 +178,7 @@ class Level implements IScreen {
 
     for (let projectile of this.projectiles) {
       if (projectile.overlaps(this.player)) {
-        console.log("Player kolliderar med testprojektil!");
+        // console.log("Player kolliderar med testprojektil!");
       }
     }
 
@@ -367,16 +373,16 @@ class Level implements IScreen {
       shakeX = random(-this.shakeStrength, this.shakeStrength);
       shakeY = random(-this.shakeStrength, this.shakeStrength);
     }
+    this.world.draw(this.cameraX)
     // =========================
     // BACKGROUND (scrolling world)
     // =========================
     translate(-this.cameraX + shakeX, shakeY);
 
-    // repeat background to fill world width
-    for (let x = 0; x < this.worldWidth; x += images.background.width) {
-      image(images.background, x, 0);
-    }
-
+    // // repeat background to fill world width
+    // for (let x = 0; x < this.worldWidth; x += images.background.width) {
+    //   image(images.background, x, 0);
+    // }
     //  image(images.testStage, 0, 0);
 
     // Draw entities
@@ -514,7 +520,7 @@ class Level implements IScreen {
   }
 
   onEnter(): void {
-    console.log("level screen entered");
+    // console.log("level screen entered");
   }
 
 }
