@@ -79,6 +79,35 @@ class Level implements IScreen {
 
   }
 
+  private drawBossIcon(){
+    if(!this.currentBoss || !this.currentBoss.alive) return;
+
+    const bossPosition = this.currentBoss.getCenter();
+    const screenX = bossPosition.x - this.cameraX;
+    const screenY = bossPosition.y;
+
+    const onScreen = screenX > 0 && screenX < width && screenY > 0 && screenY < height;
+
+    if(onScreen) return;
+
+    const screenCenter = createVector(width/2, height/2);
+    const direction = createVector(screenX,screenY).sub(screenCenter);
+    direction.normalize();
+    const margin = 10;
+    const iconPosition = p5.Vector.add(screenCenter,direction.mult(Math.min(width,height)/ 2 - margin));
+
+    push();
+    translate(iconPosition.x, direction.x);
+    const angle = atan2(direction.y, direction.x);
+    rotate(angle);
+
+    fill(0, 0, 255);
+    noStroke();
+
+    circle(30,30,50);
+    pop();
+  }
+
   private BossSystem() {
     if (!this.bossActive) {
       this.bossSpawnTimer += deltaTime;
@@ -440,7 +469,7 @@ class Level implements IScreen {
 
     this.player.drawHealthBar(width - 400, 20, 350, 50);
     //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
-    // demo text
+    // Boss countdown
     if(!this.bossActive){
       const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
       const seconds = Math.max(0, Math.ceil(timeLeft/1000));
@@ -491,7 +520,7 @@ class Level implements IScreen {
       pop();
     });
     // end camera
-
+    this.drawBossIcon();
     // =========================
     // UI (screen space)
     // =========================
