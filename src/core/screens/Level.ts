@@ -101,10 +101,14 @@ class Level implements IScreen {
     const angle = atan2(direction.y, direction.x);
     rotate(angle);
 
-    fill(0, 0, 255);
+    fill(122,199,227); // actual boss color
     noStroke();
 
     circle(30,30,50);
+    textAlign(CENTER, TOP);
+    textSize(16);
+    fill(255);
+    text("Boss",30,55);
     pop();
   }
 
