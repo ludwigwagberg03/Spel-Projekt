@@ -27,6 +27,13 @@ class Level implements IScreen {
   private gameOverTriggered: boolean = false;
 
   private isFiring: boolean = false;
+  private bossActive: boolean = false;
+  private bossSpawnDelay: number = 15000;
+  private bossSpawnTimer: number = 0;
+  private diffieculty: number = 1;
+  private baseBossHealth: number = 100;
+  private baseBossSpeed: number = 4;
+  private currentBoss: enemy | null = null;
 
   constructor(game: Game, player: Player) {
     this.game = game;
@@ -71,6 +78,8 @@ class Level implements IScreen {
     this.player.setEnimies(this.entities);
 
   }
+
+  
 
   public mousePressed() {
     this.isFiring = true;
