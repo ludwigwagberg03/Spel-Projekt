@@ -4,7 +4,7 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
-  private enemy: enemy;
+  private enemy?: enemy;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
@@ -65,7 +65,7 @@ class Level implements IScreen {
 
     this.entities.push(this.player);
 
-    this.enemy = new enemy(
+    /*this.enemy = new enemy(
       createVector(this.worldWidth / 2 - 30
         , height / 2 - 100),
       createVector(0, 0),
@@ -74,12 +74,30 @@ class Level implements IScreen {
       this.player
     );
 
-    this.entities.push(this.enemy);
+    this.entities.push(this.enemy);*/
     this.player.setEnimies(this.entities);
 
   }
 
-  
+  private bossSpawn() {
+    const scaledHealth = this.baseBossHealth * this.diffieculty;
+    const scaledSpeed = this.baseBossSpeed * this.diffieculty;
+
+    const boss = new enemy(
+      createVector(this.worldWidth / 2 - 30, height / 2 - 100),
+      createVector(0, 0),
+      createVector(256, 256),
+      scaledHealth,
+      this.player
+    );
+
+    boss.setSpeed(scaledSpeed);
+
+    this.entities.push(boss);
+
+    this.currentBoss = boss;
+    this.bossActive = true;
+  }
 
   public mousePressed() {
     this.isFiring = true;

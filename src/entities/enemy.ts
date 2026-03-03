@@ -48,6 +48,10 @@ class enemy extends entity {
     this.currentImage = images.iceBoss;
   }
 
+  public setSpeed(value: number){
+    this.speed = value;
+  }
+
   public getRadius() {
     return (this.size.x / 2)*0.75;
   }
