@@ -443,12 +443,12 @@ class Level implements IScreen {
     // demo text
     if(!this.bossActive){
       const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
-
+      const seconds = Math.max(0, Math.ceil(timeLeft/1000));
       fill(255);
       textAlign(CENTER,CENTER);
       textSize(32);
 
-      text("Boss spawns in" + timeLeft, width / 2, 100);
+      text("Boss spawns in " + seconds, width / 2, 100);
     }
 
     // Draw coins
