@@ -189,7 +189,7 @@ class enemy extends entity {
     }
   }
 
-  public onCollision(other: entity): void {
+  public onCollision(_other: entity): void {
     //push enemy slightlty
   }
   public entityDamage(damage: number, hitFrom?: p5.Vector) {

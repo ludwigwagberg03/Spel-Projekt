@@ -360,19 +360,7 @@ class Player extends entity {
     return new Projectile(spawnPos, direction, damageValue);
   }
 
-  // public shoot(): Projectile {
-  //   this.shootCooldown = 300;
-
-  //   let gunOffsetX = this.facing === 1 ? this.size.x : 0;
-  //   let gunOffsetY = this.size.y / 2;
-
-  //   let spawnPos = createVector(
-  //     this.position.x + gunOffsetX,
-  //     this.position.y + gunOffsetY,
-  //   );
-
-  //   return new Projectile(spawnPos, this.facing);
-  // }
+  
   draw(cameraX: number) {
     super.draw(cameraX);
     noSmooth();

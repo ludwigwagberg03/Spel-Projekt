@@ -381,7 +381,7 @@ class Level implements IScreen {
     fill(255, 55, 99);
     textAlign(CENTER, CENTER);
     textSize(48);
-    text("PLAYING", width / 2, height / 4);
+    // text("PLAYING", width / 2, height / 4);
 
     // Draw coins
     this.coins.forEach((c) => c.draw());
