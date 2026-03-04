@@ -1,10 +1,11 @@
 /// <reference path="../../systems/ParticlesAndCoins.ts" />
 class Level implements IScreen {
-  private game: Game;
+  private game: IChangableScreen;
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
-  private enemy: enemy;
+  private enemy?: enemy;
+  private world: World;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
@@ -27,8 +28,15 @@ class Level implements IScreen {
   private gameOverTriggered: boolean = false;
 
   private isFiring: boolean = false;
+  private bossActive: boolean = false;
+  private bossSpawnDelay: number = 15000;
+  private bossSpawnTimer: number = 0;
+  private diffieculty: number = 1;
+  private baseBossHealth: number = 100;
+  private baseBossSpeed: number = 4;
+  private currentBoss: enemy | null = null;
 
-  constructor(game: Game, _player: Player) {
+  constructor(game: IChangableScreen, _player: Player) {
     this.game = game;
     this.entities = [];
 
@@ -58,8 +66,86 @@ class Level implements IScreen {
       this.player,
     );
 
-    this.entities.push(this.enemy);
+    this.entities.push(this.enemy);*/
     this.player.setEnimies(this.entities);
+
+    this.world = new World(
+      images.firstBackgournd,
+      images.secondBackgroudn,
+      images.thirdBackground
+    );
+  }
+
+  private drawBossIcon(){
+    if(!this.currentBoss || !this.currentBoss.alive) return;
+
+    const bossPosition = this.currentBoss.getCenter();
+    const screenX = bossPosition.x - this.cameraX;
+    const screenY = bossPosition.y;
+
+    const onScreen = screenX > 0 && screenX < width && screenY > 0 && screenY < height;
+
+    if(onScreen) return;
+
+    const screenCenter = createVector(width/2, height/2);
+    const direction = createVector(screenX,screenY).sub(screenCenter);
+    direction.normalize();
+    const margin = 10;
+    const iconPosition = p5.Vector.add(screenCenter,direction.mult(Math.min(width,height)/ 2 - margin));
+
+    push();
+    translate(iconPosition.x, direction.x);
+    const angle = atan2(direction.y, direction.x);
+    rotate(angle);
+
+    fill(122,199,227); // actual boss color
+    noStroke();
+
+    circle(30,30,50);
+    textAlign(CENTER, TOP);
+    textSize(16);
+    fill(255);
+    text("Boss",30,55);
+    pop();
+  }
+
+  private BossSystem() {
+    if (!this.bossActive) {
+      this.bossSpawnTimer += deltaTime;
+
+      if (this.bossSpawnTimer >= this.bossSpawnDelay) {
+        this.bossSpawn();
+        this.bossSpawnTimer = 0;
+      }
+    }
+
+    if (this.bossActive && this.currentBoss) {
+      if (!this.currentBoss.alive) {
+        this.diffieculty++;
+        this.bossActive = false;
+        this.currentBoss = null;
+      }
+    }
+  }
+
+  private bossSpawn() {
+    const scaledHealth = this.baseBossHealth * this.diffieculty;
+    const scaledSpeed = this.baseBossSpeed * this.diffieculty;
+
+    const boss = new enemy(
+      createVector(this.worldWidth / 2 - 30, height / 2 - 100),
+      createVector(0, 0),
+      createVector(256, 256),
+      scaledHealth,
+      this.player
+    );
+
+    boss.setSpeed(scaledSpeed);
+
+    this.entities.push(boss);
+
+    this.currentBoss = boss;
+    this.bossActive = true;
   }
 
   public mousePressed() {
@@ -100,16 +186,7 @@ class Level implements IScreen {
       this.coins.push(new CoinDrop(pos));
     }
   }
-  public getCoins(): number {
-    return this.game.coinCount;
-  }
-  public buyItems(itemCost: number): boolean {
-    if (this.game.coinCount >= itemCost) {
-      this.game.coinCount -= itemCost;
-      return true;
-    }
-    return false;
-  }
+  
   private drawCoinUI(): void {
     // UI
     push();
@@ -128,17 +205,15 @@ class Level implements IScreen {
     fill(255);
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(`Coins: ${this.game.coinCount}`, 65, 47);
+    text(`Coins: ${this.player.coinCount}`, 65, 47);
 
     pop();
   }
   update(): void {
+    this.BossSystem();
     if (this.isFiring) {
       let worldMouse = createVector(mouseX + this.cameraX, mouseY);
       const bullet = this.player.tryShoot(worldMouse);
-
-      console.log("mouse world", worldMouse.x, worldMouse.y);
-
       if (bullet) {
         this.addProjectile(bullet);
         sounds.shoot.play();
@@ -160,7 +235,7 @@ class Level implements IScreen {
 
     for (let projectile of this.projectiles) {
       if (projectile.overlaps(this.player)) {
-        console.log("Player kolliderar med testprojektil!");
+        // console.log("Player kolliderar med testprojektil!");
       }
     }
 
@@ -208,7 +283,7 @@ class Level implements IScreen {
       c.update(this.gravity, groundY);
 
       if (c.tryCollect(playerCenter)) {
-        this.game.coinCount += 1;
+        this.player.coinCount += 1;
         sounds.coin.play();
       }
     });
@@ -230,7 +305,7 @@ class Level implements IScreen {
 
     const coinsStillOnGround = this.coins.length > 0;
 
-    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround) {
+    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround && this.currentBoss === null && this.diffieculty > 1) {
       this.victoryActive = true;
       this.victoryTimer = 0;
     }
@@ -274,7 +349,6 @@ class Level implements IScreen {
         }
       }
     }
-
     return closest ? closest.getPosition() : null;
   }
   checkCollision() {
@@ -318,16 +392,16 @@ class Level implements IScreen {
 
   public keyPressed(code: number): void {
     // R = restart
-    if (code === 82) {
-      this.game.changeScreen(new Level(this.game, this.player));
-      return;
-    }
+    // if (code === 82) {
+    //   this.game.changeScreen(new Level(this.game, this.player));
+    //   return;
+    // }
     //press ESC to go back to start menu
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new PauseScreen(this.game, this.player));
     }
-    if (code === 66) {
+    if (code === 66 && this.victoryActive) { // B
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new ShopScreen(this.game, this.player, this));
     }
@@ -350,17 +424,11 @@ class Level implements IScreen {
       shakeX = random(-this.shakeStrength, this.shakeStrength);
       shakeY = random(-this.shakeStrength, this.shakeStrength);
     }
+    this.world.draw(this.cameraX)
     // =========================
     // BACKGROUND (scrolling world)
     // =========================
     translate(-this.cameraX + shakeX, shakeY);
-
-    // repeat background to fill world width
-    for (let x = 0; x < this.worldWidth; x += images.background.width) {
-      image(images.background, x, 0);
-    }
-
-    //  image(images.testStage, 0, 0);
 
     // Draw entities
     this.entities.forEach((entity) => {
@@ -377,11 +445,16 @@ class Level implements IScreen {
 
     this.player.drawHealthBar(width - 400, 20, 350, 50);
     //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
-    // demo text
-    fill(255, 55, 99);
-    textAlign(CENTER, CENTER);
-    textSize(48);
-    // text("PLAYING", width / 2, height / 4);
+    // Boss countdown
+    if(!this.bossActive){
+      const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
+      const seconds = Math.max(0, Math.ceil(timeLeft/1000));
+      fill(255);
+      textAlign(CENTER,CENTER);
+      textSize(32);
+
+      text("Boss spawns in " + seconds, width / 2, 100);
+    }
 
     // Draw coins
     this.coins.forEach((c) => c.draw());
@@ -400,7 +473,6 @@ class Level implements IScreen {
 
       pop();
     });
-
     // Draw floating damage numbers
     this.damageNumbers.forEach((d) => {
       push();
@@ -423,13 +495,15 @@ class Level implements IScreen {
       pop();
     });
     // end camera
-
+    this.drawBossIcon();
     // =========================
     // UI (screen space)
     // =========================
     this.drawCoinUI();
-
-    // Victory overlay
+    this.drawVictoryOverlay();
+    this.drawInventory();
+  }
+  private drawVictoryOverlay() {
     if (this.victoryActive) {
       push();
       textFont(gameFont);
@@ -443,21 +517,12 @@ class Level implements IScreen {
       text("VICTORY!", width / 2, height / 2 - 40);
 
       textSize(18);
-      text("Press R to restart", width / 2, height / 2 + 25);
+      text("Press B to enter shop", width / 2, height / 2 + 25);
 
       pop();
     }
-
-    // // UI text (screen space)
-    // fill(255, 55, 99);
-    // textAlign(CENTER, CENTER);
-    // textSize(48);
-    // text("PLAYING", width / 2, height / 4);
-
-    // textSize(18);
-    // text("Press ESC to pause", width / 2, height / 4 + 60);
-
-    // draw a simple inventory
+  }
+  private drawInventory() {
     push();
     textAlign(LEFT, TOP);
     textSize(10);
@@ -492,8 +557,7 @@ class Level implements IScreen {
     }
     pop();
   }
-
   onEnter(): void {
-    console.log("level screen entered");
+    // console.log("level screen entered");
   }
 }

@@ -1,8 +1,8 @@
 class PauseScreen implements IScreen {
-  private game: Game;
+  private game: IChangableScreen;
   private player: Player;
 
-  constructor(game: Game, player: Player) {
+  constructor(game: IChangableScreen, player: Player) {
     this.game = game;
     this.player = player;
   }

@@ -5,7 +5,6 @@ interface IChangableScreen {
 class Game implements IChangableScreen {
   private currentScreen: IScreen;
   private player: Player;
-  public coinCount: number = 0;
 
   public getPlayer(): Player {
     return this.player;
