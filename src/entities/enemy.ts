@@ -13,11 +13,6 @@ class enemy extends entity {
   protected positionA: number;
   protected positionB: number;
   private goingToA: boolean = true;
-  // Death State System
-  private isDying: boolean = false;
-  private deathTimer: number = 0;
-  private fadeAlpha: number = 255;
-  private shrinkScale: number = 1;
   private deathTriggeredOnce: boolean = false;
   private shootTimer: number = 3000;
   private timeSinceLastShot: number = 0;
@@ -33,6 +28,13 @@ class enemy extends entity {
   private dashTimeLeft: number = 0;
   private dashDuratin: number = 0;
   private debugHitbox: boolean = true;
+  private isDeathAnimating: boolean = false;
+private deathFrameIndex: number = 0;
+private deathFrameTimer: number = 0;
+private deathFrameDelay: number = 150;
+private totalDeathFrames: number = 6;
+private deathFrameWidth: number = 64;
+private deathFrameHeight: number = 53;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
@@ -186,7 +188,6 @@ class enemy extends entity {
   private handelFollowPlayer() {
     this.followPlayer();
     let distance = p5.Vector.dist(this.position, this.player.getPosition());
-    console.log("distance", distance);
     if (distance < 400) {
       this.enterState(activeState.dash);
     }
@@ -247,33 +248,29 @@ class enemy extends entity {
   }
 
   // --- Start Death ---
-  private startDeath(): void {
-    this.isDying = true;
-    this.deathTriggeredOnce = true;
-    this.velocity.mult(0);
-    this.knockbackForce.mult(0);
-  }
+ private startDeath(): void {
+  this.isDeathAnimating = true;
+  this.deathTriggeredOnce = true;
+  this.velocity.mult(0);
+  this.knockbackForce.mult(0);
+}
 
-  // --- Death Animation ---
   private handleDeath(): void {
-    this.deathTimer++;
-
-    this.shrinkScale -= 0.04; // shrink
-    this.fadeAlpha -= 10; // fade
-
-    if (this.shrinkScale < 0) this.shrinkScale = 0;
-    if (this.fadeAlpha < 0) this.fadeAlpha = 0;
-
-    if (this.deathTimer > 25) {
-      this.isDead = true; // safe removal
+  this.deathFrameTimer += deltaTime;
+  if (this.deathFrameTimer >= this.deathFrameDelay) {
+    this.deathFrameIndex++;
+    this.deathFrameTimer = 0;
+    if (this.deathFrameIndex >= this.totalDeathFrames) {
+      this.isDead = true;
     }
   }
+}
 
   public onCollision(other: entity): void {
     //push enemy slightlty
   }
   public entityDamage(damage: number, hitFrom?: p5.Vector) {
-    if (this.isDying) return; // dying
+    if (this.isDeathAnimating) return; // dying
 
     super.entityDamage(damage, hitFrom);
 
@@ -308,11 +305,10 @@ class enemy extends entity {
 
   public update(gravity: number, wordWidth: number, level?: Level) {
     super.update(gravity, wordWidth);
-    if (this.isDying) {
+    if (this.isDeathAnimating) {
       this.handleDeath();
       return;
     }
-    console.log("state: ", activeState[this.state]);
     this.movementChoise(this.state, level);
     
     
@@ -332,6 +328,21 @@ class enemy extends entity {
   public draw(cameraX: number) {
     super.draw(cameraX);
     noSmooth();
+
+    if (this.isDeathAnimating) {
+    const sx = this.deathFrameIndex * this.deathFrameWidth;
+    image(
+      images.bossDeath,
+      this.position.x,
+      this.position.y,
+      this.size.x,
+      this.size.y,
+      sx, 0,
+      this.deathFrameWidth,
+      this.deathFrameHeight
+    );
+    return; // skip normal drawing
+  }
 
     const sx = this.frameIndex * this.frameWidth;
     const sy = 0;

@@ -58,7 +58,7 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2, height / 2),
       createVector(0, 0),
       createVector(64, 64),
-      100,
+      1,
     );
 
     this.entities.push(this.player);
@@ -247,7 +247,6 @@ class Level implements IScreen {
   }
   update(): void {
     this.triggerEndOFGame();
-    console.log("diffieculty", this.diffieculty);
     this.BossSystem();
     if (this.isFiring) {
       if (this.player.isAutoFireOn()) {
@@ -324,8 +323,10 @@ class Level implements IScreen {
     // =========================
     if (!this.gameOverTriggered && !this.player.alive) {
       this.gameOverTriggered = true;
+      this.player.startDeathAnimation(() => {
       this.game.changeScreen(new GameOverScreen(this.game, this.gameOverTriggered, this.player));
-      return;
+    });
+    return;
     }
 
     // =========================
@@ -361,7 +362,7 @@ class Level implements IScreen {
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
 
-    this.entities = this.entities.filter((isDead) => !isDead.isItDead());
+    this.entities = this.entities.filter((e) => e instanceof Player || !e.isItDead());
 
     if(this.endOfGameTime >= 1){
       this.endOfGameTime += deltaTime;

@@ -25,6 +25,10 @@ class Player extends entity {
   private frameWidth: number = 16;
   private frameHeight: number = 32;
   public coinCount: number = 0;
+  private isDying: boolean = false;
+  private deathTimer: number = 0;
+  private totalDeathFrames: number = 7; // adjust to your spritesheet
+  private onDeathComplete?: () => void;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -79,13 +83,26 @@ class Player extends entity {
   }
 
   public onCollision(other: entity): void {
-    if (other instanceof Platform) {
-      this.handlePlatformLanding(other);
-    }
-    if (other instanceof enemy) {
-      this.entityDamage(1);
-    }
+  if (other instanceof Platform) {
+    this.handlePlatformLanding(other);
   }
+  if (other instanceof enemy) {
+    console.log("player hit by enemy, health:", this.healthPool());
+    this.entityDamage(1);
+  }
+}
+public startDeathAnimation(onComplete: () => void) {
+  if (this.isDying) return;
+  this.isDying = true;
+  this.deathTimer = 0;
+  this.frameIndex = 0;
+  this.frameDelay = 150;
+  this.frameWidth = 10;  // 70px / 7 frames
+  this.frameHeight = 16;
+  this.onDeathComplete = onComplete;
+  this.velocity.x = 0;
+  this.velocity.y = 0;
+}
   private handlePlatformLanding(other: entity) {
     if (this.isFalling) return;
 
@@ -191,6 +208,21 @@ class Player extends entity {
     let newImage = this.currentImage;
     let newTotalFrames = this.totalFrames;
 
+    if (this.isDying) {
+      this.currentImage = images.playerDeath;
+      this.totalFrames = this.totalDeathFrames;
+      this.frameTimer += deltaTime;
+    if (this.frameTimer > this.frameDelay) {
+      this.frameIndex++;
+      this.frameTimer = 0;
+    if (this.frameIndex >= this.totalFrames) {
+      this.frameIndex = this.totalFrames - 1; // hold last frame
+      this.onDeathComplete?.();
+      this.onDeathComplete = undefined;
+    }
+  }
+  return; // skip normal animation logic
+}
     if (!this.onGround) {
       if (this.velocity.y < 0) {
         newImage = images.playerJump;
