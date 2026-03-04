@@ -134,6 +134,7 @@ class Level implements IScreen {
   }
 
   private bossSpawn() {
+    this.victoryActive = false;
     const scaledHealth = this.baseBossHealth * this.diffieculty;
     const scaledSpeed = this.baseBossSpeed * this.diffieculty;
 
@@ -513,7 +514,7 @@ class Level implements IScreen {
 
       fill(255);
       textSize(34);
-      text("VICTORY!", width / 2, height / 2 - 40);
+      text("Boss defeated!", width / 2, height / 2 - 40);
 
       textSize(18);
       text("Press B to enter shop", width / 2, height / 2 + 25);
