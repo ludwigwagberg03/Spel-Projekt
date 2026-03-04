@@ -362,8 +362,6 @@ class Level implements IScreen {
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
 
-    this.entities = this.entities.filter((e) => e instanceof Player || !e.isItDead());
-
     if(this.endOfGameTime >= 1){
       this.endOfGameTime += deltaTime;
       if (this.endOfGameTime >= 10000){

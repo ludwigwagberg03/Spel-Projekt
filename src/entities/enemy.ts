@@ -31,7 +31,7 @@ class enemy extends entity {
   private isDeathAnimating: boolean = false;
 private deathFrameIndex: number = 0;
 private deathFrameTimer: number = 0;
-private deathFrameDelay: number = 150;
+private deathFrameDelay: number = 250;
 private totalDeathFrames: number = 6;
 private deathFrameWidth: number = 64;
 private deathFrameHeight: number = 53;
