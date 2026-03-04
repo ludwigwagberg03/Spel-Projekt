@@ -1,11 +1,11 @@
 /// <reference path="./IScreen.ts" />
 
 class GameOverScreen implements IScreen {
-  private game: Game;
+  private game: IChangableScreen;
   private isWin: boolean;
   private player: Player;
 
-  constructor(game: Game, isWin: boolean = false, player:Player) {
+  constructor(game: IChangableScreen, isWin: boolean = false, player:Player) {
     this.game = game;
     this.isWin = isWin;
     this.player = player;

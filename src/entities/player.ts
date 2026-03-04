@@ -24,6 +24,7 @@ class Player extends entity {
   private totalFrames: number = 6; // default idle
   private frameWidth: number = 16;
   private frameHeight: number = 32;
+  public coinCount: number = 0;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -39,138 +40,37 @@ class Player extends entity {
         id: "basicSword",
         name: "Basic Sword",
         damage: 15,
+        type: "melee",
         cooldown: 500,
         hitboxWidth: 100,
         hitboxHeight: 50,
         price: 50
+      },
+      {
+        id: "pistol",
+        name: "Pistol",
+        type: "ranged",
+        damage: 50,
+        cooldown: 300,
+        projectileSpeed: 15,
+        projectileSize: 80,
+        price: 0
       }
     ]);
     this.equipItem(0);
-    console.log("onwed", this.inventory.getItems());
-    // console.log(this.inventory.getItems())
-
-
+    // console.log("onwed", this.inventory.getItems());
   }
 
-  public tryShoot(mouseWorldPos: p5.Vector): Projectile | null {
-    if (!this.canShoot()) return null;
-
-    return this.shoot(mouseWorldPos);
+  public getCurrentIndex() {
+    return this.currentItemIndex;
   }
 
-  private updateAnimation() {
-
-    let newImage = this.currentImage;
-    let newTotalFrames = this.totalFrames;
-
-    if (!this.onGround) {
-      if (this.velocity.y < 0) {
-        newImage = images.playerJump;
-        newTotalFrames = 14;
-        this.frameDelay = 1000;
-      } else {
-        newImage = images.playerAir;
-        newTotalFrames = 10;
-      }
-    }
-    else if (this.velocity.x !== 0) {
-      //console.log("walking");
-      newImage = images.playerWalk;
-      newTotalFrames = 4;
-      this.frameDelay = 8000;
-    }
-    else {
-      newImage = images.playerIdle;
-      newTotalFrames = 5;
-      this.frameDelay = 2000;
-    }
-
-    if (newImage !== this.currentImage) {
-      this.frameIndex = 0;
-      this.frameTimer = 0;
-    }
-
-    this.currentImage = newImage;
-    this.totalFrames = newTotalFrames;
-
-    this.frameTimer += deltaTime;
-
-    if (this.frameTimer > this.frameDelay) {
-      this.frameIndex++;
-      this.frameTimer = 0;
-
-      if (this.frameIndex >= this.totalFrames) {
-        this.frameIndex = 0;
-      }
-    }
-  }
-
-  public applyEffect(type: string, duration: number) {
-    this.effectType = type;
-    this.effectTimer = duration;
-
-    switch (type) {
-      case "slow":
-        this.speed = this.baseSpeed / 2;
-        break;
-    }
-    // add more effect like firedamage
-  }
-
-  private proccessEffect() {
-    switch (this.effectType) {
-      //logic for effects like firedamage
-    }
-  }
-
-  private clearEffect() {
-    this.effectTimer = 0;
-    this.effectType = "";
-
-    this.speed = this.baseSpeed;
-  }
-
-  public updateEffect(deltaTime: number) {
-    if (this.effectTimer > 0) {
-      this.effectTimer -= deltaTime;
-      console.log("effect timer ", this.effectTimer);
-      if (this.effectTimer <= 0) {
-        this.clearEffect();
-      } else {
-        this.proccessEffect();
-      }
-    }
-  }
-
-  public canShoot(): boolean {
-    return this.shootCooldown <= 0;
-  }
   public setPLayerPosition(p: p5.Vector) {
     this.position = p.copy()
   }
 
   public setEnimies(entities: entity[]) {
     this.enimies = entities;
-  }
-
-  private equipItem(index: number) {
-
-    console.log("onwed", this.inventory.getItems());
-    const items = this.inventory.getItems();
-    if (index >= 0 && index < items.length) {
-      this.currentItemIndex = index;
-      this.currentItem = items[index];
-
-      this.attackHitBox.width = this.currentItem.hitboxWidth;
-      this.attackHitBox.hight = this.currentItem.hitboxHeight;
-
-      this.swordSwipeTimer = this.currentItem.cooldown;
-
-      console.log("Equipped:", this.currentItem.name);
-    }
-  }
-  public getCurrentIndex() {
-    return this.currentItemIndex;
   }
 
   public onCollision(other: entity): void {
@@ -254,7 +154,98 @@ class Player extends entity {
       this.attackHitBox.position.x = this.position.x - 2 * this.size.x;
       this.attackHitBox.position.y = this.position.y;
     }
+  }
 
+  public updateEffect(deltaTime: number) {
+    if (this.effectTimer > 0) {
+      this.effectTimer -= deltaTime;
+      // console.log("effect timer ", this.effectTimer);
+      if (this.effectTimer <= 0) {
+        this.clearEffect();
+      } else {
+        this.proccessEffect();
+      }
+    }
+  }
+
+  private proccessEffect() {
+    switch (this.effectType) {
+      //logic for effects like firedamage
+    }
+  }
+
+  private clearEffect() {
+    this.effectTimer = 0;
+    this.effectType = "";
+
+    this.speed = this.baseSpeed;
+  }
+
+  private updateAnimation() {
+
+    let newImage = this.currentImage;
+    let newTotalFrames = this.totalFrames;
+
+    if (!this.onGround) {
+      if (this.velocity.y < 0) {
+        newImage = images.playerJump;
+        newTotalFrames = 14;
+        this.frameDelay = 1000;
+      } else {
+        newImage = images.playerAir;
+        newTotalFrames = 10;
+      }
+    }
+    else if (this.velocity.x !== 0) {
+      //console.log("walking");
+      newImage = images.playerWalk;
+      newTotalFrames = 4;
+      this.frameDelay = 8000;
+    }
+    else {
+      newImage = images.playerIdle;
+      newTotalFrames = 5;
+      this.frameDelay = 2000;
+    }
+
+    if (newImage !== this.currentImage) {
+      this.frameIndex = 0;
+      this.frameTimer = 0;
+    }
+
+    this.currentImage = newImage;
+    this.totalFrames = newTotalFrames;
+
+    this.frameTimer += deltaTime;
+
+    if (this.frameTimer > this.frameDelay) {
+      this.frameIndex++;
+      this.frameTimer = 0;
+
+      if (this.frameIndex >= this.totalFrames) {
+        this.frameIndex = 0;
+      }
+    }
+  }
+
+  private equipItem(index: number) {
+
+    console.log("onwed", this.inventory.getItems());
+    const items = this.inventory.getItems();
+
+    if (index >= 0 && index < items.length) {
+
+      this.currentItemIndex = index;
+      this.currentItem = items[index];
+
+      if (this.currentItem.type === "melee") {
+        this.attackHitBox.width = this.currentItem.hitboxWidth!;
+        this.attackHitBox.hight = this.currentItem.hitboxHeight!;
+      }
+      this.swordSwipeTimer = this.currentItem.cooldown;
+
+      console.log("Equipped:", this.currentItem.name);
+    }
   }
 
   private swordAttack(enemies: entity[]) {
@@ -289,6 +280,51 @@ class Player extends entity {
       }
     }
   }
+  public attack(target: p5.Vector): Projectile | null {
+    if (this.shootCooldown > 0) return null;
+    if (!this.currentItem) return null;
+
+    if (this.currentItem.type === "melee") {
+      this.swordAttack(this.enimies);
+      return null;
+    }
+
+    if (this.currentItem.type === "ranged") {
+      const projectile = this.createProjectile(target);
+      this.shootCooldown = this.currentItem.cooldown;
+      return projectile;
+    }
+    return null;
+  }
+
+  private createProjectile(target: p5.Vector): Projectile {
+    let spawnPos = this.getPosition().copy();
+    spawnPos.add(createVector(this.size.x / 2, this.size.y / 2));
+
+    let direction = p5.Vector.sub(target, spawnPos);
+    direction.normalize();
+    // direction.mult(this.currentItem.projectileSpeed!)
+
+    this.velocity.add(direction.copy().mult(-3));
+
+    return new Projectile(
+      spawnPos,
+      direction,
+      this.currentItem.damage,
+      this.currentItem.projectileSize!,
+      this,
+    );
+  }
+
+  // public canShoot(): boolean {
+  //   return this.shootCooldown <= 0;
+  // }
+
+  public tryShoot(mouseWorldPos: p5.Vector): Projectile | null {
+    // if (!this.canShoot()) return null;
+
+    return this.attack(mouseWorldPos);
+  }
 
   private move() {
     this.velocity.x = 0;
@@ -313,7 +349,6 @@ class Player extends entity {
       this.jump();
     }
     if (keyIsDown(69)) { // E
-      // console.log("pressed e");
       this.swordAttack(this.enimies);
       this.applyEffect("slow", 10000);
       console.log("effect timer ", this.effectTimer);
@@ -331,6 +366,18 @@ class Player extends entity {
       this.equipItem(3);
     }
   }
+  public applyEffect(type: string, duration: number) {
+    this.effectType = type;
+    this.effectTimer = duration;
+
+    switch (type) {
+      case "slow":
+        this.speed = this.baseSpeed / 2;
+        break;
+    }
+    // add more effect like firedamage
+  }
+
   private jump() {
     if (this.onGround) {
       this.velocity.y = -30 * this.speed;
@@ -338,41 +385,6 @@ class Player extends entity {
       this.onPlatform = false;
     }
   }
-
-  public shoot(target: p5.Vector): Projectile {
-    // Reset cooldown
-    this.shootCooldown = 300;
-
-    // Spawn position (center of player)
-    let spawnPos = this.getPosition().copy();
-    spawnPos.add(createVector(this.size.x / 2, this.size.y / 2));
-
-    // Calculate direction
-    let direction = p5.Vector.sub(target, spawnPos);
-    direction.normalize();
-
-    // Recoil
-    this.velocity.add(direction.copy().mult(-3));
-
-    // Random damage (1–3)
-    let damageValue = floor(random(1, 4));
-
-    return new Projectile(spawnPos, direction, damageValue);
-  }
-
-  // public shoot(): Projectile {
-  //   this.shootCooldown = 300;
-
-  //   let gunOffsetX = this.facing === 1 ? this.size.x : 0;
-  //   let gunOffsetY = this.size.y / 2;
-
-  //   let spawnPos = createVector(
-  //     this.position.x + gunOffsetX,
-  //     this.position.y + gunOffsetY,
-  //   );
-
-  //   return new Projectile(spawnPos, this.facing);
-  // }
   draw(cameraX: number) {
     super.draw(cameraX);
     noSmooth();

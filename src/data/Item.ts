@@ -1,9 +1,15 @@
 interface Item {
     id: string;
     name: string;
+    type: "melee" | "ranged";
     damage: number;
     cooldown: number;
-    hitboxWidth: number;
-    hitboxHeight: number;
+
+    hitboxWidth?: number;
+    hitboxHeight?: number;
+
+    projectileSpeed?: number;
+    projectileSize?: number;
+
     price: number;
 }
