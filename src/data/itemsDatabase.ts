@@ -3,6 +3,7 @@ const Items:  {swords: Item[] } = {
         {
             id: "basicSword",
             name: "BasicSword",
+            type: "melee",
             damage: 15,
             cooldown: 500,
             hitboxWidth: 100,
@@ -10,17 +11,29 @@ const Items:  {swords: Item[] } = {
             price: 0
         },
         {
+            id: "pistol",
+            name: "Pistol",
+            type: "ranged",
+            damage: 40,
+            cooldown: 300,
+            projectileSpeed: 15,
+            projectileSize: 8,
+            price: 0
+        },
+        {
             id: "shortSword",
             name: "ShortSword",
+            type: "melee",
             damage: 8,
             cooldown: 200,
             hitboxWidth: 80,
             hitboxHeight: 40,
-            price: 0
+            price: 3
         },
         {
             id: "heavySword",
             name: "HeavySword",
+            type: "melee",
             damage: 100,
             cooldown: 1000,
             hitboxWidth: 120,
@@ -30,11 +43,32 @@ const Items:  {swords: Item[] } = {
         {
             id: "LongSword",
             name: "LongSword",
+            type: "melee",
             damage: 20,
             cooldown: 600,
             hitboxWidth: 160,
             hitboxHeight: 50,
             price: 0
-        }
+        },
+        {
+            id: "shortSword2",
+            name: "ShortSword2",
+            type: "melee",
+            damage: 8,
+            cooldown: 200,
+            hitboxWidth: 80,
+            hitboxHeight: 40,
+            price: 3
+        },
+        {
+            id: "shortSword3",
+            name: "ShortSword3",
+            type: "melee",
+            damage: 8,
+            cooldown: 200,
+            hitboxWidth: 80,
+            hitboxHeight: 40,
+            price: 3
+        },
     ]
 };

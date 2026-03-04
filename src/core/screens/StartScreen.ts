@@ -57,7 +57,7 @@ function drawStoneButton(
 
 
 class StartScreen implements IScreen {
-  private game: Game;
+  private game: IChangableScreen;
   private time = 0;
   private inputLocked: boolean = true;
   private stars: { x: number; y: number; size: number; speed: number }[] = [];
@@ -69,7 +69,7 @@ class StartScreen implements IScreen {
   private selected = 0;
   private lastSelected = 0;
 
-  constructor(game: Game, player: Player) {
+  constructor(game: IChangableScreen, player: Player) {
     this.game = game;
     this.player = player;
 
