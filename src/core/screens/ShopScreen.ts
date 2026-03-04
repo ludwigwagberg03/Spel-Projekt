@@ -111,7 +111,7 @@ class ShopScreen implements IScreen {
         }
         if (code === 27) {
             console.log("enter level screen")
-            this.game.changeScreen(new Level(this.game, this.player))
+            this.game.changeScreen(this.level)
         }
     }
 }

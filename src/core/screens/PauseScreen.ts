@@ -1,10 +1,12 @@
 class PauseScreen implements IScreen {
   private game: IChangableScreen;
   private player: Player;
+  private level: Level;
 
-  constructor(game: IChangableScreen, player: Player) {
+  constructor(game: IChangableScreen, player: Player, level: Level) {
     this.game = game;
     this.player = player;
+    this.level = level;
   }
   draw(): void {
     // dark overlay
@@ -24,7 +26,7 @@ class PauseScreen implements IScreen {
 
   keyPressed(code: number): void {
     // resume game
-    if (code === ESCAPE) this.game.changeScreen(new Level(this.game, this.player));
+    if (code === ESCAPE) this.game.changeScreen(this.level);
 
     // go to menu
     if (code === 77) this.game.changeScreen(new StartScreen(this.game, this.player));

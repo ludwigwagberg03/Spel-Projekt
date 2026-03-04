@@ -56,7 +56,7 @@ function drawStoneButton(
 class StartScreen implements IScreen {
   private game: IChangableScreen;
   private time = 0;
-
+  private player: Player;
   private stars: { x: number; y: number; size: number; speed: number }[] = [];
 
   // Menu
@@ -67,7 +67,7 @@ class StartScreen implements IScreen {
 
   constructor(game: IChangableScreen, player: Player) {
     this.game = game;
-
+    this.player = player;
     // create stars (random positions, sizes and speeds)
     for (let i = 0; i < 80; i++) {
       this.stars.push({
@@ -195,7 +195,7 @@ class StartScreen implements IScreen {
       const choice = this.options[this.selected];
 
       if (choice === "Nytt spel") {
-        this.game.changeScreen(new Level(this.game, this.game.getPlayer()));
+        this.game.changeScreen(new Level(this.game, this.player));
       }
 
       if (choice === "Avsluta") {

@@ -201,6 +201,7 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
+    console.log("diffieculty",this.diffieculty);
     this.BossSystem();
     if (this.isFiring) {
       let worldMouse = createVector(mouseX + this.cameraX, mouseY);
@@ -246,6 +247,7 @@ class Level implements IScreen {
       if (e instanceof enemy) {
         // If death just started: spawn explosion + coins ONCE
         if (e.consumeDeathTrigger()) {
+          console.log("spawn coins");
           const center = e.getCenter();
           this.spawnExplosion(center);
           this.spawnCoins(center);
@@ -390,9 +392,9 @@ class Level implements IScreen {
     //press ESC to go back to start menu
     if (code === ESCAPE) {
       // this.game.changeScreen(new StartScreen(this.game));
-      this.game.changeScreen(new PauseScreen(this.game, this.player));
+      this.game.changeScreen(new PauseScreen(this.game, this.player, this));
     }
-    if (code === 66 && this.victoryActive) { // B
+    if (code === 66 && this.currentBoss === null) { // B
       // this.game.changeScreen(new StartScreen(this.game));
       this.game.changeScreen(new ShopScreen(this.game, this.player, this));
     }

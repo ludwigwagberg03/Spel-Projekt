@@ -48,12 +48,12 @@ class enemy extends entity {
     this.currentImage = images.iceBoss;
   }
 
-  public setSpeed(value: number) {
+  public setSpeed(value: number){
     this.speed = value;
   }
 
   public getRadius() {
-    return (this.size.x / 2) * 0.75;
+    return (this.size.x / 2)*0.75;
   }
 
   private enterState(newState: activeState) {
@@ -314,8 +314,8 @@ class enemy extends entity {
     }
     console.log("state: ", activeState[this.state]);
     this.movementChoise(this.state, level);
-
-
+    
+    
 
 
     this.previousPositionX.x = this.position.x;
@@ -362,11 +362,11 @@ class enemy extends entity {
 
     if (this.debugHitbox) {
       push();
-      noFill();
-      stroke(255, 0, 0);
-      strokeWeight(2);
-      rect(this.position.x, this.position.y, this.size.x, this.size.y);
-      pop();
+    noFill();
+    stroke(255, 0, 0);
+    strokeWeight(2);
+    rect(this.position.x, this.position.y, this.size.x, this.size.y);
+    pop();
     }
   }
 }
