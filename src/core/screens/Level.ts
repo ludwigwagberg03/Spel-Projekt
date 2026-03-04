@@ -34,7 +34,7 @@ class Level implements IScreen {
   private baseBossHealth: number = 100;
   private baseBossSpeed: number = 4;
   private currentBoss: enemy | null = null;
-  private coinStandard: number = 100;
+  private coinStandard: number = 10;
   private bossStartTime: number = 0;
 
   constructor(game: IChangableScreen, _player: Player) {
