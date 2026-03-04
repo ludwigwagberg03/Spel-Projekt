@@ -61,6 +61,11 @@ class Player extends entity {
     // console.log("onwed", this.inventory.getItems());
   }
 
+  public isAutoFireOn(): boolean {
+    if(!this.currentItem) return false;
+    return this.currentItem.autoFire === true;
+  }
+
   public getCurrentIndex() {
     return this.currentItemIndex;
   }

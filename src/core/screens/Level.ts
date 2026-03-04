@@ -31,11 +31,12 @@ class Level implements IScreen {
   private bossSpawnDelay: number = 15000;
   private bossSpawnTimer: number = 0;
   private diffieculty: number = 1;
-  private baseBossHealth: number = 100;
+  private baseBossHealth: number = 500;
   private baseBossSpeed: number = 4;
   private currentBoss: enemy | null = null;
   private coinStandard: number = 10;
   private bossStartTime: number = 0;
+  private isAutoFire: boolean = false;
 
   constructor(game: IChangableScreen, _player: Player) {
     this.game = game;

@@ -5,6 +5,8 @@ interface Item {
     damage: number;
     cooldown: number;
 
+    autoFire?: boolean;
+
     hitboxWidth?: number;
     hitboxHeight?: number;
 

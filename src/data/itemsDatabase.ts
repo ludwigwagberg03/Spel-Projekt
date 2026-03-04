@@ -14,8 +14,42 @@ const Items:  {swords: Item[] } = {
             id: "pistol",
             name: "Pistol",
             type: "ranged",
+            damage: 20,
+            cooldown: 350,
+            autoFire: false,
+            projectileSpeed: 15,
+            projectileSize: 8,
+            price: 0
+        },
+        {
+            id: "sniper",
+            name: "sniper",
+            type: "ranged",
+            damage: 80,
+            cooldown: 800,
+            autoFire: false,
+            projectileSpeed: 15,
+            projectileSize: 8,
+            price: 0
+        },
+        {
+            id: "smg",
+            name: "smg",
+            type: "ranged",
+            damage: 15,
+            cooldown: 150,
+            autoFire: true,
+            projectileSpeed: 15,
+            projectileSize: 8,
+            price: 0
+        },
+        {
+            id: "bow",
+            name: "bow",
+            type: "ranged",
             damage: 40,
-            cooldown: 300,
+            cooldown: 500,
+            autoFire: true,
             projectileSpeed: 15,
             projectileSize: 8,
             price: 0
