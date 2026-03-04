@@ -35,6 +35,9 @@ class Level implements IScreen {
   private baseBossHealth: number = 100;
   private baseBossSpeed: number = 4;
   private currentBoss: enemy | null = null;
+  private coinStandard: number = 100;
+  private levelStartTime: number = 0;
+  private bossStartTime: number = 0;
 
   constructor(game: IChangableScreen, _player: Player) {
     this.game = game;
@@ -551,6 +554,7 @@ class Level implements IScreen {
     pop();
   }
   onEnter(): void {
+    this.levelStartTime = millis();
     // console.log("level screen entered");
   }
 }
