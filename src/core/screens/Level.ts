@@ -58,15 +58,6 @@ class Level implements IScreen {
 
     this.entities.push(this.player);
 
-    this.enemy = new enemy(
-      createVector(this.worldWidth / 2 - 30, height / 2 - 100),
-      createVector(0, 0),
-      createVector(256, 256),
-      100,
-      this.player,
-    );
-
-    this.entities.push(this.enemy);*/
     this.player.setEnimies(this.entities);
 
     this.world = new World(
@@ -294,7 +285,7 @@ class Level implements IScreen {
     // =========================
     if (!this.gameOverTriggered && !this.player.alive) {
       this.gameOverTriggered = true;
-      this.game.changeScreen(new GameOverScreen(this.game));
+      this.game.changeScreen(new GameOverScreen(this.game, this.gameOverTriggered, this.player));
       return;
     }
 

@@ -1,10 +1,12 @@
 class GameOverScreen implements IScreen {
   private game: IChangableScreen;
-  private isWin: boolean;
+  private isWin?: boolean;
   private player: Player;
 
   constructor(game: IChangableScreen, isWin: boolean = false, player:Player) {
     this.game = game;
+    this.player = player;
+
     // this._isWin = isWin;
   }
 
@@ -27,12 +29,12 @@ class GameOverScreen implements IScreen {
   public keyPressed(code: number): void {
     // R = restart level
     if (code === 82) {
-      this.game.changeScreen(new Level(this.game, this.game.getPlayer()));
+      this.game.changeScreen(new Level(this.game, this.player));
     }
 
     // M = go to main menu
     if (code === 77) {
-      this.game.changeScreen(new StartScreen(this.game));
+      this.game.changeScreen(new StartScreen(this.game, this.player));
     }
   }
 }

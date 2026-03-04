@@ -34,32 +34,26 @@ class enemy extends entity {
   private dashDuratin: number = 0;
   private debugHitbox: boolean = true;
 
-  constructor(
-    p: p5.Vector,
-    v: p5.Vector,
-    s: p5.Vector,
-    h: number,
-    player: Player,
-  ) {
+  constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
     this.isGravity = false;
     // console.log("enemy");
     this.previousPositionX = this.position;
     this.isFacingRight = true;
     this.player = player;
-    this.dashTimerValue = this.dashTimer;
+    this.dashTimerValue = this.dashTimer
     this.dashAmount = 0;
     this.positionA = 0;
     this.positionB = 0;
     this.currentImage = images.iceBoss;
   }
 
-  public setSpeed(value: number){
+  public setSpeed(value: number) {
     this.speed = value;
   }
 
   public getRadius() {
-    return (this.size.x / 2)*0.75;
+    return (this.size.x / 2) * 0.75;
   }
 
   private enterState(newState: activeState) {
@@ -87,7 +81,7 @@ class enemy extends entity {
     this.frameDelay = 172;
     this.frameTimer += deltaTime;
     if (this.frameTimer >= this.frameDelay) {
-      this.frameIndex++;
+      this.frameIndex++
       this.frameTimer = 0;
       if (this.frameIndex >= this.totalFrames) {
         this.frameIndex = 0;
@@ -117,11 +111,12 @@ class enemy extends entity {
   }
 
   private followPlayer() {
-    let direction = p5.Vector.sub(this.player.getPosition(), this.position);
+    let direction = p5.Vector.sub(this.player.getPosition(), this.position)
     direction.normalize();
     direction.mult(this.speed);
     this.velocity = direction;
   }
+
 
   private dash() {
     if (this.isDashing) return;
@@ -274,7 +269,7 @@ class enemy extends entity {
     }
   }
 
-  public onCollision(_other: entity): void {
+  public onCollision(other: entity): void {
     //push enemy slightlty
   }
   public entityDamage(damage: number, hitFrom?: p5.Vector) {
@@ -319,8 +314,8 @@ class enemy extends entity {
     }
     console.log("state: ", activeState[this.state]);
     this.movementChoise(this.state, level);
-    
-    
+
+
 
 
     this.previousPositionX.x = this.position.x;
@@ -332,7 +327,7 @@ class enemy extends entity {
       this.position.y = groundLevel;
       this.velocity.y = 0;
     }
-  }
+  };
 
   public draw(cameraX: number) {
     super.draw(cameraX);
@@ -350,7 +345,7 @@ class enemy extends entity {
       sx,
       sy,
       this.frameWidth,
-      this.frameHeight,
+      this.frameHeight
     );
 
     //  Health Bar
@@ -367,11 +362,11 @@ class enemy extends entity {
 
     if (this.debugHitbox) {
       push();
-    noFill();
-    stroke(255, 0, 0);
-    strokeWeight(2);
-    rect(this.position.x, this.position.y, this.size.x, this.size.y);
-    pop();
+      noFill();
+      stroke(255, 0, 0);
+      strokeWeight(2);
+      rect(this.position.x, this.position.y, this.size.x, this.size.y);
+      pop();
     }
   }
 }
