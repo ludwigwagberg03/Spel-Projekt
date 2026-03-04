@@ -370,6 +370,12 @@ class Player extends entity {
     if (keyIsDown(52)) { // 4
       this.equipItem(3);
     }
+    if (keyIsDown(53)) { // 5
+      this.equipItem(4);
+    }
+    if (keyIsDown(54)) { // 6
+      this.equipItem(5);
+    }
   }
   public applyEffect(type: string, duration: number) {
     this.effectType = type;
