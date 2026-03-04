@@ -4,7 +4,7 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
-  private enemy: enemy;
+  private enemy?: enemy;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
   // Stores all active projectiles
@@ -27,6 +27,13 @@ class Level implements IScreen {
   private gameOverTriggered: boolean = false;
 
   private isFiring: boolean = false;
+  private bossActive: boolean = false;
+  private bossSpawnDelay: number = 15000;
+  private bossSpawnTimer: number = 0;
+  private diffieculty: number = 1;
+  private baseBossHealth: number = 100;
+  private baseBossSpeed: number = 4;
+  private currentBoss: enemy | null = null;
 
   constructor(game: Game, player: Player) {
     this.game = game;
@@ -58,7 +65,7 @@ class Level implements IScreen {
 
     this.entities.push(this.player);
 
-    this.enemy = new enemy(
+    /*this.enemy = new enemy(
       createVector(this.worldWidth / 2 - 30
         , height / 2 - 100),
       createVector(0, 0),
@@ -67,9 +74,81 @@ class Level implements IScreen {
       this.player
     );
 
-    this.entities.push(this.enemy);
+    this.entities.push(this.enemy);*/
     this.player.setEnimies(this.entities);
 
+  }
+
+  private drawBossIcon(){
+    if(!this.currentBoss || !this.currentBoss.alive) return;
+
+    const bossPosition = this.currentBoss.getCenter();
+    const screenX = bossPosition.x - this.cameraX;
+    const screenY = bossPosition.y;
+
+    const onScreen = screenX > 0 && screenX < width && screenY > 0 && screenY < height;
+
+    if(onScreen) return;
+
+    const screenCenter = createVector(width/2, height/2);
+    const direction = createVector(screenX,screenY).sub(screenCenter);
+    direction.normalize();
+    const margin = 10;
+    const iconPosition = p5.Vector.add(screenCenter,direction.mult(Math.min(width,height)/ 2 - margin));
+
+    push();
+    translate(iconPosition.x, direction.x);
+    const angle = atan2(direction.y, direction.x);
+    rotate(angle);
+
+    fill(122,199,227); // actual boss color
+    noStroke();
+
+    circle(30,30,50);
+    textAlign(CENTER, TOP);
+    textSize(16);
+    fill(255);
+    text("Boss",30,55);
+    pop();
+  }
+
+  private BossSystem() {
+    if (!this.bossActive) {
+      this.bossSpawnTimer += deltaTime;
+
+      if (this.bossSpawnTimer >= this.bossSpawnDelay) {
+        this.bossSpawn();
+        this.bossSpawnTimer = 0;
+      }
+    }
+
+    if (this.bossActive && this.currentBoss) {
+      if (!this.currentBoss.alive) {
+        this.diffieculty++;
+        this.bossActive = false;
+        this.currentBoss = null;
+      }
+    }
+  }
+
+  private bossSpawn() {
+    const scaledHealth = this.baseBossHealth * this.diffieculty;
+    const scaledSpeed = this.baseBossSpeed * this.diffieculty;
+
+    const boss = new enemy(
+      createVector(this.worldWidth / 2 - 30, height / 2 - 100),
+      createVector(0, 0),
+      createVector(256, 256),
+      scaledHealth,
+      this.player
+    );
+
+    boss.setSpeed(scaledSpeed);
+
+    this.entities.push(boss);
+
+    this.currentBoss = boss;
+    this.bossActive = true;
   }
 
   public mousePressed() {
@@ -144,18 +223,18 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
-    
+    this.BossSystem();
     if (this.isFiring) {
-    let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-    const bullet = this.player.tryShoot(worldMouse);
+      let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+      const bullet = this.player.tryShoot(worldMouse);
 
-    console.log("mouse world",worldMouse.x, worldMouse.y);
+      console.log("mouse world", worldMouse.x, worldMouse.y);
 
-    if(bullet){
-      this.addProjectile(bullet);
-      sounds.shoot.play();
+      if (bullet) {
+        this.addProjectile(bullet);
+        sounds.shoot.play();
+      }
     }
-  }
 
     // Follow player with camera
     this.cameraX = this.player.getPosition().x - width / 2;
@@ -243,7 +322,7 @@ class Level implements IScreen {
 
     const coinsStillOnGround = this.coins.length > 0;
 
-    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround) {
+    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround && this.currentBoss === null && this.diffieculty > 1) {
       this.victoryActive = true;
       this.victoryTimer = 0;
     }
@@ -394,11 +473,16 @@ class Level implements IScreen {
 
     this.player.drawHealthBar(width - 400, 20, 350, 50);
     //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
-    // demo text
-    fill(255, 55, 99);
-    textAlign(CENTER, CENTER);
-    textSize(48);
-    text("PLAYING", width / 2, height / 4);
+    // Boss countdown
+    if(!this.bossActive){
+      const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
+      const seconds = Math.max(0, Math.ceil(timeLeft/1000));
+      fill(255);
+      textAlign(CENTER,CENTER);
+      textSize(32);
+
+      text("Boss spawns in " + seconds, width / 2, 100);
+    }
 
     // Draw coins
     this.coins.forEach((c) => c.draw());
@@ -440,7 +524,7 @@ class Level implements IScreen {
       pop();
     });
     // end camera
-
+    this.drawBossIcon();
     // =========================
     // UI (screen space)
     // =========================

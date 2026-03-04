@@ -1,5 +1,5 @@
 class ShopScreen implements IScreen {
-    private game: IChangableScreen;
+    private game: Game;
     private player: Player;
     private level: Level;
 
@@ -8,7 +8,7 @@ class ShopScreen implements IScreen {
     private lastSelected = 0;
     private selected = 0;
 
-    constructor(game: IChangableScreen, player: Player, level: Level) {
+    constructor(game: Game, player: Player, level: Level) {
         this.game = game;
         this.player = player;
         this.level = level;
