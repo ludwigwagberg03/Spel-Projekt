@@ -78,7 +78,7 @@ class Player extends entity {
       this.handlePlatformLanding(other);
     }
     if (other instanceof enemy) {
-      this.entityDamage(10);
+      this.entityDamage(1);
     }
   }
   private handlePlatformLanding(other: entity) {
@@ -116,6 +116,7 @@ class Player extends entity {
     this.updateAnimation();
 
   }
+
 
   private updatePosition(worldWidth: number) {
     // player is on the ground 
@@ -394,6 +395,8 @@ class Player extends entity {
     const mouseWorld = createVector(mouseX + cameraX, mouseY)
 
     if (mouseWorld) {
+      //console.log("drawing");
+      //console.log(images.smgAim);
       const dx = mouseWorld.x - (this.position.x + this.size.x / 2);
       const dy = mouseWorld.y - (this.position.y + this.size.y / 2);
       const angel = atan2(dy, dx);
@@ -407,7 +410,7 @@ class Player extends entity {
       } else if (angel > PI / 6) {
         weaponAim = frameWidth * 2;
       }
-      const weaponScale = 2;
+      const weaponScale = 1;
       image(
         images.smgAim,
         this.position.x,
@@ -431,5 +434,12 @@ class Player extends entity {
       this.frameWidth,
       this.frameHeight
     );
+    push();
+    noFill();
+    stroke(0, 255, 0);
+    strokeWeight(2);
+    rect(this.position.x, this.position.y, this.size.x, this.size.y);
+    pop();
+    //rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
   }
 }
