@@ -8,7 +8,7 @@ abstract class entity {
   protected health: number;
   protected isAlive: boolean = true;
   private notPlayedSound: boolean = true;
-  private timer: number = 1000;
+  private timer: number = 0;
   protected maxHealth: number;
 
   protected scaleEffect: number = 1;
@@ -58,8 +58,9 @@ abstract class entity {
     sounds.tick.play();
   }
   protected die() {
-    this.isAlive = false;
-  }
+  this.isAlive = false;
+  console.log("die() called, isAlive:", this.isAlive);
+}
 
   get lifeStatus(): boolean {
     return this.health > 0;
@@ -80,14 +81,11 @@ abstract class entity {
     return this.size.copy();
   }
   public isItDead() {
-    return !this.isAlive;
+    return this.isDead;
   }
 
-  public update(gravity: number, _worldWidth: number) {
-    // Smooth scale return
-    if (this.scaleEffect > 1) {
-      this.scaleEffect -= 0.02;
-    }
+  public update(gravity: number, worldWidth: number) {
+  
     // Flash timer
     if (this.hitFlash > 0) {
       this.hitFlash -= deltaTime;

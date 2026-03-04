@@ -25,6 +25,8 @@ let images: {
   playerAir: p5.Image;
   iceBoss: p5.Image;
   smgAim: p5.Image;
+  playerDeath: p5.Image;
+  bossDeath: p5.Image;
 };
 // let itemData: any;
 
@@ -56,6 +58,8 @@ function preload() {
     playerAir: loadImage("/assets/images/playerAir.png"),
     iceBoss: loadImage("/assets/images/IceBossWings.png"),
     smgAim: loadImage("/assets/images/smgAim.png"),
+    playerDeath: loadImage("/assets/images/playerDeath.png"),
+    bossDeath: loadImage("/assets/images/bossDeath.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }
