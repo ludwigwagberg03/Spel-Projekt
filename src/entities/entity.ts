@@ -83,7 +83,7 @@ abstract class entity {
     return !this.isAlive;
   }
 
-  public update(gravity: number, worldWidth: number) {
+  public update(gravity: number, _worldWidth: number) {
     // Smooth scale return
     if (this.scaleEffect > 1) {
       this.scaleEffect -= 0.02;
@@ -129,8 +129,8 @@ abstract class entity {
 
   abstract onCollision(other: entity): void;
 
-  public draw(cameraX: number) {
-    // rita ut bild här för att återanvända kod
+  public draw(_cameraX: number) {
+     // rita ut bild här för att återanvända kod
   }
 
 }

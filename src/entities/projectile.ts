@@ -12,6 +12,7 @@ class Projectile extends entity {
 
     //let direction = p5.Vector.sub(target, pos);
     //direction.normalize();
+
     //direction.mult(speed);
 
     super(pos.copy(), direction.copy().mult(12), createVector(size, size), 1);
@@ -28,9 +29,9 @@ class Projectile extends entity {
     }
   }
 
-  draw() {
+  draw(_cameraX: number) {
     push();
-        
+
     fill(255, 220, 100);
     noStroke();
     ellipse(this.position.x, this.position.y, 12);
@@ -41,7 +42,7 @@ class Projectile extends entity {
   }
   
   onCollision(other: entity) {
-    if(other === this.owner) return;
+    if (other === this.owner) return;
     if (other instanceof enemy) {
       (other as enemy).entityDamage(this.damage, this.position.copy());
 

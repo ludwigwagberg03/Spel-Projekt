@@ -36,9 +36,8 @@ class Level implements IScreen {
   private baseBossSpeed: number = 4;
   private currentBoss: enemy | null = null;
 
-  constructor(game: IChangableScreen, player: Player) {
+  constructor(game: IChangableScreen, _player: Player) {
     this.game = game;
-
     this.entities = [];
 
     this.entities.push(
@@ -48,31 +47,23 @@ class Level implements IScreen {
         createVector(this.worldWidth, 10),
       ),
     );
-    if (player) {
-      this.player = player;
 
-      this.player.setPLayerPosition(
-        createVector(this.worldWidth / 2, height / 2)
-      )
-    } else {
-      this.player = new Player(
-        createVector(this.worldWidth / 2, height / 2),
-
-        createVector(0, 0),
-        createVector(64, 64),
-        100,
-      );
-    }
+    //  create fresh player
+    this.player = new Player(
+      createVector(this.worldWidth / 2, height / 2),
+      createVector(0, 0),
+      createVector(64, 64),
+      100,
+    );
 
     this.entities.push(this.player);
 
-    /*this.enemy = new enemy(
-      createVector(this.worldWidth / 2 - 30
-        , height / 2 - 100),
+    this.enemy = new enemy(
+      createVector(this.worldWidth / 2 - 30, height / 2 - 100),
       createVector(0, 0),
       createVector(256, 256),
       100,
-      this.player
+      this.player,
     );
 
     this.entities.push(this.enemy);*/
@@ -267,7 +258,6 @@ class Level implements IScreen {
           const center = e.getCenter();
           this.spawnExplosion(center);
           this.spawnCoins(center);
-
         }
 
         // If fully finished dying -> remove from entities
@@ -304,7 +294,7 @@ class Level implements IScreen {
     // =========================
     if (!this.gameOverTriggered && !this.player.alive) {
       this.gameOverTriggered = true;
-      this.game.changeScreen(new GameOverScreen(this.game, false, this.player));
+      this.game.changeScreen(new GameOverScreen(this.game));
       return;
     }
 
@@ -342,11 +332,7 @@ class Level implements IScreen {
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
 
-    this.entities = this.entities.filter(isDead => !isDead.isItDead());
-
-    if (this.player.lifeStatus === false) {
-      this.game.changeScreen(new StartScreen(this.game, this.player));
-    }
+    this.entities = this.entities.filter((isDead) => !isDead.isItDead());
   }
   //
   private findClosestEnemy(): p5.Vector | null {
@@ -451,7 +437,7 @@ class Level implements IScreen {
 
     // Draw projectiles
     this.projectiles.forEach((projectile) => {
-      projectile.draw();
+      projectile.draw(this.cameraX);
     });
     // Draw explosion particles
     this.particles.forEach((p) => p.draw());
