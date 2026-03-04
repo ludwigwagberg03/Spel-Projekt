@@ -37,6 +37,9 @@ class Level implements IScreen {
   private coinStandard: number = 10;
   private bossStartTime: number = 0;
   private isAutoFire: boolean = false;
+  private bossesDefeated: number = 0;
+  private endOfGame: boolean = false;
+  private endOfGameTime: number = 0;
 
   constructor(game: IChangableScreen, _player: Player) {
     this.game = game;
@@ -67,6 +70,29 @@ class Level implements IScreen {
       images.secondBackgroudn,
       images.thirdBackground
     );
+  }
+
+  private drawEndMessage(){
+    if(!this.endOfGame) return;
+
+    push();
+    textFont(gameFont);
+    textAlign(CENTER,CENTER);
+    fill(0,0,0,200);
+    rect(width/2-300,height/2-150,600,300,20);
+    fill(255,215,0);
+    textSize(42);
+    text("Victory", width / 2, height / 2 - 69);
+    pop();
+  }
+
+  private triggerEndOFGame() {
+    if (this.bossesDefeated >= 2 && this.endOfGameTime === 0) {
+      this.endOfGame = true;
+      this.bossActive = false;
+      this.currentBoss = null;
+      this.endOfGameTime += deltaTime;
+    }
   }
 
   private drawBossIcon() {
@@ -103,6 +129,7 @@ class Level implements IScreen {
   }
 
   private BossSystem() {
+    if (this.endOfGame) return;
     if (!this.bossActive) {
       this.bossSpawnTimer += deltaTime;
 
@@ -123,7 +150,7 @@ class Level implements IScreen {
         const reward = Math.floor(efficiency * (this.coinStandard * this.diffieculty));
 
         this.player.coinCount += reward;
-
+        this.bossesDefeated++;
         sounds.coin.play();
 
         this.diffieculty++;
@@ -159,13 +186,13 @@ class Level implements IScreen {
     this.isFiring = true;
 
     if (!this.player.isAutoFireOn()) {
-        let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-        const bullet = this.player.tryShoot(worldMouse);
-        if (bullet) {
-          this.addProjectile(bullet);
-          sounds.shoot.play();
-        }
+      let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+      const bullet = this.player.tryShoot(worldMouse);
+      if (bullet) {
+        this.addProjectile(bullet);
+        sounds.shoot.play();
       }
+    }
   }
   public mouseReleased() {
     this.isFiring = false;
@@ -219,6 +246,7 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
+    this.triggerEndOFGame();
     console.log("diffieculty", this.diffieculty);
     this.BossSystem();
     if (this.isFiring) {
@@ -334,6 +362,13 @@ class Level implements IScreen {
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
 
     this.entities = this.entities.filter((isDead) => !isDead.isItDead());
+
+    if(this.endOfGameTime >= 1){
+      this.endOfGameTime += deltaTime;
+      if (this.endOfGameTime >= 10000){
+        this.game.changeScreen(new StartScreen(this.game, this.player));
+      }
+    }
   }
   //
   private findClosestEnemy(): p5.Vector | null {
@@ -447,7 +482,7 @@ class Level implements IScreen {
     this.player.drawHealthBar(width - 400, 20, 350, 50);
     //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
     // Boss countdown
-    if (!this.bossActive) {
+    if (!this.bossActive && !this.endOfGame) {
       const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
       const seconds = Math.max(0, Math.ceil(timeLeft / 1000));
       fill(255);
@@ -504,7 +539,7 @@ class Level implements IScreen {
     this.drawInventory();
   }
   private drawVictoryOverlay() {
-    if (this.victoryActive) {
+    if (this.victoryActive && !this.endOfGame) {
       push();
       textFont(gameFont);
       textAlign(CENTER, CENTER);
@@ -556,6 +591,7 @@ class Level implements IScreen {
       text(items[i].name, x + 5, y + 5);
     }
     pop();
+    this.drawEndMessage();
   }
   onEnter(): void {
     // console.log("level screen entered");
