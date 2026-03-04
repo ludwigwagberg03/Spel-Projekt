@@ -69,8 +69,8 @@ class Level implements IScreen {
     );
   }
 
-  private drawBossIcon(){
-    if(!this.currentBoss || !this.currentBoss.alive) return;
+  private drawBossIcon() {
+    if (!this.currentBoss || !this.currentBoss.alive) return;
 
     const bossPosition = this.currentBoss.getCenter();
     const screenX = bossPosition.x - this.cameraX;
@@ -78,27 +78,27 @@ class Level implements IScreen {
 
     const onScreen = screenX > 0 && screenX < width && screenY > 0 && screenY < height;
 
-    if(onScreen) return;
+    if (onScreen) return;
 
-    const screenCenter = createVector(width/2, height/2);
-    const direction = createVector(screenX,screenY).sub(screenCenter);
+    const screenCenter = createVector(width / 2, height / 2);
+    const direction = createVector(screenX, screenY).sub(screenCenter);
     direction.normalize();
     const margin = 10;
-    const iconPosition = p5.Vector.add(screenCenter,direction.mult(Math.min(width,height)/ 2 - margin));
+    const iconPosition = p5.Vector.add(screenCenter, direction.mult(Math.min(width, height) / 2 - margin));
 
     push();
     translate(iconPosition.x, direction.x);
     const angle = atan2(direction.y, direction.x);
     rotate(angle);
 
-    fill(122,199,227); // actual boss color
+    fill(122, 199, 227); // actual boss color
     noStroke();
 
-    circle(30,30,50);
+    circle(30, 30, 50);
     textAlign(CENTER, TOP);
     textSize(16);
     fill(255);
-    text("Boss",30,55);
+    text("Boss", 30, 55);
     pop();
   }
 
@@ -156,6 +156,15 @@ class Level implements IScreen {
 
   public mousePressed() {
     this.isFiring = true;
+
+    if (!this.player.isAutoFireOn()) {
+        let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+        const bullet = this.player.tryShoot(worldMouse);
+        if (bullet) {
+          this.addProjectile(bullet);
+          sounds.shoot.play();
+        }
+      }
   }
   public mouseReleased() {
     this.isFiring = false;
@@ -185,7 +194,7 @@ class Level implements IScreen {
       this.particles.push(new ExplosionParticle(pos));
     }
   }
-  
+
   private drawCoinUI(): void {
     // UI
     push();
@@ -209,14 +218,16 @@ class Level implements IScreen {
     pop();
   }
   update(): void {
-    console.log("diffieculty",this.diffieculty);
+    console.log("diffieculty", this.diffieculty);
     this.BossSystem();
     if (this.isFiring) {
-      let worldMouse = createVector(mouseX + this.cameraX, mouseY);
-      const bullet = this.player.tryShoot(worldMouse);
-      if (bullet) {
-        this.addProjectile(bullet);
-        sounds.shoot.play();
+      if (this.player.isAutoFireOn()) {
+        let worldMouse = createVector(mouseX + this.cameraX, mouseY);
+        const bullet = this.player.tryShoot(worldMouse);
+        if (bullet) {
+          this.addProjectile(bullet);
+          sounds.shoot.play();
+        }
       }
     }
 
@@ -435,11 +446,11 @@ class Level implements IScreen {
     this.player.drawHealthBar(width - 400, 20, 350, 50);
     //this.player.draw(createVector(mouseX + this.cameraX, mouseY));
     // Boss countdown
-    if(!this.bossActive){
+    if (!this.bossActive) {
       const timeLeft = this.bossSpawnDelay - this.bossSpawnTimer;
-      const seconds = Math.max(0, Math.ceil(timeLeft/1000));
+      const seconds = Math.max(0, Math.ceil(timeLeft / 1000));
       fill(255);
-      textAlign(CENTER,CENTER);
+      textAlign(CENTER, CENTER);
       textSize(32);
 
       text("Boss spawns in " + seconds, width / 2, 100);
