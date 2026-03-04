@@ -114,6 +114,18 @@ class Level implements IScreen {
 
     if (this.bossActive && this.currentBoss) {
       if (!this.currentBoss.alive) {
+
+        const bossEndTime = millis();
+        const timeInSeconds = (bossEndTime - this.bossStartTime) / 1000;
+        const maxTime = 60;
+        const efficiency = Math.max(0, maxTime - timeInSeconds);
+
+        const reward = Math.floor(efficiency * (this.coinStandard * this.diffieculty));
+
+        this.player.coinCount += reward;
+
+        sounds.coin.play();
+
         this.diffieculty++;
         this.bossActive = false;
         this.currentBoss = null;
