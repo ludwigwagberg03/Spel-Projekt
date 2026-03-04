@@ -17,7 +17,6 @@ class Level implements IScreen {
 
   // ===== particles + coins =====
   private particles: ExplosionParticle[] = [];
-  private coins: CoinDrop[] = [];
 
   // ===== victory state =====
   private victoryActive: boolean = false;
@@ -140,6 +139,7 @@ class Level implements IScreen {
 
     this.currentBoss = boss;
     this.bossActive = true;
+    this.bossStartTime = millis();
   }
 
   public mousePressed() {
@@ -171,13 +171,6 @@ class Level implements IScreen {
   private spawnExplosion(pos: p5.Vector): void {
     for (let i = 0; i < 18; i++) {
       this.particles.push(new ExplosionParticle(pos));
-    }
-  }
-
-  private spawnCoins(pos: p5.Vector): void {
-    const amount = floor(random(3, 7));
-    for (let i = 0; i < amount; i++) {
-      this.coins.push(new CoinDrop(pos));
     }
   }
   
@@ -253,7 +246,6 @@ class Level implements IScreen {
           console.log("spawn coins");
           const center = e.getCenter();
           this.spawnExplosion(center);
-          this.spawnCoins(center);
         }
 
         // If fully finished dying -> remove from entities
@@ -272,18 +264,8 @@ class Level implements IScreen {
     // =========================
     // UPDATE COINS + COLLECT
     // =========================
-    const playerCenter = this.player.getCenter();
 
-    const groundY = height / 2; //platform is created at y = height / 2
-    this.coins.forEach((c) => {
-      c.update(this.gravity, groundY);
 
-      if (c.tryCollect(playerCenter)) {
-        this.player.coinCount += 1;
-        sounds.coin.play();
-      }
-    });
-    this.coins = this.coins.filter((c) => !c.isCollected);
 
     // =========================
     // LOSE CONDITION -> GameOverScreen
@@ -299,9 +281,8 @@ class Level implements IScreen {
     // =========================
     const enemiesLeft = this.entities.some((x) => x instanceof enemy);
 
-    const coinsStillOnGround = this.coins.length > 0;
 
-    if (!this.victoryActive && !enemiesLeft && !coinsStillOnGround && this.currentBoss === null && this.diffieculty > 1) {
+    if (!this.victoryActive && !enemiesLeft && this.currentBoss === null && this.diffieculty > 1) {
       this.victoryActive = true;
       this.victoryTimer = 0;
     }
@@ -453,7 +434,6 @@ class Level implements IScreen {
     }
 
     // Draw coins
-    this.coins.forEach((c) => c.draw());
 
     // Draw impacts INSIDE camera
     this.impacts.forEach((i) => {
