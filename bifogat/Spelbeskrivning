@@ -68,39 +68,6 @@ Mellan nivåerna får spelaren tillgång till en shop med slumpmässigt utvalda 
 
 Ju längre du kommer, desto tuffare blir bossarna – men du blir också starkare.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Terraria x Boss rush
-Spelet är ett 2D terraria inspererat action game, med boss rush som fokus. I stället för open sandbox world där spelaren kan mina, crafta 
-och explora är spelet uppbygt på en serie striedr mot olika typer av bossar med olika svårighetes grader i en förbuyggd arena. 
-Spelaren styr en karaktär som möter en boss åt gången. När en boss besegras belönas spelaren med experience och förbättrad utrustning, 
-vilket gör det lättare att besegra nästa boss. 
-
-Game loop
-  - Spelaren möter en boss
-  - Bossen besegras
-  - Spelaren får erfarenhet och uppgraderad utrustning
-  - Svårighetsgraden ökar
-  - Nästa boss laddas in
-Denna loop upprepas tills spelaren har besegrat alla bossar eller förlorar.
-
 Spelmekanik och system Functioner
 Spel/Game
   - Uppdaterar spelets logik (update)
