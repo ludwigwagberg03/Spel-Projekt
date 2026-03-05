@@ -46,9 +46,9 @@ function preload() {
     shoot: loadSound("/assets/sounds/gun-shot.mp3"),
   };
   images = {
-    firstBackgournd: loadImage("/assets/images/firstBackgroudn.webp"),
+    firstBackgournd: loadImage("/assets/images/thirdBackground1.png"),
     secondBackgroudn: loadImage("/assets/images/secondBackground.webp"),
-    thirdBackground: loadImage("/assets/images/thirdBackground.webp"),
+    thirdBackground: loadImage("/assets/images/Jungle_background_1.webp"),
     menu: loadImage("/assets/images/menu_bg.png"),
     testStage: loadImage("/assets/images/Frame 1 (1).png"),
     background: loadImage("/assets/images/Terr-style-bg1.png"),
