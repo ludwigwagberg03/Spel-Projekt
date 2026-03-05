@@ -12,7 +12,7 @@ class Game implements IChangableScreen {
 
   constructor(player: Player) {
     this.player = player;
-    this.currentScreen = new StartScreen(this);
+    this.currentScreen = new StartScreen(this, this.player);
     this.currentScreen.onEnter?.();
   }
 
