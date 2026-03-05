@@ -29,6 +29,7 @@ class Player extends entity {
   private deathTimer: number = 0;
   private totalDeathFrames: number = 7; // adjust to your spritesheet
   private onDeathComplete?: () => void;
+  private debugBox: boolean = false;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -482,12 +483,15 @@ class Player extends entity {
       this.frameWidth,
       this.frameHeight
     );
-    push();
-    noFill();
-    stroke(0, 255, 0);
-    strokeWeight(2);
-    rect(this.position.x, this.position.y, this.size.x, this.size.y);
-    pop();
+    if (this.debugBox) {
+      push();
+      noFill();
+      stroke(0, 255, 0);
+      strokeWeight(2);
+      rect(this.position.x, this.position.y, this.size.x, this.size.y);
+      pop();
+    }
+
     //rect(this.attackHitBox.position.x, this.attackHitBox.position.y, this.attackHitBox.width, this.attackHitBox.hight);
   }
 }

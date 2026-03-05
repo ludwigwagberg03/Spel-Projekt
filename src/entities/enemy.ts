@@ -27,14 +27,14 @@ class enemy extends entity {
   private isDashing: boolean = false;
   private dashTimeLeft: number = 0;
   private dashDuratin: number = 0;
-  private debugHitbox: boolean = true;
+  private debugHitbox: boolean = false;
   private isDeathAnimating: boolean = false;
-private deathFrameIndex: number = 0;
-private deathFrameTimer: number = 0;
-private deathFrameDelay: number = 250;
-private totalDeathFrames: number = 6;
-private deathFrameWidth: number = 64;
-private deathFrameHeight: number = 53;
+  private deathFrameIndex: number = 0;
+  private deathFrameTimer: number = 0;
+  private deathFrameDelay: number = 250;
+  private totalDeathFrames: number = 6;
+  private deathFrameWidth: number = 64;
+  private deathFrameHeight: number = 53;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
@@ -50,12 +50,12 @@ private deathFrameHeight: number = 53;
     this.currentImage = images.iceBoss;
   }
 
-  public setSpeed(value: number){
+  public setSpeed(value: number) {
     this.speed = value;
   }
 
   public getRadius() {
-    return (this.size.x / 2)*0.75;
+    return (this.size.x / 2) * 0.75;
   }
 
   private enterState(newState: activeState) {
@@ -248,23 +248,23 @@ private deathFrameHeight: number = 53;
   }
 
   // --- Start Death ---
- private startDeath(): void {
-  this.isDeathAnimating = true;
-  this.deathTriggeredOnce = true;
-  this.velocity.mult(0);
-  this.knockbackForce.mult(0);
-}
+  private startDeath(): void {
+    this.isDeathAnimating = true;
+    this.deathTriggeredOnce = true;
+    this.velocity.mult(0);
+    this.knockbackForce.mult(0);
+  }
 
   private handleDeath(): void {
-  this.deathFrameTimer += deltaTime;
-  if (this.deathFrameTimer >= this.deathFrameDelay) {
-    this.deathFrameIndex++;
-    this.deathFrameTimer = 0;
-    if (this.deathFrameIndex >= this.totalDeathFrames) {
-      this.isDead = true;
+    this.deathFrameTimer += deltaTime;
+    if (this.deathFrameTimer >= this.deathFrameDelay) {
+      this.deathFrameIndex++;
+      this.deathFrameTimer = 0;
+      if (this.deathFrameIndex >= this.totalDeathFrames) {
+        this.isDead = true;
+      }
     }
   }
-}
 
   public onCollision(other: entity): void {
     //push enemy slightlty
@@ -310,8 +310,8 @@ private deathFrameHeight: number = 53;
       return;
     }
     this.movementChoise(this.state, level);
-    
-    
+
+
 
 
     this.previousPositionX.x = this.position.x;
@@ -330,19 +330,19 @@ private deathFrameHeight: number = 53;
     noSmooth();
 
     if (this.isDeathAnimating) {
-    const sx = this.deathFrameIndex * this.deathFrameWidth;
-    image(
-      images.bossDeath,
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y,
-      sx, 0,
-      this.deathFrameWidth,
-      this.deathFrameHeight
-    );
-    return; // skip normal drawing
-  }
+      const sx = this.deathFrameIndex * this.deathFrameWidth;
+      image(
+        images.bossDeath,
+        this.position.x,
+        this.position.y,
+        this.size.x,
+        this.size.y,
+        sx, 0,
+        this.deathFrameWidth,
+        this.deathFrameHeight
+      );
+      return; // skip normal drawing
+    }
 
     const sx = this.frameIndex * this.frameWidth;
     const sy = 0;
@@ -373,11 +373,11 @@ private deathFrameHeight: number = 53;
 
     if (this.debugHitbox) {
       push();
-    noFill();
-    stroke(255, 0, 0);
-    strokeWeight(2);
-    rect(this.position.x, this.position.y, this.size.x, this.size.y);
-    pop();
+      noFill();
+      stroke(255, 0, 0);
+      strokeWeight(2);
+      rect(this.position.x, this.position.y, this.size.x, this.size.y);
+      pop();
     }
   }
 }

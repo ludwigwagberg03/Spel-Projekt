@@ -58,7 +58,7 @@ class Level implements IScreen {
       createVector(this.worldWidth / 2, height / 2),
       createVector(0, 0),
       createVector(64, 64),
-      1,
+      100,
     );
 
     this.entities.push(this.player);
