@@ -121,9 +121,7 @@ class Player extends entity {
       this.isFalling = false;
     }
   }
-
-  private takedamage(n: number): void { }
-
+  
   public update(gravity: number, worldWidth: number) {
     if (this.swordSwipeTimer > 0) {
       this.swordSwipeTimer -= deltaTime;

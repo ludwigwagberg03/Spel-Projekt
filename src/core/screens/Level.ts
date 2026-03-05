@@ -4,7 +4,6 @@ class Level implements IScreen {
   private entities: entity[];
   private gravity = 0.8;
   private player: Player;
-  private enemy?: enemy;
   private world: World;
   private cameraX: number = 0;
   private worldWidth = 5760; // 1920 * 3
@@ -36,7 +35,6 @@ class Level implements IScreen {
   private currentBoss: enemy | null = null;
   private coinStandard: number = 10;
   private bossStartTime: number = 0;
-  private isAutoFire: boolean = false;
   private bossesDefeated: number = 0;
   private endOfGame: boolean = false;
   private endOfGameTime: number = 0;
@@ -324,7 +322,7 @@ class Level implements IScreen {
     if (!this.gameOverTriggered && !this.player.alive) {
       this.gameOverTriggered = true;
       this.player.startDeathAnimation(() => {
-      this.game.changeScreen(new GameOverScreen(this.game, this.gameOverTriggered, this.player));
+      this.game.changeScreen(new GameOverScreen(this.game, this.player));
     });
     return;
     }
@@ -368,23 +366,6 @@ class Level implements IScreen {
         this.game.changeScreen(new StartScreen(this.game, this.player));
       }
     }
-  }
-  //
-  private findClosestEnemy(): p5.Vector | null {
-    let closest: enemy | null = null;
-    let minDist = Infinity;
-
-    for (let e of this.entities) {
-      if (e instanceof enemy && e.alive) {
-        let d = p5.Vector.dist(this.player.getPosition(), e.getPosition());
-
-        if (d < minDist) {
-          minDist = d;
-          closest = e;
-        }
-      }
-    }
-    return closest ? closest.getPosition() : null;
   }
   checkCollision() {
     // ENTITY vs ENTITY

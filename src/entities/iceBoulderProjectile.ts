@@ -3,7 +3,7 @@
 class IceBoulder extends Projectile{
     private projectileDamgage: number;
     constructor(p: p5.Vector, t: p5.Vector, d: number, o: entity){
-        super(p,t,d,o);
+        super(p,t,d,100,o);
         this.projectileDamgage = d;
     }
 

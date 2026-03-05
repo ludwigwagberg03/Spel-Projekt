@@ -1,9 +1,8 @@
 class GameOverScreen implements IScreen {
   private game: IChangableScreen;
-  private isWin?: boolean;
   private player: Player;
 
-  constructor(game: IChangableScreen, isWin: boolean = false, player:Player) {
+  constructor(game: IChangableScreen, player:Player) {
     this.game = game;
     this.player = player;
 

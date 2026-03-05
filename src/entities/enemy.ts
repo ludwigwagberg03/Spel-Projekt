@@ -266,9 +266,9 @@ class enemy extends entity {
     }
   }
 
-  public onCollision(other: entity): void {
-    //push enemy slightlty
+  public onCollision(): void {
   }
+
   public entityDamage(damage: number, hitFrom?: p5.Vector) {
     if (this.isDeathAnimating) return; // dying
 

@@ -3,18 +3,10 @@
 /// <reference path="platform.ts" />
 
 class Projectile extends entity {
-  private speed: number = 12;
   private owner?: entity;
   private damage: number = 1;
 
   constructor(pos: p5.Vector, direction: p5.Vector, damage: number, size: number = 12, owner?: entity) {
-    const speed = 12; // local constant
-
-    //let direction = p5.Vector.sub(target, pos);
-    //direction.normalize();
-
-    //direction.mult(speed);
-
     super(pos.copy(), direction.copy().mult(12), createVector(size, size), 1);
     this.damage = damage;
     this.owner = owner;

@@ -5,7 +5,6 @@ class ShopScreen implements IScreen {
     // IChangableScreen
     private items: Item[] = [];
 
-    private lastSelected = 0;
     private selected = 0;
 
     constructor(game: IChangableScreen, player: Player, level: Level) {
@@ -79,9 +78,6 @@ class ShopScreen implements IScreen {
     };
 
     keyPressed(code: number): void {
-
-        this.lastSelected = this.selected;
-
         // move selection
         if (code === UP_ARROW) this.selected--;
         if (code === DOWN_ARROW) this.selected++;

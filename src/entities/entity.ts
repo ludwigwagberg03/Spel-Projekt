@@ -7,7 +7,6 @@ abstract class entity {
 
   protected health: number;
   protected isAlive: boolean = true;
-  private notPlayedSound: boolean = true;
   private timer: number = 0;
   protected maxHealth: number;
 
@@ -41,7 +40,7 @@ abstract class entity {
     );
   }
 
-  public entityDamage(damage: number, hitFrom?: p5.Vector) {
+  public entityDamage(damage: number, _?: p5.Vector) {
     if (this.timer > 0) return;
 
     this.timer = 300; // cooldown timer
@@ -84,7 +83,7 @@ abstract class entity {
     return this.isDead;
   }
 
-  public update(gravity: number, worldWidth: number) {
+  public update(gravity: number, _: number) {
   
     // Flash timer
     if (this.hitFlash > 0) {
