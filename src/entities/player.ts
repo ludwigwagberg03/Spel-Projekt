@@ -29,7 +29,13 @@ class Player extends entity {
   private deathTimer: number = 0;
   private totalDeathFrames: number = 7; // adjust to your spritesheet
   private onDeathComplete?: () => void;
-  private debugBox: boolean = false;
+  private debugBox: boolean = true;
+  private isAttacking: boolean = false;
+  private attackFrameIndex: number = 0;
+  private attackTimer: number = 0;
+  private attackFrameDelay: number = 80;
+  private totalFrameFrames: number = 4;
+
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -64,6 +70,25 @@ class Player extends entity {
     ]);
     this.equipItem(0);
     // console.log("onwed", this.inventory.getItems());
+  }
+
+  private updateAttackAnimation(){
+    if(!this.isAttacking) return;
+
+    this.attackTimer += deltaTime;
+    console.log("test 1");
+
+    if(this.attackTimer > this.attackFrameDelay){
+      this.attackFrameIndex++;
+      this.attackTimer = 0;
+      console.log("test 2");
+
+      if(this.attackFrameIndex >= this.totalFrameFrames){
+        this.attackFrameIndex = 0;
+        this.isAttacking = false;
+        console.log("test 3");
+      }
+    }
   }
 
   public isAutoFireOn(): boolean {
@@ -121,7 +146,7 @@ class Player extends entity {
       this.isFalling = false;
     }
   }
-  
+
   public update(gravity: number, worldWidth: number) {
     if (this.swordSwipeTimer > 0) {
       this.swordSwipeTimer -= deltaTime;
@@ -135,6 +160,7 @@ class Player extends entity {
     this.updateAttackHitBox();
     this.updateEffect(deltaTime);
     this.updateAnimation();
+    this.updateAttackAnimation();
 
   }
 
@@ -291,6 +317,13 @@ class Player extends entity {
 
   private swordAttack(enemies: entity[]) {
     if (!this.currentItem) return console.log(this.swordSwipeTimer, "swordAttack exit");
+    if(!this.isAttacking){
+      console.log("isAttacking: ", this.isAttacking);
+      this.isAttacking = true;
+      console.log("isAttacking is now: ", this.isAttacking);
+      this.attackFrameIndex = 0;
+      this.attackTimer = 0;
+    }
 
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
@@ -391,8 +424,7 @@ class Player extends entity {
     }
     if (keyIsDown(69)) { // E
       this.swordAttack(this.enimies);
-      this.applyEffect("slow", 10000);
-      console.log("effect timer ", this.effectTimer);
+      console.log("pressed E")
     }
     if (keyIsDown(49)) { // 1
       this.equipItem(0);
@@ -458,22 +490,67 @@ class Player extends entity {
         weaponAim = frameWidth * 2;
       }
       const weaponScale = 1;
+      if (this.currentItem.type === "ranged") {
+        push();
+        translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+        if (!this.isPlayerFacingRight) {
+          scale(-1, 1);
+        }
+        image(
+          images.smgAim,
+          0,
+          -frameHeight * 2,
+          this.size.x * weaponScale,
+          this.size.y * weaponScale,
+          weaponAim,
+          0,
+          frameWidth, frameHeight
+        );
+        pop();
+      }
+    }
+    if(this.currentItem.type === "melee"){
+      console.log("test here");
+      const frameWidth = images.swordSlash.width / 4;
+      const frameHeight = images.swordSlash.height;
+
+      let frame = 0;
+
+      if(this.isAttacking){
+        frame = this.attackFrameIndex;
+      }
+
+      push();
+      translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+      if(!this.isPlayerFacingRight){
+        scale(-1, 1);
+      }
       image(
-        images.smgAim,
-        this.position.x,
-        this.position.y + this.size.y / 2 - frameHeight / weaponScale / 2,
-        this.size.x * weaponScale,
-        this.size.y * weaponScale,
-        weaponAim,
+        images.swordSlash,
+        this.size.x / 4 - 5,
+        -this.size.y / 8 + 3,
+        this.size.x,
+        this.size.y,
+        frame * frameWidth,
         0,
-        frameWidth, frameHeight
+        frameWidth,
+        frameHeight
       );
+      pop();
     }
 
+
+
+    push();
+    translate(this.position.x + this.size.x, this.position.y);
+    if (!this.isPlayerFacingRight) {
+      scale(-1, 1);
+      translate(this.size.x, 0);
+    }
     image(
       this.currentImage,
-      this.position.x,
-      this.position.y,
+      -this.size.x,
+      0,
       this.size.x,
       this.size.y,
       sx,
@@ -481,6 +558,7 @@ class Player extends entity {
       this.frameWidth,
       this.frameHeight
     );
+    pop();
     if (this.debugBox) {
       push();
       noFill();

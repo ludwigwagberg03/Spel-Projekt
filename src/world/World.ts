@@ -11,16 +11,18 @@ class World {
         this.backGround2 = backGround2;
         this.backGround3 = backGround3;
     }
-    public draw(cameraX: number) {
-        this.drawStage(this.backGround1, cameraX, this.firstImageSpeed, height);
-        this.drawStage(this.backGround2, cameraX, this.secondImageSpeed, height * 0.6);
-        this.drawStage(this.backGround3, cameraX, this.thirdImageSpeed, height * 0.3);
+    public draw(cameraX: number, cameraY: number) {
+        this.drawStage(this.backGround1, cameraX, 0, this.firstImageSpeed, height);
+        this.drawStage(this.backGround2, cameraX, cameraY, this.secondImageSpeed, height * 0.6);
+        this.drawStage(this.backGround3, cameraX, cameraY, this.thirdImageSpeed, height * 0.3);
     }
-    private drawStage(img: p5.Image, cameraX: number, speed: number, imageHeight: number) {
+    private drawStage(img: p5.Image, cameraX: number,cameraY: number, speed: number, imageHeight: number) {
         push();
 
+        let y = height - imageHeight - cameraY;
+
         for (let x = -img.width; x < width + img.width; x += img.width) {
-            image(img, x - cameraX * speed % img.width, height - imageHeight, img.width, imageHeight);
+            image(img, x - (cameraX * speed % img.width), y , img.width, imageHeight);
         } 
         pop();
     }

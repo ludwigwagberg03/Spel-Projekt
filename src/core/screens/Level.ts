@@ -38,6 +38,8 @@ class Level implements IScreen {
   private bossesDefeated: number = 0;
   private endOfGame: boolean = false;
   private endOfGameTime: number = 0;
+  private cameraY: number = 0;
+  private worldHeight: number = 3000;
 
   constructor(game: IChangableScreen, _player: Player) {
     this.game = game;
@@ -261,6 +263,15 @@ class Level implements IScreen {
     this.cameraX = this.player.getPosition().x - width / 2;
     this.cameraX = constrain(this.cameraX, 0, this.worldWidth - width);
 
+    let playerY = this.player.getPosition().y;
+
+    if(playerY < height / 2){
+      this.cameraY = playerY - height / 2;
+    } else {
+      this.cameraY = 0;
+    }
+    this.cameraY = constrain(this.cameraY, -(this.worldHeight - height), 0);
+
     // Update all entities (player, enemies, platforms)
     this.entities.forEach((entity) => {
       if (entity instanceof enemy) {
@@ -440,11 +451,11 @@ class Level implements IScreen {
       shakeX = random(-this.shakeStrength, this.shakeStrength);
       shakeY = random(-this.shakeStrength, this.shakeStrength);
     }
-    this.world.draw(this.cameraX)
+    this.world.draw(this.cameraX, this.cameraY);
     // =========================
     // BACKGROUND (scrolling world)
     // =========================
-    translate(-this.cameraX + shakeX, shakeY);
+    translate(-this.cameraX + shakeX,-this.cameraY + shakeY);
 
     // Draw entities
     this.entities.forEach((entity) => {
