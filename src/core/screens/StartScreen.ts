@@ -208,6 +208,6 @@ class StartScreen implements IScreen {
   }
 
   onEnter(): void {
-    console.log("Start screen entered");
+    
   }
 }

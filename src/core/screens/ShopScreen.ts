@@ -14,7 +14,7 @@ class ShopScreen implements IScreen {
 
         this.items = this.getRandomItems(3);
 
-        console.log("onwed", this.player.inventory.getItems());
+        
     }
 
     private getRandomItems(count: number): Item[] {
@@ -89,15 +89,15 @@ class ShopScreen implements IScreen {
         if (code === ENTER) {
 
             if (this.player.inventory.hasItem(this.items[this.selected].id)) {
-                console.log("already owned");
+                alert("already owned");
                 return;
             }
             if (!this.buyItems(this.items[this.selected].price)) {
-                console.log("Not enough money");
+                alert("Not enough money");
                 return;
             }
             this.player.inventory.addItem(this.items[this.selected]);
-            console.log("added item", this.player.inventory.getItems());
+            
 
             this.items.splice(this.selected, 1);
 
@@ -106,7 +106,7 @@ class ShopScreen implements IScreen {
             }
         }
         if (code === 27) {
-            console.log("enter level screen")
+            
             this.game.changeScreen(this.level)
         }
     }

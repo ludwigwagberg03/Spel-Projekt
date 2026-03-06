@@ -29,7 +29,13 @@ class Player extends entity {
   private deathTimer: number = 0;
   private totalDeathFrames: number = 7; // adjust to your spritesheet
   private onDeathComplete?: () => void;
-  private debugBox: boolean = false;
+  private debugBox: boolean = true;
+  private isAttacking: boolean = false;
+  private attackFrameIndex: number = 0;
+  private attackTimer: number = 0;
+  private attackFrameDelay: number = 80;
+  private totalFrameFrames: number = 4;
+
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -65,7 +71,22 @@ class Player extends entity {
       }
     ]);
     this.equipItem(0);
-    // console.log("onwed", this.inventory.getItems());
+  }
+
+  private updateAttackAnimation(){
+    if(!this.isAttacking) return;
+
+    this.attackTimer += deltaTime;
+
+    if(this.attackTimer > this.attackFrameDelay){
+      this.attackFrameIndex++;
+      this.attackTimer = 0;
+
+      if(this.attackFrameIndex >= this.totalFrameFrames){
+        this.attackFrameIndex = 0;
+        this.isAttacking = false;
+      }
+    }
   }
 
   public isAutoFireOn(): boolean {
@@ -90,8 +111,7 @@ class Player extends entity {
       this.handlePlatformLanding(other);
     }
     if (other instanceof enemy) {
-      console.log("player hit by enemy, health:", this.healthPool());
-      this.entityDamage(1);
+      this.entityDamage(10);
     }
   }
   public startDeathAnimation(onComplete: () => void) {
@@ -137,6 +157,7 @@ class Player extends entity {
     this.updateAttackHitBox();
     this.updateEffect(deltaTime);
     this.updateAnimation();
+    this.updateAttackAnimation();
 
   }
 
@@ -182,7 +203,6 @@ class Player extends entity {
   public updateEffect(deltaTime: number) {
     if (this.effectTimer > 0) {
       this.effectTimer -= deltaTime;
-      // console.log("effect timer ", this.effectTimer);
       if (this.effectTimer <= 0) {
         this.clearEffect();
       } else {
@@ -240,7 +260,6 @@ class Player extends entity {
       }
     }
     else if (this.velocity.x !== 0) {
-      //console.log("walking");
       newImage = images.playerWalk;
       newTotalFrames = 4;
       this.frameDelay = 8000;
@@ -272,8 +291,6 @@ class Player extends entity {
   }
 
   private equipItem(index: number) {
-
-    console.log("onwed", this.inventory.getItems());
     const items = this.inventory.getItems();
 
     if (index >= 0 && index < items.length) {
@@ -286,19 +303,20 @@ class Player extends entity {
         this.attackHitBox.hight = this.currentItem.hitboxHeight!;
       }
       this.swordSwipeTimer = this.currentItem.cooldown;
-
-      console.log("Equipped:", this.currentItem.name);
     }
   }
 
   private swordAttack(enemies: entity[]) {
-    if (!this.currentItem) return console.log(this.swordSwipeTimer, "swordAttack exit");
+    if (!this.currentItem) return ;
+    if(!this.isAttacking){
+      this.isAttacking = true;
+      this.attackFrameIndex = 0;
+      this.attackTimer = 0;
+    }
 
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
         if (e instanceof enemy) {
-          // console.log("test1");
-
           const enemyX = e.getPosition().x;
           const enemyY = e.getPosition().y;
           const enemyWidth = e.getSize().x;
@@ -309,13 +327,9 @@ class Player extends entity {
           const attackWidth = this.attackHitBox.width;
           const attackHight = this.attackHitBox.hight;
 
-          // console.log("Attack:", attackX, attackY, attackWidth, attackHight);
-          // console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
-
           const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
           if (hit) {
-            // console.log("hit");
             e.entityDamage(this.currentItem.damage);
             this.swordSwipeTimer = this.currentItem.cooldown;
           }
@@ -393,8 +407,6 @@ class Player extends entity {
     }
     if (keyIsDown(69)) { // E
       this.swordAttack(this.enimies);
-      this.applyEffect("slow", 10000);
-      console.log("effect timer ", this.effectTimer);
     }
     if (keyIsDown(49)) { // 1
       this.equipItem(0);
@@ -444,8 +456,6 @@ class Player extends entity {
     const mouseWorld = createVector(mouseX + cameraX, mouseY)
 
     if (mouseWorld) {
-      //console.log("drawing");
-      //console.log(images.smgAim);
       const dx = mouseWorld.x - (this.position.x + this.size.x / 2);
       const dy = mouseWorld.y - (this.position.y + this.size.y / 2);
       const angel = atan2(dy, dx);
@@ -460,22 +470,66 @@ class Player extends entity {
         weaponAim = frameWidth * 2;
       }
       const weaponScale = 1;
+      if (this.currentItem.type === "ranged") {
+        push();
+        translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+        if (!this.isPlayerFacingRight) {
+          scale(-1, 1);
+        }
+        image(
+          images.smgAim,
+          0,
+          -frameHeight * 2,
+          this.size.x * weaponScale,
+          this.size.y * weaponScale,
+          weaponAim,
+          0,
+          frameWidth, frameHeight
+        );
+        pop();
+      }
+    }
+    if(this.currentItem.type === "melee"){
+      const frameWidth = images.swordSlash.width / 4;
+      const frameHeight = images.swordSlash.height;
+
+      let frame = 0;
+
+      if(this.isAttacking){
+        frame = this.attackFrameIndex;
+      }
+
+      push();
+      translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+      if(!this.isPlayerFacingRight){
+        scale(-1, 1);
+      }
       image(
-        images.smgAim,
-        this.position.x,
-        this.position.y + this.size.y / 2 - frameHeight / weaponScale / 2,
-        this.size.x * weaponScale,
-        this.size.y * weaponScale,
-        weaponAim,
+        images.swordSlash,
+        this.size.x / 4 - 5,
+        -this.size.y / 8 + 3,
+        this.size.x,
+        this.size.y,
+        frame * frameWidth,
         0,
-        frameWidth, frameHeight
+        frameWidth,
+        frameHeight
       );
+      pop();
     }
 
+
+
+    push();
+    translate(this.position.x + this.size.x, this.position.y);
+    if (!this.isPlayerFacingRight) {
+      scale(-1, 1);
+      translate(this.size.x, 0);
+    }
     image(
       this.currentImage,
-      this.position.x,
-      this.position.y,
+      -this.size.x,
+      0,
       this.size.x,
       this.size.y,
       sx,
@@ -483,6 +537,7 @@ class Player extends entity {
       this.frameWidth,
       this.frameHeight
     );
+    pop();
     if (this.debugBox) {
       push();
       noFill();
