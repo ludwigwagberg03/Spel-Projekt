@@ -30,10 +30,12 @@ class Player extends entity {
   private totalDeathFrames: number = 7; // adjust to your spritesheet
   private onDeathComplete?: () => void;
   private debugBox: boolean = true;
+  private isAttacking: boolean = false;
   private attackFrameIndex: number = 0;
   private attackTimer: number = 0;
   private attackFrameDelay: number = 80;
-  private attackFrameFrames: number = 4;
+  private totalFrameFrames: number = 4;
+
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -70,7 +72,24 @@ class Player extends entity {
     // console.log("onwed", this.inventory.getItems());
   }
 
-  
+  private updateAttackAnimation(){
+    if(!this.isAttacking) return;
+
+    this.attackTimer += deltaTime;
+    console.log("test 1");
+
+    if(this.attackTimer > this.attackFrameDelay){
+      this.attackFrameIndex++;
+      this.attackTimer = 0;
+      console.log("test 2");
+
+      if(this.attackFrameIndex >= this.totalFrameFrames){
+        this.attackFrameIndex = 0;
+        this.isAttacking = false;
+        console.log("test 3");
+      }
+    }
+  }
 
   public isAutoFireOn(): boolean {
     if (!this.currentItem) return false;
@@ -141,6 +160,7 @@ class Player extends entity {
     this.updateAttackHitBox();
     this.updateEffect(deltaTime);
     this.updateAnimation();
+    this.updateAttackAnimation();
 
   }
 
@@ -297,6 +317,13 @@ class Player extends entity {
 
   private swordAttack(enemies: entity[]) {
     if (!this.currentItem) return console.log(this.swordSwipeTimer, "swordAttack exit");
+    if(!this.isAttacking){
+      console.log("isAttacking: ", this.isAttacking);
+      this.isAttacking = true;
+      console.log("isAttacking is now: ", this.isAttacking);
+      this.attackFrameIndex = 0;
+      this.attackTimer = 0;
+    }
 
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
@@ -397,8 +424,7 @@ class Player extends entity {
     }
     if (keyIsDown(69)) { // E
       this.swordAttack(this.enimies);
-      this.applyEffect("slow", 10000);
-      console.log("effect timer ", this.effectTimer);
+      console.log("pressed E")
     }
     if (keyIsDown(49)) { // 1
       this.equipItem(0);
@@ -484,10 +510,15 @@ class Player extends entity {
       }
     }
     if(this.currentItem.type === "melee"){
+      console.log("test here");
       const frameWidth = images.swordSlash.width / 4;
       const frameHeight = images.swordSlash.height;
 
       let frame = 0;
+
+      if(this.isAttacking){
+        frame = this.attackFrameIndex;
+      }
 
       push();
       translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
