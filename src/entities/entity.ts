@@ -58,7 +58,6 @@ abstract class entity {
   }
   protected die() {
   this.isAlive = false;
-  console.log("die() called, isAlive:", this.isAlive);
 }
 
   get lifeStatus(): boolean {

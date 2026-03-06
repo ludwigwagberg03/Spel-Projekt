@@ -69,24 +69,20 @@ class Player extends entity {
       }
     ]);
     this.equipItem(0);
-    // console.log("onwed", this.inventory.getItems());
   }
 
   private updateAttackAnimation(){
     if(!this.isAttacking) return;
 
     this.attackTimer += deltaTime;
-    console.log("test 1");
 
     if(this.attackTimer > this.attackFrameDelay){
       this.attackFrameIndex++;
       this.attackTimer = 0;
-      console.log("test 2");
 
       if(this.attackFrameIndex >= this.totalFrameFrames){
         this.attackFrameIndex = 0;
         this.isAttacking = false;
-        console.log("test 3");
       }
     }
   }
@@ -113,8 +109,7 @@ class Player extends entity {
       this.handlePlatformLanding(other);
     }
     if (other instanceof enemy) {
-      console.log("player hit by enemy, health:", this.healthPool());
-      this.entityDamage(1);
+      this.entityDamage(10);
     }
   }
   public startDeathAnimation(onComplete: () => void) {
@@ -206,7 +201,6 @@ class Player extends entity {
   public updateEffect(deltaTime: number) {
     if (this.effectTimer > 0) {
       this.effectTimer -= deltaTime;
-      // console.log("effect timer ", this.effectTimer);
       if (this.effectTimer <= 0) {
         this.clearEffect();
       } else {
@@ -264,7 +258,6 @@ class Player extends entity {
       }
     }
     else if (this.velocity.x !== 0) {
-      //console.log("walking");
       newImage = images.playerWalk;
       newTotalFrames = 4;
       this.frameDelay = 8000;
@@ -296,8 +289,6 @@ class Player extends entity {
   }
 
   private equipItem(index: number) {
-
-    console.log("onwed", this.inventory.getItems());
     const items = this.inventory.getItems();
 
     if (index >= 0 && index < items.length) {
@@ -310,17 +301,13 @@ class Player extends entity {
         this.attackHitBox.hight = this.currentItem.hitboxHeight!;
       }
       this.swordSwipeTimer = this.currentItem.cooldown;
-
-      console.log("Equipped:", this.currentItem.name);
     }
   }
 
   private swordAttack(enemies: entity[]) {
-    if (!this.currentItem) return console.log(this.swordSwipeTimer, "swordAttack exit");
+    if (!this.currentItem) return ;
     if(!this.isAttacking){
-      console.log("isAttacking: ", this.isAttacking);
       this.isAttacking = true;
-      console.log("isAttacking is now: ", this.isAttacking);
       this.attackFrameIndex = 0;
       this.attackTimer = 0;
     }
@@ -328,8 +315,6 @@ class Player extends entity {
     if (this.swordSwipeTimer <= 0) {
       for (let e of enemies) {
         if (e instanceof enemy) {
-          // console.log("test1");
-
           const enemyX = e.getPosition().x;
           const enemyY = e.getPosition().y;
           const enemyWidth = e.getSize().x;
@@ -340,13 +325,9 @@ class Player extends entity {
           const attackWidth = this.attackHitBox.width;
           const attackHight = this.attackHitBox.hight;
 
-          // console.log("Attack:", attackX, attackY, attackWidth, attackHight);
-          // console.log("Enemy:", enemyX, enemyY, enemyWidth, enemyHight);
-
           const hit = attackX < enemyX + enemyWidth && attackX + attackWidth > enemyX && attackY < enemyY + enemyHight && attackY + attackHight > enemyY;
 
           if (hit) {
-            // console.log("hit");
             e.entityDamage(this.currentItem.damage);
             this.swordSwipeTimer = this.currentItem.cooldown;
           }
@@ -424,7 +405,6 @@ class Player extends entity {
     }
     if (keyIsDown(69)) { // E
       this.swordAttack(this.enimies);
-      console.log("pressed E")
     }
     if (keyIsDown(49)) { // 1
       this.equipItem(0);
@@ -474,8 +454,6 @@ class Player extends entity {
     const mouseWorld = createVector(mouseX + cameraX, mouseY)
 
     if (mouseWorld) {
-      //console.log("drawing");
-      //console.log(images.smgAim);
       const dx = mouseWorld.x - (this.position.x + this.size.x / 2);
       const dy = mouseWorld.y - (this.position.y + this.size.y / 2);
       const angel = atan2(dy, dx);
@@ -510,7 +488,6 @@ class Player extends entity {
       }
     }
     if(this.currentItem.type === "melee"){
-      console.log("test here");
       const frameWidth = images.swordSlash.width / 4;
       const frameHeight = images.swordSlash.height;
 

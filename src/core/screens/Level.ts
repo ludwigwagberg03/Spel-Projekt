@@ -283,7 +283,6 @@ class Level implements IScreen {
 
     for (let projectile of this.projectiles) {
       if (projectile.overlaps(this.player)) {
-        // console.log("Player kolliderar med testprojektil!");
       }
     }
 
@@ -303,7 +302,7 @@ class Level implements IScreen {
       if (e instanceof enemy) {
         // If death just started: spawn explosion + coins ONCE
         if (e.consumeDeathTrigger()) {
-          console.log("spawn coins");
+          
           const center = e.getCenter();
           this.spawnExplosion(center);
         }
@@ -585,6 +584,6 @@ class Level implements IScreen {
     this.drawEndMessage();
   }
   onEnter(): void {
-    // console.log("level screen entered");
+    
   }
 }

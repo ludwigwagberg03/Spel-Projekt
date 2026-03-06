@@ -39,7 +39,6 @@ class enemy extends entity {
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number, player: Player) {
     super(p, v, s, h);
     this.isGravity = false;
-    // console.log("enemy");
     this.previousPositionX = this.position;
     this.isFacingRight = true;
     this.player = player;
@@ -200,7 +199,7 @@ class enemy extends entity {
     }
     this.dashColdownTimer -= deltaTime;
 
-    //console.log("Hover Time",this.dashColdownTimer);
+
     if (this.dashColdownTimer <= 0) {
       this.enterState(activeState.chase);
     }
@@ -214,7 +213,7 @@ class enemy extends entity {
       this.dash();
       this.dashTimer = 0;
       this.dashAmount++;
-      console.log("dash amount", this.dashAmount);
+
     }
 
     if (this.isDashing) {
