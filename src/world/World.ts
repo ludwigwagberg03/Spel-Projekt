@@ -12,9 +12,9 @@ class World {
         this.backGround3 = backGround3;
     }
     public draw(cameraX: number, cameraY: number) {
-        this.drawStage(this.backGround1, cameraX, cameraY, this.firstImageSpeed, height);
-        this.drawStage(this.backGround2, cameraX, 0, this.secondImageSpeed, height * 0.6);
-        this.drawStage(this.backGround3, cameraX, 0, this.thirdImageSpeed, height * 0.3);
+        this.drawStage(this.backGround1, cameraX, 0, this.firstImageSpeed, height);
+        this.drawStage(this.backGround2, cameraX, cameraY, this.secondImageSpeed, height * 0.6);
+        this.drawStage(this.backGround3, cameraX, cameraY, this.thirdImageSpeed, height * 0.3);
     }
     private drawStage(img: p5.Image, cameraX: number,cameraY: number, speed: number, imageHeight: number) {
         push();
