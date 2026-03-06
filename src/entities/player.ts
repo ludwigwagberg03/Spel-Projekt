@@ -473,11 +473,11 @@ class Player extends entity {
     translate(this.position.x + this.size.x, this.position.y);
     if(!this.isPlayerFacingRight){
       scale(-1, 1);
-      translate(-this.size.x,0);
+      translate(this.size.x,0);
     }
     image(
       this.currentImage,
-      0,
+      -this.size.x,
       0,
       this.size.x,
       this.size.y,
