@@ -27,6 +27,7 @@ let images: {
   smgAim: p5.Image;
   playerDeath: p5.Image;
   bossDeath: p5.Image;
+  swordSlash: p5.Image;
 };
 // let itemData: any;
 
@@ -60,6 +61,7 @@ function preload() {
     smgAim: loadImage("/assets/images/smgAim.png"),
     playerDeath: loadImage("/assets/images/playerDeath.png"),
     bossDeath: loadImage("/assets/images/bossDeath.png"),
+    swordSlash: loadImage("/assets/images/swordslash.png"),
   };
   gameFont = loadFont("/assets/fonts/minecraftia/Minecraftia-Regular.ttf");
 }
