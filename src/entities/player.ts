@@ -458,22 +458,24 @@ class Player extends entity {
         weaponAim = frameWidth * 2;
       }
       const weaponScale = 1;
-      push();
-      translate(this.position.x + this.size.x / 2, this.position.y + this.size.y/2);
-      if (!this.isPlayerFacingRight) {
-        scale(-1, 1);
+      if (this.currentItem.type === "ranged") {
+        push();
+        translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+        if (!this.isPlayerFacingRight) {
+          scale(-1, 1);
+        }
+        image(
+          images.smgAim,
+          0,
+          -frameHeight * 2,
+          this.size.x * weaponScale,
+          this.size.y * weaponScale,
+          weaponAim,
+          0,
+          frameWidth, frameHeight
+        );
+        pop();
       }
-      image(
-        images.smgAim,
-        0,
-        -frameHeight * 2,
-        this.size.x * weaponScale,
-        this.size.y * weaponScale,
-        weaponAim,
-        0,
-        frameWidth, frameHeight
-      );
-      pop();
     }
     push();
     translate(this.position.x + this.size.x, this.position.y);
