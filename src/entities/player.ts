@@ -517,7 +517,7 @@ class Player extends entity {
       let frame = 0;
 
       if(this.isAttacking){
-        frame = this.attackFrameIndex
+        frame = this.attackFrameIndex;
       }
 
       push();
