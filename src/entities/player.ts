@@ -121,7 +121,7 @@ class Player extends entity {
       this.isFalling = false;
     }
   }
-  
+
   public update(gravity: number, worldWidth: number) {
     if (this.swordSwipeTimer > 0) {
       this.swordSwipeTimer -= deltaTime;
@@ -458,22 +458,28 @@ class Player extends entity {
         weaponAim = frameWidth * 2;
       }
       const weaponScale = 1;
+      push();
+      translate(this.position.x + this.size.x / 2, this.position.y + this.size.y/2);
+      if (!this.isPlayerFacingRight) {
+        scale(-1, 1);
+      }
       image(
         images.smgAim,
-        this.position.x,
-        this.position.y + this.size.y / 2 - frameHeight / weaponScale / 2,
+        0,
+        -frameHeight * 2,
         this.size.x * weaponScale,
         this.size.y * weaponScale,
         weaponAim,
         0,
         frameWidth, frameHeight
       );
+      pop();
     }
     push();
     translate(this.position.x + this.size.x, this.position.y);
-    if(!this.isPlayerFacingRight){
+    if (!this.isPlayerFacingRight) {
       scale(-1, 1);
-      translate(this.size.x,0);
+      translate(this.size.x, 0);
     }
     image(
       this.currentImage,
