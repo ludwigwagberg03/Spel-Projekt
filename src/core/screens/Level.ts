@@ -27,7 +27,7 @@ class Level implements IScreen {
 
   private isFiring: boolean = false;
   private bossActive: boolean = false;
-  private bossSpawnDelay: number = 15000;
+  private bossSpawnDelay: number = 5000;
   private bossSpawnTimer: number = 0;
   private diffieculty: number = 1;
   private baseBossHealth: number = 500;
@@ -72,22 +72,22 @@ class Level implements IScreen {
     );
   }
 
-  private drawEndMessage(){
-    if(!this.endOfGame) return;
+  private drawEndMessage() {
+    if (!this.endOfGame) return;
 
     push();
     textFont(gameFont);
-    textAlign(CENTER,CENTER);
-    fill(0,0,0,200);
-    rect(width/2-300,height/2-150,600,300,20);
-    fill(255,215,0);
+    textAlign(CENTER, CENTER);
+    fill(0, 0, 0, 200);
+    rect(width / 2 - 300, height / 2 - 150, 600, 300, 20);
+    fill(255, 215, 0);
     textSize(42);
     text("Victory", width / 2, height / 2 - 69);
     pop();
   }
 
   private triggerEndOFGame() {
-    if (this.bossesDefeated >= 2 && this.endOfGameTime === 0) {
+    if (this.bossesDefeated >= 10 && this.endOfGameTime === 0) {
       this.endOfGame = true;
       this.bossActive = false;
       this.currentBoss = null;
@@ -231,17 +231,17 @@ class Level implements IScreen {
     // panel
     noStroke();
     fill(0, 0, 0, 120);
-    rect(20, 20, 180, 55, 12);
+    rect(width - 230, 80, 180, 55, 12);
 
     // coin icon
     fill(255, 205, 60);
-    ellipse(45, 47, 22);
+    ellipse((width - 230 + 180 / 2 - 70), 80 + 55 / 2 +2.5, 22);
 
     // text
     fill(255);
     textSize(18);
     textAlign(LEFT, CENTER);
-    text(`Coins: ${this.player.coinCount}`, 65, 47);
+    text(`Coins: ${this.player.coinCount}`, (width - 230 + 180 / 2 - 50), 80 + 55 / 2 +5);
 
     pop();
   }
@@ -332,9 +332,9 @@ class Level implements IScreen {
     if (!this.gameOverTriggered && !this.player.alive) {
       this.gameOverTriggered = true;
       this.player.startDeathAnimation(() => {
-      this.game.changeScreen(new GameOverScreen(this.game, this.player));
-    });
-    return;
+        this.game.changeScreen(new GameOverScreen(this.game, this.player));
+      });
+      return;
     }
 
     // =========================
@@ -370,9 +370,9 @@ class Level implements IScreen {
 
     this.damageNumbers = this.damageNumbers.filter((d) => d.life > 0);
 
-    if(this.endOfGameTime >= 1){
+    if (this.endOfGameTime >= 1) {
       this.endOfGameTime += deltaTime;
-      if (this.endOfGameTime >= 10000){
+      if (this.endOfGameTime >= 10000) {
         this.game.changeScreen(new StartScreen(this.game, this.player));
       }
     }
@@ -454,7 +454,7 @@ class Level implements IScreen {
     // =========================
     // BACKGROUND (scrolling world)
     // =========================
-    translate(-this.cameraX + shakeX,-this.cameraY + shakeY);
+    translate(-this.cameraX + shakeX, -this.cameraY + shakeY);
 
     // Draw entities
     this.entities.forEach((entity) => {
@@ -554,16 +554,22 @@ class Level implements IScreen {
 
     const items = this.player.inventory.getItems();
 
-    const left = 200;
-    const top = 40;
-    const spacingBetweenItems = 80;
+    const padding = 10;
+    const spacingX = 10;
+    const spacingY = 10;
 
     const slotWidth = 70;
-    const slotHeight = 20;
+    const slotHeight = 70;
+    const imageSize = 48;
+
+    let x = padding;
+    let y = padding;
 
     for (let i = 0; i < items.length; i++) {
-      const x = left + i * spacingBetweenItems;
-      const y = top;
+      if (x + slotWidth > width / 3) {
+        x = padding;
+        y += slotHeight + spacingY;
+      }
 
       stroke(255);
       strokeWeight(2);
@@ -574,11 +580,26 @@ class Level implements IScreen {
       }
 
       noFill();
-      rect(x, y, slotWidth, slotHeight);
+      rect(x, y, slotWidth, slotHeight, 5);
 
       noStroke();
+      if (items[i].type === "ranged") {
+        image(images.bowImage, x + (slotWidth - imageSize) / 2, y + 5, imageSize, imageSize);
+      }
+      if (items[i].type === "melee") {
+        image(images.swordImage, x + (slotWidth - imageSize) / 2, y + 5, imageSize, imageSize);
+      }
+
       fill(255);
-      text(items[i].name, x + 5, y + 5);
+      textAlign(CENTER, TOP);
+      text(
+        items[i].name,
+        x + slotWidth / 2,
+        y + 5 + imageSize + 2
+      );
+
+      x += slotWidth + spacingX;
+
     }
     pop();
     this.drawEndMessage();

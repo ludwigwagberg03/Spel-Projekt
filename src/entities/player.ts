@@ -24,7 +24,7 @@ class Player extends entity {
   private totalFrames: number = 6; // default idle
   private frameWidth: number = 16;
   private frameHeight: number = 32;
-  public coinCount: number = 0;
+  public coinCount: number = 500;
   private isDying: boolean = false;
   private deathTimer: number = 0;
   private totalDeathFrames: number = 7; // adjust to your spritesheet
@@ -55,16 +55,18 @@ class Player extends entity {
         cooldown: 500,
         hitboxWidth: 100,
         hitboxHeight: 50,
+        imageKey: "swordImage",
         price: 50
       },
       {
         id: "pistol",
         name: "Pistol",
         type: "ranged",
-        damage: 50,
+        damage: 200,
         cooldown: 300,
         projectileSpeed: 15,
         projectileSize: 80,
+        imageKey: "bowImage",
         price: 0
       }
     ]);

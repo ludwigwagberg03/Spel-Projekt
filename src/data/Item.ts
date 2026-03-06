@@ -5,6 +5,9 @@ interface Item {
     damage: number;
     cooldown: number;
 
+    image?: p5.Image;
+    imageKey?: string;
+    
     autoFire?: boolean;
 
     hitboxWidth?: number;

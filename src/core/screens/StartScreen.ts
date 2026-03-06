@@ -79,7 +79,7 @@ class StartScreen implements IScreen {
     }
   }
 
-  update(): void {}
+  update(): void { }
 
   draw(): void {
     // ===== BACKGROUND IMAGE =====
@@ -197,10 +197,13 @@ class StartScreen implements IScreen {
       if (choice === "Nytt spel") {
         this.game.changeScreen(new Level(this.game, this.player));
       }
-
+      // if (choice === "Inställningar") {
+      //   this.game.changeScreen(new ShopScreen(this.game, this.player, this.level));
+      // }
       if (choice === "Avsluta") {
         noLoop();
       }
+      
     }
   }
 
