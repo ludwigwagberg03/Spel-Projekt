@@ -30,6 +30,10 @@ class Player extends entity {
   private totalDeathFrames: number = 7; // adjust to your spritesheet
   private onDeathComplete?: () => void;
   private debugBox: boolean = true;
+  private attackFrameIndex: number = 0;
+  private attackTimer: number = 0;
+  private attackFrameDelay: number = 80;
+  private attackFrameFrames: number = 4;
 
   constructor(p: p5.Vector, v: p5.Vector, s: p5.Vector, h: number) {
 
@@ -65,6 +69,8 @@ class Player extends entity {
     this.equipItem(0);
     // console.log("onwed", this.inventory.getItems());
   }
+
+  
 
   public isAutoFireOn(): boolean {
     if (!this.currentItem) return false;
@@ -477,6 +483,33 @@ class Player extends entity {
         pop();
       }
     }
+    if(this.currentItem.type === "melee"){
+      const frameWidth = images.swordSlash.width / 4;
+      const frameHeight = images.swordSlash.height;
+
+      let frame = 0;
+
+      push();
+      translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
+      if(!this.isPlayerFacingRight){
+        scale(-1, 1);
+      }
+      image(
+        images.swordSlash,
+        this.size.x / 4 - 5,
+        -this.size.y / 8 + 3,
+        this.size.x,
+        this.size.y,
+        frame * frameWidth,
+        0,
+        frameWidth,
+        frameHeight
+      );
+      pop();
+    }
+
+
+
     push();
     translate(this.position.x + this.size.x, this.position.y);
     if (!this.isPlayerFacingRight) {
