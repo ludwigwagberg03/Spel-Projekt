@@ -27,7 +27,7 @@ class Level implements IScreen {
 
   private isFiring: boolean = false;
   private bossActive: boolean = false;
-  private bossSpawnDelay: number = 5000;
+  private bossSpawnDelay: number = 15000;
   private bossSpawnTimer: number = 0;
   private diffieculty: number = 1;
   private baseBossHealth: number = 500;

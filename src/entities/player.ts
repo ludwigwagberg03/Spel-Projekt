@@ -62,10 +62,11 @@ class Player extends entity {
         id: "pistol",
         name: "Pistol",
         type: "ranged",
-        damage: 200,
-        cooldown: 300,
+        damage: 20,
+        cooldown: 350,
+        autoFire: false,
         projectileSpeed: 15,
-        projectileSize: 80,
+        projectileSize: 8,
         imageKey: "bowImage",
         price: 0
       }
@@ -73,16 +74,16 @@ class Player extends entity {
     this.equipItem(0);
   }
 
-  private updateAttackAnimation(){
-    if(!this.isAttacking) return;
+  private updateAttackAnimation() {
+    if (!this.isAttacking) return;
 
     this.attackTimer += deltaTime;
 
-    if(this.attackTimer > this.attackFrameDelay){
+    if (this.attackTimer > this.attackFrameDelay) {
       this.attackFrameIndex++;
       this.attackTimer = 0;
 
-      if(this.attackFrameIndex >= this.totalFrameFrames){
+      if (this.attackFrameIndex >= this.totalFrameFrames) {
         this.attackFrameIndex = 0;
         this.isAttacking = false;
       }
@@ -307,8 +308,8 @@ class Player extends entity {
   }
 
   private swordAttack(enemies: entity[]) {
-    if (!this.currentItem) return ;
-    if(!this.isAttacking){
+    if (!this.currentItem) return;
+    if (!this.isAttacking) {
       this.isAttacking = true;
       this.attackFrameIndex = 0;
       this.attackTimer = 0;
@@ -489,19 +490,19 @@ class Player extends entity {
         pop();
       }
     }
-    if(this.currentItem.type === "melee"){
+    if (this.currentItem.type === "melee") {
       const frameWidth = images.swordSlash.width / 4;
       const frameHeight = images.swordSlash.height;
 
       let frame = 0;
 
-      if(this.isAttacking){
+      if (this.isAttacking) {
         frame = this.attackFrameIndex;
       }
 
       push();
       translate(this.position.x + this.size.x / 2, this.position.y + this.size.y / 2);
-      if(!this.isPlayerFacingRight){
+      if (!this.isPlayerFacingRight) {
         scale(-1, 1);
       }
       image(
