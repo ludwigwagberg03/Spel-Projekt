@@ -11,10 +11,13 @@ let sounds: {
   shoot: p5.SoundFile;
 };
 let images: {
+  swordImage: p5.Image,
+  bowImage: p5.Image,
+
   firstBackgournd: p5.Image,
   secondBackgroudn: p5.Image,
   thirdBackground: p5.Image,
-  
+
   menu: p5.Image;
   background: p5.Image;
   testStage: p5.Image;
@@ -46,6 +49,8 @@ function preload() {
     shoot: loadSound("/assets/sounds/gun-shot.mp3"),
   };
   images = {
+    bowImage: loadImage("/assets/images/bow.webp"),
+    swordImage: loadImage("/assets/images/sword.webp"),
     firstBackgournd: loadImage("/assets/images/thirdBackground1.png"),
     secondBackgroudn: loadImage("/assets/images/secondBackground.webp"),
     thirdBackground: loadImage("/assets/images/Jungle_background_1.webp"),

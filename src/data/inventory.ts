@@ -1,3 +1,10 @@
+function attachItemImages() {
+  for (let item of Items.swords) {
+    if (item.imageKey && images[item.imageKey as keyof typeof images]) {
+      item.image = images[item.imageKey as keyof typeof images];
+    }
+  }
+}
 class Inventory {
     private items: Item[] = [];
 
@@ -21,4 +28,5 @@ class Inventory {
         }
         return false;
     }
+    
 }

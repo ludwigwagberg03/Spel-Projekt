@@ -1,4 +1,4 @@
-const Items:  {swords: Item[] } = {
+const Items: { swords: Item[] } = {
     swords: [
         {
             id: "basicSword",
@@ -8,6 +8,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 500,
             hitboxWidth: 100,
             hitboxHeight: 50,
+            imageKey: "swordImage",
             price: 0
         },
         {
@@ -19,6 +20,7 @@ const Items:  {swords: Item[] } = {
             autoFire: false,
             projectileSpeed: 15,
             projectileSize: 8,
+            imageKey: "bowImage",
             price: 0
         },
         {
@@ -30,6 +32,7 @@ const Items:  {swords: Item[] } = {
             autoFire: false,
             projectileSpeed: 15,
             projectileSize: 8,
+            imageKey: "bowImage",
             price: 0
         },
         {
@@ -41,6 +44,7 @@ const Items:  {swords: Item[] } = {
             autoFire: true,
             projectileSpeed: 15,
             projectileSize: 8,
+            imageKey: "bowImage",
             price: 0
         },
         {
@@ -52,6 +56,7 @@ const Items:  {swords: Item[] } = {
             autoFire: true,
             projectileSpeed: 15,
             projectileSize: 8,
+            imageKey: "bowImage",
             price: 0
         },
         {
@@ -62,6 +67,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 200,
             hitboxWidth: 80,
             hitboxHeight: 40,
+            imageKey: "swordImage",
             price: 3
         },
         {
@@ -72,6 +78,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 1000,
             hitboxWidth: 120,
             hitboxHeight: 60,
+            imageKey: "swordImage",
             price: 0
         },
         {
@@ -82,6 +89,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 600,
             hitboxWidth: 160,
             hitboxHeight: 50,
+            imageKey: "swordImage",
             price: 0
         },
         {
@@ -92,6 +100,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 200,
             hitboxWidth: 80,
             hitboxHeight: 40,
+            imageKey: "swordImage",
             price: 3
         },
         {
@@ -102,6 +111,7 @@ const Items:  {swords: Item[] } = {
             cooldown: 200,
             hitboxWidth: 80,
             hitboxHeight: 40,
+            imageKey: "swordImage",
             price: 3
         },
     ]
