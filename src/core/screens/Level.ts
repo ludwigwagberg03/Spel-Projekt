@@ -266,7 +266,6 @@ class Level implements IScreen {
     let playerY = this.player.getPosition().y;
 
     if(playerY < height / 2){
-      console.log("this is true");
       this.cameraY = playerY - height / 2;
     } else {
       this.cameraY = 0;
