@@ -14,7 +14,7 @@ class ShopScreen implements IScreen {
 
         this.items = this.getRandomItems(3);
 
-        
+
     }
 
     private getRandomItems(count: number): Item[] {
@@ -54,6 +54,11 @@ class ShopScreen implements IScreen {
     draw() {
         background(0);
 
+        stroke(0, 120, 255);
+        strokeWeight(4);
+        fill(20, 40, 120, 150); 
+        rect(width / 2 - 250, 120, 500, height - 200, 10);
+
         fill(255);
         textAlign(CENTER, CENTER);
 
@@ -61,19 +66,56 @@ class ShopScreen implements IScreen {
         text("SHOP", width / 2, 80);
 
         textSize(20);
+        text(this.player.coinCount+ " Player gold", width / 2, height - 100);
+
+        const spacingX = 20;
+        const spacingY = 20;
+
+        const slotWidth = 120;
+        const slotHeight = 120;
+        const imageSize = 64;
+
+        let x = width / 2 - slotWidth / 2;
+        let y = 150;
 
         for (let i = 0; i < this.items.length; i++) {
-            fill(255);
 
-            if (i === this.selected) {
-                fill(60);
+            if (y + slotHeight > height - 50) {
+                y = 150;
+                x += slotWidth + spacingX;
             }
 
-            text(
-                `${this.items[i].name} - ${this.items[i].price} gold`,
-                width / 2,
-                200 + i * 100
-            );
+            stroke(255);
+            strokeWeight(2);
+
+            if (i === this.selected) {
+                let glow = 180 + sin(frameCount * 0.08) * 70;
+                stroke(0, 120, 255, glow);
+            }
+
+            noFill();
+            rect(x, y, slotWidth, slotHeight, 6);
+
+            noStroke();
+
+            if (this.items[i].type === "ranged") {
+                image(images.bowImage, x + (slotWidth - imageSize) / 2, y + 10, imageSize, imageSize);
+            }
+
+            if (this.items[i].type === "melee") {
+                image(images.swordImage, x + (slotWidth - imageSize) / 2, y + 10, imageSize, imageSize);
+            }
+
+            fill(255);
+            textSize(14);
+            textAlign(CENTER, TOP);
+            text(this.items[i].name, x + slotWidth / 2, y + 10 + imageSize + 5);
+
+            fill(255, 220, 100);
+            textSize(12);
+            text(this.items[i].price + " gold", x + slotWidth / 2, y + 10 + imageSize + 22);
+
+            y += slotHeight + spacingY;
         }
     };
 
@@ -97,7 +139,7 @@ class ShopScreen implements IScreen {
                 return;
             }
             this.player.inventory.addItem(this.items[this.selected]);
-            
+
 
             this.items.splice(this.selected, 1);
 
@@ -106,7 +148,7 @@ class ShopScreen implements IScreen {
             }
         }
         if (code === 27) {
-            
+
             this.game.changeScreen(this.level)
         }
     }
