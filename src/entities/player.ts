@@ -29,7 +29,7 @@ class Player extends entity {
   private deathTimer: number = 0;
   private totalDeathFrames: number = 7; // adjust to your spritesheet
   private onDeathComplete?: () => void;
-  private debugBox: boolean = true;
+  private debugBox: boolean = false;
   private isAttacking: boolean = false;
   private attackFrameIndex: number = 0;
   private attackTimer: number = 0;
